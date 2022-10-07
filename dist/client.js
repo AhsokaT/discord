@@ -37,7 +37,6 @@ class Client extends discord_js_1.Client {
                 return identifiers.includes(interaction.commandName);
             return false;
         });
-        console.log(command);
         if (!interaction.inCachedGuild())
             return;
         if (command)

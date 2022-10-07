@@ -28,8 +28,10 @@ client.once('ready', async (ready) => {
     (0, misc_1.postHousePicker)(ready)
         .then(message => console.debug(`Posted house picker: ${message.id}`))
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
-    (0, misc_1.updateHousePoints)(ready, '1017094377690108046', '1027995705438126151', client.housePointManager.points).catch(console.debug);
+    (0, misc_1.updateHousePoints)(ready, '1017094377690108046', '1027995705438126151', ready.housePointManager.points).catch(console.debug);
     client.housePointManager.on('update', points => (0, misc_1.updateHousePoints)(ready, '1017094377690108046', '1027995705438126151', points).catch(console.debug));
 });
+client.housePointManager.on('pointsAssigned', (...args) => (0, misc_1.logHousePointChange)(client, 'assigned', ...args).catch(console.debug));
+client.housePointManager.on('pointsRemoved', (...args) => (0, misc_1.logHousePointChange)(client, 'removed', ...args).catch(console.debug));
 client.login(process.env.TOKEN);
 process.on('unhandledRejection', console.error);

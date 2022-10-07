@@ -1,8 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postHousePicker = exports.updateHousePoints = void 0;
+exports.postHousePicker = exports.updateHousePoints = exports.logHousePointChange = void 0;
 const discord_js_1 = require("discord.js");
 const house_1 = require("./Commands/House/house");
+async function logHousePointChange(client, change, house, points) {
+    return new Promise(async (res, rej) => {
+        const channel = await client.channels.fetch(process.env.AUDIT_CHANNEL);
+        if (!channel || !channel.isTextBased() || channel.isDMBased())
+            return rej('Could not fetch channel');
+        channel.send({ content: `**${points} points** ${change} ${change === 'assigned' ? 'to' : 'from'} **${house_1.House[house]}** <@&${house_1.RoleID[house]}>`, allowedMentions: { parse: [] } })
+            .then(res)
+            .catch(rej);
+    });
+}
+exports.logHousePointChange = logHousePointChange;
 function houseField(house, points) {
     return { name: house, value: `${points} points` };
 }

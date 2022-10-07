@@ -39,7 +39,6 @@ async function replyWithEmbed(target, interaction) {
         userInfo += '\n**`> Account`** Bot';
     const embed = new discord_js_1.EmbedBuilder()
         .setColor('#2F3136')
-        .setDescription('NEW COMMAND')
         .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL({ size: 4096 }) })
         .setThumbnail(user.displayAvatarURL({ size: 4096 }))
         .addFields({ name: 'User info', value: userInfo, inline: true });

@@ -1,4 +1,4 @@
-import { TypedEmitter } from '@pat.npm.js/discord-bot-framework';
+import { TypedEmitter } from '../../../TypedEmitter';
 import { readFileSync, writeFileSync } from 'fs';
 
 export type HouseParticipants =

@@ -1,4 +1,4 @@
-import { TypedEmitter } from '@pat.npm.js/discord-bot-framework';
+import { TypedEmitter } from '../../../TypedEmitter';
 export declare type HouseParticipants = 'TIGER' | 'OWL' | 'RAVEN' | 'TURTLE' | 'PANDA';
 export declare type HousePoints = Record<HouseParticipants, number>;
 export interface HousePointManagerEvent {

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HousePointManager = void 0;
-const discord_bot_framework_1 = require("@pat.npm.js/discord-bot-framework");
+const TypedEmitter_1 = require("../../../TypedEmitter");
 const fs_1 = require("fs");
-class HousePointManager extends discord_bot_framework_1.TypedEmitter {
+class HousePointManager extends TypedEmitter_1.TypedEmitter {
     static dir = './housePoints.json';
     get points() {
         return JSON.parse((0, fs_1.readFileSync)(HousePointManager.dir, { encoding: 'utf-8' }));

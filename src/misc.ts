@@ -1,7 +1,20 @@
 import { ActionRowBuilder, EmbedBuilder, Message, MessageActionRowComponentBuilder, SelectMenuBuilder, SelectMenuOptionBuilder, Snowflake } from 'discord.js';
 import { Client } from './client';
 import { House, RoleID } from './Commands/House/house';
-import { HousePoints } from './Commands/House/HousePointManager';
+import { HouseParticipants, HousePoints } from './Commands/House/HousePointManager';
+
+export async function logHousePointChange(client: Client, change: 'assigned' | 'removed', house: HouseParticipants, points: number): Promise<Message<true>> {
+    return new Promise(async (res, rej) => {
+        const channel = await client.channels.fetch(process.env.AUDIT_CHANNEL!);
+
+        if (!channel || !channel.isTextBased() || channel.isDMBased())
+            return rej('Could not fetch channel');
+
+        channel.send({ content: `**${points} points** ${change} ${change === 'assigned' ? 'to' : 'from'} **${House[house]}** <@&${RoleID[house]}>`, allowedMentions: { parse: [] } })
+            .then(res)
+            .catch(rej);
+    });
+}
 
 function houseField(house: string, points: number) {
     return { name: house, value: `${points} points` };
