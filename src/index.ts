@@ -4,11 +4,13 @@ import { config } from 'dotenv';
 
 // Commands
 import { BanCommand as OldBan } from './Commands/ban';
-import { ASSIGN_POINTS_COMMAND, REMOVE_POINTS_COMMAND } from './Commands/House/houseCommands';
+import { ADJUST_POINTS_COMMAND } from './Commands/House/adjustpoints';
 import { HOUSE_COMMAND } from './Commands/House/house';
 import { USER_INFO_COMMAND } from './Commands/New/userinfo';
 import { UnbanCommand } from './Commands/unban';
-import { logHousePointChange, postHousePicker, updateHousePoints } from './misc';
+import { postHousePicker, updateHousePoints } from './misc';
+import { LEADERBOARD } from './Commands/House/leaderboard';
+import { HOUSE_INFO } from './Commands/House/houseInfo';
 
 // dotenv
 config();
@@ -33,23 +35,21 @@ client.once('ready', async ready => {
     );
 
     (ready as Client).addCommands(
+        LEADERBOARD,
         USER_INFO_COMMAND,
         HOUSE_COMMAND,
-        ASSIGN_POINTS_COMMAND,
-        REMOVE_POINTS_COMMAND
+        ADJUST_POINTS_COMMAND,
+        HOUSE_INFO
     );
 
     postHousePicker(ready as Client<true>)
         .then(message => console.debug(`Posted house picker: ${message.id}`))
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
 
-    updateHousePoints(ready as Client, '1017094377690108046', '1027995705438126151', (ready as Client).housePointManager.points).catch(console.debug);
-
-    client.housePointManager.on('update', points => updateHousePoints(ready as Client, '1017094377690108046', '1027995705438126151', points).catch(console.debug));
+    updateHousePoints(ready as Client, '1028280826472955975', '1028281169860628490', (ready as Client).housePointManager.points).catch(console.debug);
 });
 
-client.housePointManager.on('pointsAssigned', (...args) => logHousePointChange(client, 'assigned', ...args).catch(console.debug));
-client.housePointManager.on('pointsRemoved', (...args) => logHousePointChange(client, 'removed', ...args).catch(console.debug));
+client.housePointManager.on('update', points => updateHousePoints(client, '1028280826472955975', '1028281169860628490', points).catch(console.debug));
 
 client.login(process.env.TOKEN);
 

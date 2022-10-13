@@ -6,6 +6,13 @@ export declare enum House {
     TURTLE = "\uD83D\uDC22 Kame House",
     PANDA = "\uD83D\uDC3C Bamboo Forest"
 }
+export declare enum HouseDescription {
+    TIGER = "Competitive, crud central, Fearless, Rage",
+    OWL = "observant, Integrity, judge, They do not speak a lot but when they do, they talk wisely.",
+    RAVEN = "The eye of all eyes, Pure Daily Offenders, can be calm or on crud, depending on the tea or tequila!",
+    TURTLE = "chill, perseverance, otaku, cosplay & hentai enthusiast! (LOT'S OF NOSE BLEEDS)",
+    PANDA = "bashful, emotional, foodie, jokes, sleepy"
+}
 export declare enum RoleID {
     TIGER = "1024014286416261191",
     OWL = "1024014430448660490",

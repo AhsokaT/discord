@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HOUSE_COMMAND = exports.RoleID = exports.House = void 0;
+exports.HOUSE_COMMAND = exports.RoleID = exports.HouseDescription = exports.House = void 0;
 const discord_js_1 = require("discord.js");
 const template_1 = require("../template");
 var House;
@@ -11,6 +11,14 @@ var House;
     House["TURTLE"] = "\uD83D\uDC22 Kame House";
     House["PANDA"] = "\uD83D\uDC3C Bamboo Forest";
 })(House = exports.House || (exports.House = {}));
+var HouseDescription;
+(function (HouseDescription) {
+    HouseDescription["TIGER"] = "Competitive, crud central, Fearless, Rage";
+    HouseDescription["OWL"] = "observant, Integrity, judge, They do not speak a lot but when they do, they talk wisely.";
+    HouseDescription["RAVEN"] = "The eye of all eyes, Pure Daily Offenders, can be calm or on crud, depending on the tea or tequila!";
+    HouseDescription["TURTLE"] = "chill, perseverance, otaku, cosplay & hentai enthusiast! (LOT'S OF NOSE BLEEDS)";
+    HouseDescription["PANDA"] = "bashful, emotional, foodie, jokes, sleepy";
+})(HouseDescription = exports.HouseDescription || (exports.HouseDescription = {}));
 var RoleID;
 (function (RoleID) {
     RoleID["TIGER"] = "1024014286416261191";

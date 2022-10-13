@@ -70,7 +70,7 @@ async function replyWithEmbed(target: User | GuildMember, interaction: Interacti
 
 export const USER_INFO_COMMAND = new Command()
     .addIdentifiers('Information', 'USERINFO')
-    .addGuilds(process.env.DAILY_OFFENDERS!, process.env.AHSOKA!)
+    .addGuilds('509135025560616963')
     .onButton(async interaction => {
         let targetID = interaction.customId.split('_').pop();
 

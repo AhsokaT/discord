@@ -59,7 +59,7 @@ async function replyWithEmbed(target, interaction) {
 }
 exports.USER_INFO_COMMAND = new template_1.Command()
     .addIdentifiers('Information', 'USERINFO')
-    .addGuilds(process.env.DAILY_OFFENDERS, process.env.AHSOKA)
+    .addGuilds('509135025560616963')
     .onButton(async (interaction) => {
     let targetID = interaction.customId.split('_').pop();
     if (!targetID)

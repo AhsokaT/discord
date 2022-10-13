@@ -13,12 +13,17 @@ class Client extends discord_js_1.Client {
         this.on('interactionCreate', interaction => this.receiveInteraction(interaction));
         this.on('interactionCreate', interaction => this.receiveInteractionNew(interaction));
     }
+    fetchDO() {
+        return this.guilds.fetch('509135025560616963');
+    }
     addCommands(...commands) {
         commands.forEach(command => {
             this.newCommands.add(command);
-            command.guilds.forEach(async (id) => {
+            command.guilds.forEach(id => {
                 this.guilds.fetch(id)
-                    .then(guild => command.commandBuilders.forEach(builder => guild.commands.create(builder)))
+                    .then(guild => command.commandBuilders.forEach(builder => {
+                    guild.commands.create(builder).then(appCmd => console.log(`${appCmd.name} ${appCmd.guild?.name}`));
+                }))
                     .catch(console.debug);
             });
         });
@@ -30,15 +35,15 @@ class Client extends discord_js_1.Client {
         return 'commandName' in interaction;
     }
     receiveInteractionNew(interaction) {
-        const command = this.newCommands.find(({ identifiers }) => {
+        const command = this.newCommands.find(command => {
             if (this.hasCustomID(interaction))
-                return identifiers.some(id => interaction.customId.startsWith(id));
+                return command.identifiers.some(id => interaction.customId.split('_').shift() === id);
             if (this.hasCommandName(interaction))
-                return identifiers.includes(interaction.commandName);
+                return command.identifiers.includes(interaction.commandName);
             return false;
         });
         if (!interaction.inCachedGuild())
-            return;
+            return console.debug('Interaction in uncached guild.');
         if (command)
             command.receive(interaction);
     }

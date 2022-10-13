@@ -1,23 +1,28 @@
-import { ActionRowBuilder, EmbedBuilder, Message, MessageActionRowComponentBuilder, SelectMenuBuilder, SelectMenuOptionBuilder, Snowflake } from 'discord.js';
+import { ActionRowBuilder, EmbedBuilder, Message, MessageActionRowComponentBuilder, SelectMenuBuilder, SelectMenuOptionBuilder, Snowflake, TextChannel } from 'discord.js';
 import { Client } from './client';
-import { House, RoleID } from './Commands/House/house';
-import { HouseParticipants, HousePoints } from './Commands/House/HousePointManager';
+import { RoleID } from './Commands/House/house';
+import { HousePoints } from './Commands/House/HousePointManager';
+import { buildLeaderboard } from './Commands/House/leaderboard';
 
-export async function logHousePointChange(client: Client, change: 'assigned' | 'removed', house: HouseParticipants, points: number): Promise<Message<true>> {
-    return new Promise(async (res, rej) => {
-        const channel = await client.channels.fetch(process.env.AUDIT_CHANNEL!);
+export async function sendToLogChannel(client: Client, message: Parameters<TextChannel['send']>[0]): Promise<Message<true>> {
+    return new Promise((res, rej) => {
+        const channelID = process.env.AUDIT_CHANNEL;
 
-        if (!channel || !channel.isTextBased() || channel.isDMBased())
-            return rej('Could not fetch channel');
+        if (!channelID)
+            return rej('process.env.AUDIT_CHANNEL is undefined.');
 
-        channel.send({ content: `**${points} points** ${change} ${change === 'assigned' ? 'to' : 'from'} **${House[house]}** <@&${RoleID[house]}>`, allowedMentions: { parse: [] } })
-            .then(res)
+        client.channels.fetch(channelID)
+            .then(channel => {
+                if (!channel)
+                    return rej('Channel could not be fetched');
+
+                if (!channel.isTextBased() || channel.isDMBased())
+                    return rej('Channel was not text-based or channel was DM-based.');
+
+                channel.send(message).then(res);
+            })
             .catch(rej);
     });
-}
-
-function houseField(house: string, points: number) {
-    return { name: house, value: `${points} points` };
 }
 
 export async function updateHousePoints(client: Client<true>, channelID: Snowflake, messageID: Snowflake, points: HousePoints): Promise<Message<true>> {
@@ -29,14 +34,10 @@ export async function updateHousePoints(client: Client<true>, channelID: Snowfla
 
         const message = await channel.messages.fetch(messageID).catch(console.debug);
 
-        const embed = new EmbedBuilder()
-            .setColor('#2F3136')
-            .addFields(...Object.keys(House).map(house => [House[house], points[house]] as [string, number]).sort((a, b) => b[1] - a[1]).map(data => houseField(...data)));
-
         if (message)
-            message.edit({ embeds: [embed] }).then(res).catch(rej);
+            message.edit({ embeds: [buildLeaderboard(points)] }).then(res).catch(rej);
         else
-            channel.send({ embeds: [embed] }).then(res).catch(rej);
+            channel.send({ embeds: [buildLeaderboard(points)] }).then(res).catch(rej);
     });
 }
 

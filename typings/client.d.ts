@@ -1,4 +1,4 @@
-import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Interaction, Snowflake } from 'discord.js';
+import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Guild, Interaction, Snowflake } from 'discord.js';
 import { Collection } from 'js-augmentations';
 import { HousePointManager } from './Commands/House/HousePointManager';
 import { Command as NewCommand } from './Commands/template';
@@ -13,6 +13,7 @@ export declare class Client<Ready extends boolean = boolean> extends DJSClient<R
     readonly newCommands: Collection<NewCommand<"cached">>;
     readonly housePointManager: HousePointManager;
     constructor(options: ClientOptions);
+    fetchDO(): Promise<Guild>;
     addCommands(...commands: NewCommand[]): void;
     private hasCustomID;
     private hasCommandName;

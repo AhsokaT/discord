@@ -1,35 +1,36 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postHousePicker = exports.updateHousePoints = exports.logHousePointChange = void 0;
+exports.postHousePicker = exports.updateHousePoints = exports.sendToLogChannel = void 0;
 const discord_js_1 = require("discord.js");
 const house_1 = require("./Commands/House/house");
-async function logHousePointChange(client, change, house, points) {
-    return new Promise(async (res, rej) => {
-        const channel = await client.channels.fetch(process.env.AUDIT_CHANNEL);
-        if (!channel || !channel.isTextBased() || channel.isDMBased())
-            return rej('Could not fetch channel');
-        channel.send({ content: `**${points} points** ${change} ${change === 'assigned' ? 'to' : 'from'} **${house_1.House[house]}** <@&${house_1.RoleID[house]}>`, allowedMentions: { parse: [] } })
-            .then(res)
+const leaderboard_1 = require("./Commands/House/leaderboard");
+async function sendToLogChannel(client, message) {
+    return new Promise((res, rej) => {
+        const channelID = process.env.AUDIT_CHANNEL;
+        if (!channelID)
+            return rej('process.env.AUDIT_CHANNEL is undefined.');
+        client.channels.fetch(channelID)
+            .then(channel => {
+            if (!channel)
+                return rej('Channel could not be fetched');
+            if (!channel.isTextBased() || channel.isDMBased())
+                return rej('Channel was not text-based or channel was DM-based.');
+            channel.send(message).then(res);
+        })
             .catch(rej);
     });
 }
-exports.logHousePointChange = logHousePointChange;
-function houseField(house, points) {
-    return { name: house, value: `${points} points` };
-}
+exports.sendToLogChannel = sendToLogChannel;
 async function updateHousePoints(client, channelID, messageID, points) {
     return new Promise(async (res, rej) => {
         const channel = await client.channels.fetch(channelID);
         if (!channel || !channel.isTextBased() || channel.isDMBased())
             return rej('Could not fetch channel');
         const message = await channel.messages.fetch(messageID).catch(console.debug);
-        const embed = new discord_js_1.EmbedBuilder()
-            .setColor('#2F3136')
-            .addFields(...Object.keys(house_1.House).map(house => [house_1.House[house], points[house]]).sort((a, b) => b[1] - a[1]).map(data => houseField(...data)));
         if (message)
-            message.edit({ embeds: [embed] }).then(res).catch(rej);
+            message.edit({ embeds: [(0, leaderboard_1.buildLeaderboard)(points)] }).then(res).catch(rej);
         else
-            channel.send({ embeds: [embed] }).then(res).catch(rej);
+            channel.send({ embeds: [(0, leaderboard_1.buildLeaderboard)(points)] }).then(res).catch(rej);
     });
 }
 exports.updateHousePoints = updateHousePoints;
