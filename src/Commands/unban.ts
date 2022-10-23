@@ -42,7 +42,7 @@ export class UnbanCommand implements Command {
     }
 
     private async audit(unbanned: User, moderator: GuildMember) {
-        let auditChannel = await moderator.guild.channels.fetch(process.env.AUDIT_CHANNEL!)
+        let auditChannel = await moderator.guild.channels.fetch('1025143957186941038')
             .catch(console.debug);
 
         if (!auditChannel || !auditChannel.isTextBased())

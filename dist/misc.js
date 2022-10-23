@@ -6,10 +6,7 @@ const builders_1 = require("./Commands/builders");
 const house_1 = require("./Commands/House/house");
 async function sendToLogChannel(client, message) {
     return new Promise((res, rej) => {
-        const channelID = process.env.AUDIT_CHANNEL;
-        if (!channelID)
-            return rej('process.env.AUDIT_CHANNEL is undefined.');
-        client.channels.fetch(channelID)
+        client.channels.fetch('1025143957186941038')
             .then(channel => {
             if (!channel)
                 return rej('Channel could not be fetched');

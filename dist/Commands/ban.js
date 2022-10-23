@@ -52,7 +52,7 @@ class BanCommand {
         return ['Ban', 'BAN', 'ban'];
     }
     get guilds() {
-        return [process.env.DAILY_OFFENDERS];
+        return ['509135025560616963'];
     }
     get commandBuilders() {
         return [SLASH_COMMAND, USER_CONTEXT_MENU];
@@ -180,7 +180,7 @@ class BanCommand {
             .catch(() => interaction.reply({ content: `❌ I was unable to ban **${member.user.tag}** for an unknown reason`, ephemeral: true }).catch(console.debug));
     }
     async audit(banned, moderator, reason) {
-        let auditChannel = await moderator.guild.channels.fetch(process.env.AUDIT_CHANNEL)
+        let auditChannel = await moderator.guild.channels.fetch('1025143957186941038')
             .catch(console.debug);
         if (!auditChannel || !auditChannel.isTextBased())
             return;

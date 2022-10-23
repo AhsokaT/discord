@@ -70,7 +70,7 @@ export class BanCommand implements Command {
     }
 
     get guilds(): Snowflake[] {
-        return [process.env.DAILY_OFFENDERS!];
+        return ['509135025560616963'];
     }
 
     get commandBuilders(): ApplicationCommandDataResolvable[] {
@@ -243,7 +243,7 @@ export class BanCommand implements Command {
     }
 
     private async audit(banned: GuildMember, moderator: GuildMember, reason: string) {
-        let auditChannel = await moderator.guild.channels.fetch(process.env.AUDIT_CHANNEL!)
+        let auditChannel = await moderator.guild.channels.fetch('1025143957186941038')
             .catch(console.debug);
 
         if (!auditChannel || !auditChannel.isTextBased())

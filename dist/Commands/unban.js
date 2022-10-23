@@ -32,7 +32,7 @@ class UnbanCommand {
             .catch(() => interaction.reply({ content: `User with ID **${targetID}** is not banned from this server`, ephemeral: true }).catch(console.debug));
     }
     async audit(unbanned, moderator) {
-        let auditChannel = await moderator.guild.channels.fetch(process.env.AUDIT_CHANNEL)
+        let auditChannel = await moderator.guild.channels.fetch('1025143957186941038')
             .catch(console.debug);
         if (!auditChannel || !auditChannel.isTextBased())
             return;
