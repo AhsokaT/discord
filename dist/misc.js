@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postHousePicker = exports.updateHousePoints = exports.sendToLogChannel = void 0;
 const discord_js_1 = require("discord.js");
+const builders_1 = require("./Commands/builders");
 const house_1 = require("./Commands/House/house");
-const leaderboard_1 = require("./Commands/House/leaderboard");
 async function sendToLogChannel(client, message) {
     return new Promise((res, rej) => {
         const channelID = process.env.AUDIT_CHANNEL;
@@ -21,16 +21,16 @@ async function sendToLogChannel(client, message) {
     });
 }
 exports.sendToLogChannel = sendToLogChannel;
-async function updateHousePoints(client, channelID, messageID, points) {
+async function updateHousePoints(client, channelID, messageID) {
     return new Promise(async (res, rej) => {
         const channel = await client.channels.fetch(channelID);
         if (!channel || !channel.isTextBased() || channel.isDMBased())
             return rej('Could not fetch channel');
         const message = await channel.messages.fetch(messageID).catch(console.debug);
         if (message)
-            message.edit({ embeds: [(0, leaderboard_1.buildLeaderboard)(points)] }).then(res).catch(rej);
+            message.edit({ embeds: [(0, builders_1.LeaderboardEmbed)(client.housePointManager.sorted)] }).then(res).catch(rej);
         else
-            channel.send({ embeds: [(0, leaderboard_1.buildLeaderboard)(points)] }).then(res).catch(rej);
+            channel.send({ embeds: [(0, builders_1.LeaderboardEmbed)(client.housePointManager.sorted)] }).then(res).catch(rej);
     });
 }
 exports.updateHousePoints = updateHousePoints;

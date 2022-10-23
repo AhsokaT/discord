@@ -1,6 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js';
 import { Client } from '../../client';
 import { sendToLogChannel } from '../../misc';
+import { HouseInfoButton, UserInfoButton } from '../builders';
 import { Command } from '../template';
 import { House, RoleID } from './house';
 import { HouseParticipants } from './HousePointManager';
@@ -39,7 +40,7 @@ export const ADJUST_POINTS_COMMAND = new Command()
         const reason = interaction.options.getString('reason', true);
 
         if (points === 0)
-            return void interaction.reply({ content: '<:NotInvolved:1028806989905678378> What do you expect me to do with zero points?', ephemeral: true }).catch(console.debug);
+            return void interaction.reply({ content: 'What do you expect me to do with zero points?', ephemeral: true }).catch(console.debug);
 
         await interaction.deferReply({ ephemeral: true }).catch(console.debug);
 
@@ -51,14 +52,8 @@ export const ADJUST_POINTS_COMMAND = new Command()
             content,
             components: [
                 new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-                    new ButtonBuilder()
-                        .setLabel(`${points < 0 ? 'Removed' : 'Added'} by`)
-                        .setCustomId(`USERINFO_${interaction.user.id}`)
-                        .setStyle(ButtonStyle.Secondary),
-                    new ButtonBuilder()
-                        .setLabel('House')
-                        .setCustomId(`HOUSEINFO_${house}`)
-                        .setStyle(ButtonStyle.Secondary)
+                    UserInfoButton(interaction.user.id, `${points < 0 ? 'Removed' : 'Added'} by`),
+                    HouseInfoButton(house)
                 )
             ],
             allowedMentions: { parse: [] }

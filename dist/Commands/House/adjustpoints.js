@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ADJUST_POINTS_COMMAND = void 0;
 const discord_js_1 = require("discord.js");
 const misc_1 = require("../../misc");
+const builders_1 = require("../builders");
 const template_1 = require("../template");
 const house_1 = require("./house");
 function houseOption(name) {
@@ -33,20 +34,14 @@ exports.ADJUST_POINTS_COMMAND = new template_1.Command()
     const points = interaction.options.getInteger('points', true);
     const reason = interaction.options.getString('reason', true);
     if (points === 0)
-        return void interaction.reply({ content: '<:NotInvolved:1028806989905678378> What do you expect me to do with zero points?', ephemeral: true }).catch(console.debug);
+        return void interaction.reply({ content: 'What do you expect me to do with zero points?', ephemeral: true }).catch(console.debug);
     await interaction.deferReply({ ephemeral: true }).catch(console.debug);
     interaction.client.housePointManager.adjustPoints(house, points);
     const content = points < 0 ? `**${points * -1} points removed** from <@&${house_1.RoleID[house]}>\n\`• Reason\` ${reason}` : `**${points} points added** to <@&${house_1.RoleID[house]}>\n\`• Reason\` ${reason}`;
     (0, misc_1.sendToLogChannel)(interaction.client, {
         content,
         components: [
-            new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder()
-                .setLabel(`${points < 0 ? 'Removed' : 'Added'} by`)
-                .setCustomId(`USERINFO_${interaction.user.id}`)
-                .setStyle(discord_js_1.ButtonStyle.Secondary), new discord_js_1.ButtonBuilder()
-                .setLabel('House')
-                .setCustomId(`HOUSEINFO_${house}`)
-                .setStyle(discord_js_1.ButtonStyle.Secondary))
+            new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UserInfoButton)(interaction.user.id, `${points < 0 ? 'Removed' : 'Added'} by`), (0, builders_1.HouseInfoButton)(house))
         ],
         allowedMentions: { parse: [] }
     })

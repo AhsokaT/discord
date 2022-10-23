@@ -1,4 +1,6 @@
-import { EmbedBuilder, GuildMember, Interaction, PermissionFlagsBits, User } from 'discord.js';
+import { ButtonBuilder } from '@discordjs/builders';
+import { ActionRowBuilder, ButtonStyle, EmbedBuilder, GuildMember, Interaction, MessageActionRowComponentBuilder, PermissionFlagsBits, Snowflake, User } from 'discord.js';
+import { RoleHouse, RoleID } from '../House/house';
 import { Command } from '../template';
 
 const FLAG_EMOJIS = {
@@ -24,47 +26,78 @@ async function replyWithEmbed(target: User | GuildMember, interaction: Interacti
     let member = target instanceof GuildMember ? target : null;
 
     let userInfo =
-        `**\`> Username\`** ${user.tag}\n` +
-        `**\`> ID\`** ${user.id}\n` +
-        `**\`> Created\`** <t:${Math.round(user.createdTimestamp / 1000)}:R>`;
+        `**\`• Username\`** ${user.tag}\n` +
+        `**\`• ID\`** ${user.id}\n` +
+        `**\`• Created\`** <t:${Math.round(user.createdTimestamp / 1000)}:R>`;
 
     if (member && member.guild.members.me?.permissions.has(PermissionFlagsBits.UseExternalEmojis) || !member) {
         try {
             let flags = user.flags ?? await user.fetchFlags();
 
             if ([...flags].length > 0)
-                userInfo += `\n**\`> Badges\`** ${[...flags].map(flag => FLAG_EMOJIS[flag]).join(' ')}`;
+                userInfo += `\n**\`• Badges\`** ${[...flags].map(flag => FLAG_EMOJIS[flag]).join(' ')}`;
         } catch (err) {
             console.debug(err);
         }
     }
 
     if (user.bot)
-        userInfo += '\n**`> Account`** Bot';
+        userInfo += '\n**`• Account`** Bot';
 
     const embed = new EmbedBuilder()
         .setColor('#2F3136')
+        .setDescription(user.toString())
         .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL({ size: 4096 }) })
         .setThumbnail(user.displayAvatarURL({ size: 4096 }))
         .addFields({ name: 'User info', value: userInfo, inline: true });
 
+    const actionRow = new ActionRowBuilder<MessageActionRowComponentBuilder>()
+        .addComponents(
+            new ButtonBuilder()
+                .setLabel('User avatar')
+                .setStyle(ButtonStyle.Link)
+                .setURL(user.displayAvatarURL({ size: 4096, extension: 'png' }))
+        );
+
     if (member) {
-        let memberInfo = `**\`> Display name\`** ${member.displayName}`;
+        embed.setThumbnail(member.displayAvatarURL({ size: 4096 }));
+
+        if (member.displayAvatarURL({ size: 4096 }) !== user.displayAvatarURL({ size: 4096 }))
+            actionRow.addComponents(
+                new ButtonBuilder()
+                    .setLabel('Server avatar')
+                    .setStyle(ButtonStyle.Link)
+                    .setURL(member.displayAvatarURL({ size: 4096, extension: 'png' }))
+            );
+
+        let memberInfo = `**\`• Display name\`** ${member.displayName}`;
         let guild = member.guild;
 
         if (member.roles.cache.size > 1)
-            memberInfo += `\n**\`> Roles\`** ${member.roles.cache.filter(role => role.id !== guild.id).map(role => role.toString()).join(' ')}`;
+            memberInfo += `\n**\`• Roles\`** ${member.roles.cache.filter(role => role.id !== guild.id).map(role => role.toString()).join(' ')}`;
 
         if (member.joinedTimestamp)
-            memberInfo += `\n**\`> Joined\`** <t:${Math.round(member.joinedTimestamp / 1000)}:R>`;
+            memberInfo += `\n**\`• Joined\`** <t:${Math.round(member.joinedTimestamp / 1000)}:R>`;
 
         embed.addFields({ name: 'Member info', value: memberInfo, inline: true });
+
+        const houseRole = member.roles.cache.find(role => (Object.values(RoleID) as Snowflake[]).includes(role.id));
+
+        if (houseRole)
+            actionRow.addComponents(
+                new ButtonBuilder()
+                    .setLabel('House')
+                    .setCustomId(`HOUSEINFO_${RoleHouse[houseRole.id]}`)
+                    .setStyle(ButtonStyle.Secondary)
+            );
     }
 
-    interaction.reply({
+    return interaction.reply({
         ephemeral: true,
         embeds: [embed],
-        allowedMentions: { parse: [] }
+        components: actionRow.components.length === 0 ? [] : [actionRow],
+        allowedMentions: { parse: [] },
+        fetchReply: true
     });
 }
 

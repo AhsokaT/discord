@@ -23,7 +23,37 @@ export class HousePointManager extends TypedEmitter<HousePointManagerEvent> {
     }
 
     get sorted() {
-        return Object.keys(House).map(name => [House[name], this.points[name]] as [string, number]).sort((a, b) => b[1] - a[1]);
+        return Object.keys(House).map(name => [name, this.points[name]] as [string, number]).sort((a, b) => b[1] - a[1]);
+    }
+
+    get first() {
+        let points = this.sorted[0]![1];
+
+        return this.sorted.filter(house => house[1] === points);
+    }
+
+    get second() {
+        let points = this.sorted[1]![1];
+
+        return this.sorted.filter(house => house[1] === points);
+    }
+
+    get third() {
+        let points = this.sorted[2]![1];
+
+        return this.sorted.filter(house => house[1] === points);
+    }
+
+    get fourth() {
+        let points = this.sorted[3]![1];
+
+        return this.sorted.filter(house => house[1] === points);
+    }
+
+    get fith() {
+        let points = this.sorted[4]![1];
+
+        return this.sorted.filter(house => house[1] === points);
     }
 
     adjustPoints(house: HouseParticipants, points: number) {

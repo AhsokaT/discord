@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HOUSE_COMMAND = exports.RoleID = exports.HouseDescription = exports.House = void 0;
+exports.HOUSE_COMMAND = exports.RoleHouse = exports.RoleID = exports.HouseDescription = exports.House = void 0;
 const discord_js_1 = require("discord.js");
+const misc_1 = require("../../misc");
+const builders_1 = require("../builders");
 const template_1 = require("../template");
 var House;
 (function (House) {
@@ -27,9 +29,19 @@ var RoleID;
     RoleID["TURTLE"] = "1024014510723432478";
     RoleID["PANDA"] = "1024014614536667239";
 })(RoleID = exports.RoleID || (exports.RoleID = {}));
+var RoleHouse;
+(function (RoleHouse) {
+    RoleHouse["1024014286416261191"] = "TIGER";
+    RoleHouse["1024014430448660490"] = "OWL";
+    RoleHouse["1024014477789773965"] = "RAVEN";
+    RoleHouse["1024014510723432478"] = "TURTLE";
+    RoleHouse["1024014614536667239"] = "PANDA";
+})(RoleHouse = exports.RoleHouse || (exports.RoleHouse = {}));
 exports.HOUSE_COMMAND = new template_1.Command()
-    .addIdentifiers('HOUSE', 'HOUSECONFIRM')
+    .addIdentifiers('HOUSE', 'HOUSECONFIRM', 'HOUSEUNSURE')
     .onButton(async (interaction) => {
+    if (interaction.customId === 'HOUSEUNSURE')
+        return void interaction.update({ content: 'No house selected', components: [] }).catch(console.debug);
     if (!interaction.customId.startsWith('HOUSECONFIRM'))
         return;
     const selection = interaction.customId.split('_').pop();
@@ -58,6 +70,14 @@ exports.HOUSE_COMMAND = new template_1.Command()
         return console.error(err);
     }
     interaction.editReply({ content: `You have successfully joined **${House[selection]}**`, components: [] }).catch(console.debug);
+    (0, misc_1.sendToLogChannel)(interaction.client, {
+        content: `${interaction.user} **became ${selection === 'OWL' ? 'an' : 'a'}** <@&${RoleID[selection]}>`,
+        components: [
+            new discord_js_1.ActionRowBuilder()
+                .addComponents((0, builders_1.UserInfoButton)(interaction.user.id, 'Member'), (0, builders_1.HouseInfoButton)(selection))
+        ],
+        allowedMentions: { parse: [] }
+    }).catch(console.debug);
 })
     .onSelectMenu(interaction => {
     const [selection] = interaction.values;
@@ -65,14 +85,17 @@ exports.HOUSE_COMMAND = new template_1.Command()
         console.debug('Select Menu Interaction did not include values');
         return void interaction.reply({ ephemeral: true, content: 'There was an error with your selection' }).catch(console.debug);
     }
-    if (interaction.member.roles.cache.hasAny(...Object.values(RoleID)))
+    if (interaction.member.roles.cache.hasAny(...Object.values(RoleID)) && interaction.member.user.id !== '451448994128723978')
         return void interaction.reply({ content: 'You cannot join another house', ephemeral: true }).catch(console.debug);
     interaction.reply({
         ephemeral: true,
-        content: `Are you sure you want to join **${House[selection]}**? You can dismiss this message if you want to reconsider`,
+        content: `Are you sure you want to join **${House[selection]}**?`,
         components: [
             new discord_js_1.ActionRowBuilder()
                 .addComponents(new discord_js_1.ButtonBuilder()
+                .setStyle(discord_js_1.ButtonStyle.Primary)
+                .setLabel('I\'m not sure yet')
+                .setCustomId(`HOUSEUNSURE`), new discord_js_1.ButtonBuilder()
                 .setStyle(discord_js_1.ButtonStyle.Success)
                 .setLabel('Sign me up!')
                 .setCustomId(`HOUSECONFIRM_${selection}`))

@@ -20,4 +20,11 @@ export declare enum RoleID {
     TURTLE = "1024014510723432478",
     PANDA = "1024014614536667239"
 }
+export declare enum RoleHouse {
+    '1024014286416261191' = "TIGER",
+    '1024014430448660490' = "OWL",
+    '1024014477789773965' = "RAVEN",
+    '1024014510723432478' = "TURTLE",
+    '1024014614536667239' = "PANDA"
+}
 export declare const HOUSE_COMMAND: Command<"cached">;

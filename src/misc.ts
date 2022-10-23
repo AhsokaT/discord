@@ -1,8 +1,7 @@
 import { ActionRowBuilder, EmbedBuilder, Message, MessageActionRowComponentBuilder, SelectMenuBuilder, SelectMenuOptionBuilder, Snowflake, TextChannel } from 'discord.js';
 import { Client } from './client';
+import { LeaderboardEmbed } from './Commands/builders';
 import { RoleID } from './Commands/House/house';
-import { HousePoints } from './Commands/House/HousePointManager';
-import { buildLeaderboard } from './Commands/House/leaderboard';
 
 export async function sendToLogChannel(client: Client, message: Parameters<TextChannel['send']>[0]): Promise<Message<true>> {
     return new Promise((res, rej) => {
@@ -25,7 +24,7 @@ export async function sendToLogChannel(client: Client, message: Parameters<TextC
     });
 }
 
-export async function updateHousePoints(client: Client<true>, channelID: Snowflake, messageID: Snowflake, points: HousePoints): Promise<Message<true>> {
+export async function updateHousePoints(client: Client<true>, channelID: Snowflake, messageID: Snowflake): Promise<Message<true>> {
     return new Promise(async (res, rej) => {
         const channel = await client.channels.fetch(channelID);
 
@@ -35,9 +34,9 @@ export async function updateHousePoints(client: Client<true>, channelID: Snowfla
         const message = await channel.messages.fetch(messageID).catch(console.debug);
 
         if (message)
-            message.edit({ embeds: [buildLeaderboard(points)] }).then(res).catch(rej);
+            message.edit({ embeds: [LeaderboardEmbed(client.housePointManager.sorted)] }).then(res).catch(rej);
         else
-            channel.send({ embeds: [buildLeaderboard(points)] }).then(res).catch(rej);
+            channel.send({ embeds: [LeaderboardEmbed(client.housePointManager.sorted)] }).then(res).catch(rej);
     });
 }
 
@@ -124,7 +123,7 @@ export async function postHousePicker(client: Client<true>): Promise<Message<tru
                             )
                     )
             ]
-        }
+        };
 
         if (message)
             message.edit(payload).then(res).catch(rej);

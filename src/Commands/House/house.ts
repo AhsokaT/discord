@@ -1,5 +1,9 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageActionRowComponentBuilder } from 'discord.js';
+import { Client } from '../../client';
+import { sendToLogChannel } from '../../misc';
+import { HouseInfoButton, UserInfoButton } from '../builders';
 import { Command } from '../template';
+import { HouseParticipants } from './HousePointManager';
 
 export enum House {
     TIGER = '🐯 House of Tiger',
@@ -25,13 +29,24 @@ export enum RoleID {
     PANDA = '1024014614536667239'
 }
 
+export enum RoleHouse {
+    '1024014286416261191' = 'TIGER',
+    '1024014430448660490' = 'OWL',
+    '1024014477789773965' = 'RAVEN',
+    '1024014510723432478' = 'TURTLE',
+    '1024014614536667239' = 'PANDA'
+}
+
 export const HOUSE_COMMAND = new Command()
-    .addIdentifiers('HOUSE', 'HOUSECONFIRM')
+    .addIdentifiers('HOUSE', 'HOUSECONFIRM', 'HOUSEUNSURE')
     .onButton(async interaction => {
+        if (interaction.customId === 'HOUSEUNSURE')
+            return void interaction.update({ content: 'No house selected', components: [] }).catch(console.debug);
+    
         if (!interaction.customId.startsWith('HOUSECONFIRM'))
             return;
 
-        const selection = interaction.customId.split('_').pop();
+        const selection = interaction.customId.split('_').pop() as HouseParticipants | undefined;
 
         if (!selection)
             return console.error('Selection not included in custom ID');
@@ -62,6 +77,15 @@ export const HOUSE_COMMAND = new Command()
         }
 
         interaction.editReply({ content: `You have successfully joined **${House[selection]}**`, components: []}).catch(console.debug);
+
+        sendToLogChannel(interaction.client as Client, {
+            content: `${interaction.user} **became ${selection === 'OWL' ? 'an' : 'a'}** <@&${RoleID[selection]}>`,
+            components: [
+                new ActionRowBuilder<MessageActionRowComponentBuilder>()
+                    .addComponents(UserInfoButton(interaction.user.id, 'Member'), HouseInfoButton(selection))
+            ],
+            allowedMentions: { parse: [] }
+        }).catch(console.debug);
     })
     .onSelectMenu(interaction => {
         const [selection] = interaction.values;
@@ -71,15 +95,19 @@ export const HOUSE_COMMAND = new Command()
             return void interaction.reply({ ephemeral: true, content: 'There was an error with your selection' }).catch(console.debug);
         }
 
-        if (interaction.member.roles.cache.hasAny(...Object.values(RoleID)))
+        if (interaction.member.roles.cache.hasAny(...Object.values(RoleID)) && interaction.member.user.id !== '451448994128723978')
             return void interaction.reply({ content: 'You cannot join another house', ephemeral: true }).catch(console.debug);
 
         interaction.reply({
             ephemeral: true,
-            content: `Are you sure you want to join **${House[selection]}**? You can dismiss this message if you want to reconsider`,
+            content: `Are you sure you want to join **${House[selection]}**?`,
             components: [
                 new ActionRowBuilder<MessageActionRowComponentBuilder>()
                     .addComponents(
+                        new ButtonBuilder()
+                            .setStyle(ButtonStyle.Primary)
+                            .setLabel('I\'m not sure yet')
+                            .setCustomId(`HOUSEUNSURE`),
                         new ButtonBuilder()
                             .setStyle(ButtonStyle.Success)
                             .setLabel('Sign me up!')

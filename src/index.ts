@@ -1,4 +1,4 @@
-import { GatewayIntentBits } from 'discord.js';
+import { ActionRowBuilder, EmbedBuilder, GatewayIntentBits, MessageActionRowComponentBuilder } from 'discord.js';
 import { Client } from './client';
 import { config } from 'dotenv';
 
@@ -8,9 +8,10 @@ import { ADJUST_POINTS_COMMAND } from './Commands/House/adjustpoints';
 import { HOUSE_COMMAND } from './Commands/House/house';
 import { USER_INFO_COMMAND } from './Commands/New/userinfo';
 import { UnbanCommand } from './Commands/unban';
-import { postHousePicker, updateHousePoints } from './misc';
+import { postHousePicker, sendToLogChannel, updateHousePoints } from './misc';
 import { LEADERBOARD } from './Commands/House/leaderboard';
 import { HOUSE_INFO } from './Commands/House/houseInfo';
+import { UserInfoButton } from './Commands/builders';
 
 // dotenv
 config();
@@ -46,10 +47,36 @@ client.once('ready', async ready => {
         .then(message => console.debug(`Posted house picker: ${message.id}`))
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
 
-    updateHousePoints(ready as Client, '1028280826472955975', '1028281169860628490', (ready as Client).housePointManager.points).catch(console.debug);
+    updateHousePoints(ready as Client, '1028280826472955975', '1028281169860628490').catch(console.debug);
+
+    // client.emit('guildMemberRemove', await (await client.guilds.fetch('509135025560616963')).members.fetch('509080069264769026'));
 });
 
-client.housePointManager.on('update', points => updateHousePoints(client, '1028280826472955975', '1028281169860628490', points).catch(console.debug));
+client.housePointManager.on('update', () => updateHousePoints(client, '1028280826472955975', '1028281169860628490').catch(console.debug));
+
+client.on('guildMemberRemove', member => {
+    const embed = new EmbedBuilder()
+        .setColor('#2F3136')
+        .setTitle('Member left')
+        .setAuthor({ name: member.user.tag })
+        .addFields(
+            { name: 'Member', value: member.toString(), inline: true },
+            { name: 'Time', value: `<t:${Math.round(Date.now() / 1000)}:R>`, inline: true }
+        );
+
+    if (member.joinedTimestamp)
+        embed.addFields({ name: 'Joined', value: `<t:${Math.round(member.joinedTimestamp / 1000)}:R>`, inline: true });
+
+    sendToLogChannel(client, {
+        embeds: [embed],
+        components: [
+            new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(UserInfoButton(member.user.id))
+        ],
+        allowedMentions: { parse: [] }
+    })
+    .then(message => setTimeout(() => message.delete(), 25_000))
+    .catch(console.debug);
+});
 
 client.login(process.env.TOKEN);
 

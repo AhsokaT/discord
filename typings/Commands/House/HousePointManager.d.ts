@@ -8,5 +8,10 @@ export declare class HousePointManager extends TypedEmitter<HousePointManagerEve
     static dir: string;
     get points(): HousePoints;
     get sorted(): [string, number][];
+    get first(): [string, number][];
+    get second(): [string, number][];
+    get third(): [string, number][];
+    get fourth(): [string, number][];
+    get fith(): [string, number][];
     adjustPoints(house: HouseParticipants, points: number): HousePoints;
 }

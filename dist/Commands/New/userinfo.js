@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.USER_INFO_COMMAND = void 0;
+const builders_1 = require("@discordjs/builders");
 const discord_js_1 = require("discord.js");
+const house_1 = require("../House/house");
 const template_1 = require("../template");
 const FLAG_EMOJIS = {
     'VerifiedDeveloper': '<:VERIFIED_DEVELOPER:766737559174119454>',
@@ -22,39 +24,59 @@ async function replyWithEmbed(target, interaction) {
         return;
     let user = target instanceof discord_js_1.User ? target : target.user;
     let member = target instanceof discord_js_1.GuildMember ? target : null;
-    let userInfo = `**\`> Username\`** ${user.tag}\n` +
-        `**\`> ID\`** ${user.id}\n` +
-        `**\`> Created\`** <t:${Math.round(user.createdTimestamp / 1000)}:R>`;
+    let userInfo = `**\`• Username\`** ${user.tag}\n` +
+        `**\`• ID\`** ${user.id}\n` +
+        `**\`• Created\`** <t:${Math.round(user.createdTimestamp / 1000)}:R>`;
     if (member && member.guild.members.me?.permissions.has(discord_js_1.PermissionFlagsBits.UseExternalEmojis) || !member) {
         try {
             let flags = user.flags ?? await user.fetchFlags();
             if ([...flags].length > 0)
-                userInfo += `\n**\`> Badges\`** ${[...flags].map(flag => FLAG_EMOJIS[flag]).join(' ')}`;
+                userInfo += `\n**\`• Badges\`** ${[...flags].map(flag => FLAG_EMOJIS[flag]).join(' ')}`;
         }
         catch (err) {
             console.debug(err);
         }
     }
     if (user.bot)
-        userInfo += '\n**`> Account`** Bot';
+        userInfo += '\n**`• Account`** Bot';
     const embed = new discord_js_1.EmbedBuilder()
         .setColor('#2F3136')
+        .setDescription(user.toString())
         .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL({ size: 4096 }) })
         .setThumbnail(user.displayAvatarURL({ size: 4096 }))
         .addFields({ name: 'User info', value: userInfo, inline: true });
+    const actionRow = new discord_js_1.ActionRowBuilder()
+        .addComponents(new builders_1.ButtonBuilder()
+        .setLabel('User avatar')
+        .setStyle(discord_js_1.ButtonStyle.Link)
+        .setURL(user.displayAvatarURL({ size: 4096, extension: 'png' })));
     if (member) {
-        let memberInfo = `**\`> Display name\`** ${member.displayName}`;
+        embed.setThumbnail(member.displayAvatarURL({ size: 4096 }));
+        if (member.displayAvatarURL({ size: 4096 }) !== user.displayAvatarURL({ size: 4096 }))
+            actionRow.addComponents(new builders_1.ButtonBuilder()
+                .setLabel('Server avatar')
+                .setStyle(discord_js_1.ButtonStyle.Link)
+                .setURL(member.displayAvatarURL({ size: 4096, extension: 'png' })));
+        let memberInfo = `**\`• Display name\`** ${member.displayName}`;
         let guild = member.guild;
         if (member.roles.cache.size > 1)
-            memberInfo += `\n**\`> Roles\`** ${member.roles.cache.filter(role => role.id !== guild.id).map(role => role.toString()).join(' ')}`;
+            memberInfo += `\n**\`• Roles\`** ${member.roles.cache.filter(role => role.id !== guild.id).map(role => role.toString()).join(' ')}`;
         if (member.joinedTimestamp)
-            memberInfo += `\n**\`> Joined\`** <t:${Math.round(member.joinedTimestamp / 1000)}:R>`;
+            memberInfo += `\n**\`• Joined\`** <t:${Math.round(member.joinedTimestamp / 1000)}:R>`;
         embed.addFields({ name: 'Member info', value: memberInfo, inline: true });
+        const houseRole = member.roles.cache.find(role => Object.values(house_1.RoleID).includes(role.id));
+        if (houseRole)
+            actionRow.addComponents(new builders_1.ButtonBuilder()
+                .setLabel('House')
+                .setCustomId(`HOUSEINFO_${house_1.RoleHouse[houseRole.id]}`)
+                .setStyle(discord_js_1.ButtonStyle.Secondary));
     }
-    interaction.reply({
+    return interaction.reply({
         ephemeral: true,
         embeds: [embed],
-        allowedMentions: { parse: [] }
+        components: actionRow.components.length === 0 ? [] : [actionRow],
+        allowedMentions: { parse: [] },
+        fetchReply: true
     });
 }
 exports.USER_INFO_COMMAND = new template_1.Command()
