@@ -1,9 +1,9 @@
-import { ActionRowBuilder, EmbedBuilder, Message, MessageActionRowComponentBuilder, SelectMenuBuilder, SelectMenuOptionBuilder, Snowflake, TextChannel } from 'discord.js';
+import { ActionRowBuilder, EmbedBuilder, Message, MessageActionRowComponentBuilder, SelectMenuBuilder, SelectMenuOptionBuilder, Snowflake, TextChannel, Client as DJSClient } from 'discord.js';
 import { Client } from './client';
 import { LeaderboardEmbed } from './Commands/builders';
 import { RoleID } from './Commands/House/house';
 
-export async function sendToLogChannel(client: Client, message: Parameters<TextChannel['send']>[0]): Promise<Message<true>> {
+export async function sendToLogChannel(client: DJSClient, message: Parameters<TextChannel['send']>[0]): Promise<Message<true>> {
     return new Promise((res, rej) => {
         client.channels.fetch('1025143957186941038')
             .then(channel => {

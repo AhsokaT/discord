@@ -12,17 +12,20 @@ const unban_1 = require("./Commands/unban");
 const misc_1 = require("./misc");
 const leaderboard_1 = require("./Commands/House/leaderboard");
 const houseInfo_1 = require("./Commands/House/houseInfo");
-const builders_1 = require("./Commands/builders");
+const guildMemberRemove_1 = require("./Events/guildMemberRemove");
 // dotenv
 (0, dotenv_1.config)();
+const events = [guildMemberRemove_1.guildMemberRemove];
 const client = new client_1.Client({
     presence: { status: 'idle' },
     intents: [
         discord_js_1.GatewayIntentBits.Guilds,
         discord_js_1.GatewayIntentBits.GuildMessages,
-        discord_js_1.GatewayIntentBits.GuildBans
+        discord_js_1.GatewayIntentBits.GuildBans,
+        discord_js_1.GatewayIntentBits.GuildInvites
     ]
 });
+events.forEach(event => client.on(event.event, event.listener));
 client.on('ready', ready => console.debug(`${ready.user.tag} is online!`));
 client.once('ready', async (ready) => ready.guilds.fetch().then(guilds => guilds.forEach(guild => console.log(guild.name))));
 client.once('ready', async (ready) => {
@@ -35,23 +38,5 @@ client.once('ready', async (ready) => {
     // client.emit('guildMemberRemove', await (await client.guilds.fetch('509135025560616963')).members.fetch('509080069264769026'));
 });
 client.housePointManager.on('update', () => (0, misc_1.updateHousePoints)(client, '1028280826472955975', '1028281169860628490').catch(console.debug));
-client.on('guildMemberRemove', member => {
-    const embed = new discord_js_1.EmbedBuilder()
-        .setColor('#2F3136')
-        .setTitle('Member left')
-        .setAuthor({ name: member.user.tag })
-        .addFields({ name: 'Member', value: member.toString(), inline: true }, { name: 'Time', value: `<t:${Math.round(Date.now() / 1000)}:R>`, inline: true });
-    if (member.joinedTimestamp)
-        embed.addFields({ name: 'Joined', value: `<t:${Math.round(member.joinedTimestamp / 1000)}:R>`, inline: true });
-    (0, misc_1.sendToLogChannel)(client, {
-        embeds: [embed],
-        components: [
-            new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UserInfoButton)(member.user.id))
-        ],
-        allowedMentions: { parse: [] }
-    })
-        .then(message => setTimeout(() => message.delete(), 25_000))
-        .catch(console.debug);
-});
 client.login(process.env.TOKEN);
 process.on('unhandledRejection', console.error);
