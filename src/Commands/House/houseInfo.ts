@@ -1,7 +1,7 @@
 import { EmbedBuilder } from 'discord.js';
 import { Client } from '../../client';
 import { Command } from '../template';
-import { House, HouseDescription, RoleID } from './house';
+import { House, HouseDescription, RoleID } from './housePicker';
 
 const Ordinal = {
     1: '1st',
@@ -29,7 +29,7 @@ export const HOUSE_INFO = new Command()
 
         position = pointManager.sorted.map(([name]) => name).indexOf(houses[0][0]);
 
-        const value = houses.length > 1 ? `Joint **${Ordinal[position + 1]}** with ${houses.filter(([name]) => name !== house).map(([name]) => `<@&${RoleID[name]}>`).join(', ')}` : `**${Ordinal[position + 1]}** with **${pointManager.points[house]} points**`;
+        const value = houses.length > 1 ? `Joint **${Ordinal[position + 1]}** with ${houses.filter(([name]) => name !== house).map(([name]) => `<@&${RoleID[name]}>`).join(', ')}` : `**${Ordinal[position + 1]}** with **${pointManager.cache[house]} points**`;
 
         const embed = new EmbedBuilder()
             .setColor('#2F3136')

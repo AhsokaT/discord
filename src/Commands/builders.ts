@@ -1,13 +1,18 @@
 import { ButtonBuilder, ButtonStyle, EmbedBuilder, Snowflake } from 'discord.js';
-import { House } from './House/house';
-import { HouseParticipants } from './House/HousePointManager';
+import { House } from './House/housePicker';
+import { HouseID } from './House/HousePointManager';
 
 export const UserInfoButton = (user: Snowflake, label = 'User') => new ButtonBuilder()
     .setCustomId(`USERINFO_${user}`)
     .setStyle(ButtonStyle.Primary)
     .setLabel(label);
 
-export const HouseInfoButton = (house: HouseParticipants, label = 'House') => new ButtonBuilder()
+export const LeaderboardButton = (label = 'Leaderboard') => new ButtonBuilder()
+    .setCustomId('LEADERBOARD')
+    .setStyle(ButtonStyle.Primary)
+    .setLabel(label);
+
+export const HouseInfoButton = (house: HouseID, label = 'House') => new ButtonBuilder()
     .setCustomId(`HOUSEINFO_${house}`)
     .setStyle(ButtonStyle.Primary)
     .setLabel(label);

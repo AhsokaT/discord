@@ -3,7 +3,7 @@ import { Client } from '../../client';
 import { sendToLogChannel } from '../../misc';
 import { HouseInfoButton, UserInfoButton } from '../builders';
 import { Command } from '../template';
-import { HouseParticipants } from './HousePointManager';
+import { HouseID } from './HousePointManager';
 
 export enum House {
     TIGER = '🐯 House of Tiger',
@@ -46,7 +46,7 @@ export const HOUSE_COMMAND = new Command()
         if (!interaction.customId.startsWith('HOUSECONFIRM'))
             return;
 
-        const selection = interaction.customId.split('_').pop() as HouseParticipants | undefined;
+        const selection = interaction.customId.split('_').pop() as HouseID | undefined;
 
         if (!selection)
             return console.error('Selection not included in custom ID');
@@ -100,7 +100,7 @@ export const HOUSE_COMMAND = new Command()
 
         interaction.reply({
             ephemeral: true,
-            content: `Are you sure you want to join **${House[selection]}**?`,
+            content: `Are you sure you want to join **${House[selection]}**? Once you join, you cannot change your house`,
             components: [
                 new ActionRowBuilder<MessageActionRowComponentBuilder>()
                     .addComponents(

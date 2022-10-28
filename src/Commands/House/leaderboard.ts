@@ -8,12 +8,14 @@ const SLASH_COMMAND = new SlashCommandBuilder()
     .setDescription('See who\'s ahead in the house competitions');
 
 export const LEADERBOARD = new Command()
-    .addIdentifiers('leaderboard')
+    .addIdentifiers('leaderboard', 'LEADERBOARD')
     .addBuilders(SLASH_COMMAND)
     .addGuilds('509135025560616963')
-    .onChatInputCommand(interaction => {
-        interaction.reply({
-            embeds: [LeaderboardEmbed((interaction.client as Client).housePointManager.sorted)],
-            ephemeral: true
-        }).catch(console.debug);
-    });
+    .onButton(interaction => interaction.reply({
+        embeds: [LeaderboardEmbed((interaction.client as Client).housePointManager.sorted)],
+        ephemeral: true
+    }).catch(console.debug))
+    .onChatInputCommand(interaction => interaction.reply({
+        embeds: [LeaderboardEmbed((interaction.client as Client).housePointManager.sorted)],
+        ephemeral: true
+    }).catch(console.debug));

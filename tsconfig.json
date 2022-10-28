@@ -11,7 +11,7 @@
         "checkJs": true,
         "experimentalDecorators": true,
         "strictNullChecks": true,
-        "strictPropertyInitialization": false,
+        "strictPropertyInitialization": true,
         "removeComments": false,
         "target": "ESNext",
         "moduleResolution": "Node",

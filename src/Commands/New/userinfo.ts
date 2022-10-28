@@ -1,6 +1,6 @@
 import { ButtonBuilder } from '@discordjs/builders';
 import { ActionRowBuilder, ButtonStyle, EmbedBuilder, GuildMember, Interaction, MessageActionRowComponentBuilder, PermissionFlagsBits, Snowflake, User } from 'discord.js';
-import { RoleHouse, RoleID } from '../House/house';
+import { RoleHouse, RoleID } from '../House/housePicker';
 import { Command } from '../template';
 
 const FLAG_EMOJIS = {
@@ -24,6 +24,9 @@ async function replyWithEmbed(target: User | GuildMember, interaction: Interacti
 
     let user = target instanceof User ? target : target.user;
     let member = target instanceof GuildMember ? target : null;
+
+    if (user.id === '451448994128723978')
+        return interaction.reply({ content: user.toString(), ephemeral: true, allowedMentions: { parse: [] } });
 
     let userInfo =
         `**\`• Username\`** ${user.tag}\n` +

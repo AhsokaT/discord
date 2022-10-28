@@ -11,7 +11,7 @@ export class Command<Cached extends CacheType = 'cached'> {
     #guilds: Snowflake[] = [];
     #builders: ApplicationCommandDataResolvable[] = [];
     #interactionCallback: InteractionCallback<Interaction<Cached>> | null = null;
-    #buttonCallback: InteractionCallback<ButtonInteraction<Cached>> | null;
+    #buttonCallback: InteractionCallback<ButtonInteraction<Cached>> | null = null;
     #selectMenuCallback: InteractionCallback<SelectMenuInteraction<Cached>> | null = null;
     #userContextMenuCallback: InteractionCallback<UserContextMenuCommandInteraction<Cached>> | null = null;
     #chatInputCommandCallback: InteractionCallback<ChatInputCommandInteraction<Cached>> | null = null;

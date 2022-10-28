@@ -1,7 +1,8 @@
-import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Guild, Interaction, Snowflake } from 'discord.js';
+import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Guild, Interaction, Message, Snowflake, TextBasedChannel, TextChannel } from 'discord.js';
 import { Collection } from 'js-augmentations';
 import { HousePointManager } from './Commands/House/HousePointManager';
 import { Command as NewCommand } from './Commands/template';
+import { DataBaseManager } from './DataBase/DataBase';
 
 export interface Command {
     receive(interaction: Interaction<'cached'>): void;
@@ -13,10 +14,14 @@ export interface Command {
 export class Client<Ready extends boolean = boolean> extends DJSClient<Ready> {
     readonly commands = new Collection<Command>();
     readonly newCommands = new Collection<NewCommand>();
-    readonly housePointManager = new HousePointManager();
+    readonly housePointManager: HousePointManager;
+    readonly database: DataBaseManager;
 
-    constructor(options: ClientOptions) {
+    constructor(options: ClientOptions & { mongoURL: string; }) {
         super(options);
+
+        this.database = new DataBaseManager(options.mongoURL);
+        this.housePointManager = new HousePointManager(this);
 
         this.on('interactionCreate', interaction => this.receiveInteraction(interaction));
         this.on('interactionCreate', interaction => this.receiveInteractionNew(interaction));
@@ -26,15 +31,60 @@ export class Client<Ready extends boolean = boolean> extends DJSClient<Ready> {
         return this.guilds.fetch('509135025560616963');
     }
 
+    fetchCompetitionChannel() {
+        return new Promise<TextBasedChannel>(async (res, rej) => {
+            const channel = await this.channels.fetch('1028280826472955975');
+
+            if (!channel || !channel.isTextBased())
+                rej('Channel could not be fetched or channel was not text-based.');
+            else
+                res(channel);
+        });
+    }
+
+    fetchLogChannel() {
+        return new Promise<TextBasedChannel>(async (res, rej) => {
+            const channel = await this.channels.fetch('1025143957186941038');
+
+            if (!channel || !channel.isTextBased())
+                rej('Channel could not be fetched or channel was not text-based.');
+            else
+                res(channel);
+        });
+    }
+
+    async sendToCompetitionsChannel(content: Parameters<TextChannel['send']>[0]) {
+        const channel = await this.fetchCompetitionChannel();
+
+        if (channel && channel.isTextBased())
+            return channel.send(content);
+
+        throw Error('Unable to fetch competitions channel.');
+    }
+
+    async sendToLogChannel(message: Parameters<TextChannel['send']>[0]): Promise<Message<true>> {
+        return new Promise((res, rej) => {
+            this.fetchLogChannel()
+                .then(channel => {
+                    if (!channel)
+                        return rej('Channel could not be fetched');
+    
+                    if (!channel.isTextBased() || channel.isDMBased())
+                        return rej('Channel was not text-based or channel was DM-based.');
+    
+                    channel.send(message).then(res);
+                })
+                .catch(rej);
+        });
+    }
+
     addCommands(...commands: NewCommand[]) {
         commands.forEach(command => {
             this.newCommands.add(command);
 
             command.guilds.forEach(id => {
                 this.guilds.fetch(id)
-                    .then(guild => command.commandBuilders.forEach(builder => {
-                        guild.commands.create(builder).then(appCmd => console.log(`${appCmd.name} ${appCmd.guild?.name}`));
-                    }))
+                    .then(guild => command.commandBuilders.forEach(builder => guild.commands.create(builder)))
                     .catch(console.debug);
             });
         });

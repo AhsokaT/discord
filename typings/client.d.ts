@@ -1,7 +1,8 @@
-import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Guild, Interaction, Snowflake } from 'discord.js';
+import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Guild, Interaction, Message, Snowflake, TextBasedChannel, TextChannel } from 'discord.js';
 import { Collection } from 'js-augmentations';
 import { HousePointManager } from './Commands/House/HousePointManager';
 import { Command as NewCommand } from './Commands/template';
+import { DataBaseManager } from './DataBase/DataBase';
 export interface Command {
     receive(interaction: Interaction<'cached'>): void;
     get names(): string[];
@@ -12,8 +13,15 @@ export declare class Client<Ready extends boolean = boolean> extends DJSClient<R
     readonly commands: Collection<Command>;
     readonly newCommands: Collection<NewCommand<"cached">>;
     readonly housePointManager: HousePointManager;
-    constructor(options: ClientOptions);
+    readonly database: DataBaseManager;
+    constructor(options: ClientOptions & {
+        mongoURL: string;
+    });
     fetchDO(): Promise<Guild>;
+    fetchCompetitionChannel(): Promise<TextBasedChannel>;
+    fetchLogChannel(): Promise<TextBasedChannel>;
+    sendToCompetitionsChannel(content: Parameters<TextChannel['send']>[0]): Promise<Message<true> | Message<false>>;
+    sendToLogChannel(message: Parameters<TextChannel['send']>[0]): Promise<Message<true>>;
     addCommands(...commands: NewCommand[]): void;
     private hasCustomID;
     private hasCommandName;
