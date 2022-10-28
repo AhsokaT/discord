@@ -91,7 +91,7 @@ export const HOUSE_POINTS = new Command()
                     LeaderboardButton()
                 )
             ]
-        }).then(message => setTimeout(() => message.delete(), 10_000)).catch(console.debug);
+        }).catch(console.debug);
 
         client.sendToCompetitionsChannel({
             content: logMessage,
@@ -102,5 +102,5 @@ export const HOUSE_POINTS = new Command()
                     LeaderboardButton()
                 )
             ]
-        }).then(message => setTimeout(() => message.delete(), 10_000)).catch(console.debug);
+        }).catch(console.debug);
     });

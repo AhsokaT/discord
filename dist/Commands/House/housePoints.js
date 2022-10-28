@@ -67,12 +67,12 @@ exports.HOUSE_POINTS = new template_1.Command()
         components: [
             new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UserInfoButton)(interaction.user.id, 'Changed by'), (0, builders_1.LeaderboardButton)())
         ]
-    }).then(message => setTimeout(() => message.delete(), 10_000)).catch(console.debug);
+    }).catch(console.debug);
     client.sendToCompetitionsChannel({
         content: logMessage,
         allowedMentions: { parse: [] },
         components: [
             new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UserInfoButton)(interaction.user.id, 'Changed by'), (0, builders_1.LeaderboardButton)())
         ]
-    }).then(message => setTimeout(() => message.delete(), 10_000)).catch(console.debug);
+    }).catch(console.debug);
 });
