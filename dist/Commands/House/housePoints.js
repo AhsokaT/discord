@@ -6,7 +6,6 @@ const DataBase_1 = require("../../DataBase/DataBase");
 const builders_1 = require("../builders");
 const template_1 = require("../template");
 const housePicker_1 = require("./housePicker");
-const housePicker_2 = require("./housePicker");
 const SLASH_COMMAND = new discord_js_1.SlashCommandBuilder()
     .setName('housepoints')
     .setDescription('Add or remove points from any house')
@@ -58,7 +57,7 @@ exports.HOUSE_POINTS = new template_1.Command()
     const logMessage = Object.keys(housePicker_1.House).reduce((acc, house) => {
         const change = interaction.options.getInteger(house.toLowerCase() + 's');
         if (change)
-            return acc + `\n<@&${housePicker_2.RoleID[house]}> **\`${before[house]} -> ${client.housePointManager.cache[house]}\`** ${change < 0 ? change * -1 : change} points ${change > 0 ? 'added' : 'removed'}`;
+            return acc + `\n<@&${housePicker_1.RoleID[house]}> **\`${before[house]} -> ${client.housePointManager.cache[house]}\`** ${change < 0 ? change * -1 : change} points ${change > 0 ? 'added' : 'removed'}`;
         return acc;
     }, '');
     client.sendToLogChannel({

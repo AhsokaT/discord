@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HOUSE_COMMAND = exports.RoleHouse = exports.RoleID = exports.HouseDescription = exports.House = void 0;
+exports.HOUSE_COMMAND = exports.RoleHouse = exports.RoleID = exports.HouseDescription = exports.HouseEmoji = exports.House = void 0;
 const discord_js_1 = require("discord.js");
-const misc_1 = require("../../misc");
+const client_1 = require("../../client");
 const builders_1 = require("../builders");
 const template_1 = require("../template");
 var House;
@@ -13,6 +13,14 @@ var House;
     House["TURTLE"] = "\uD83D\uDC22 Kame House";
     House["PANDA"] = "\uD83D\uDC3C Bamboo Forest";
 })(House = exports.House || (exports.House = {}));
+var HouseEmoji;
+(function (HouseEmoji) {
+    HouseEmoji["TIGER"] = "\uD83D\uDC2F";
+    HouseEmoji["OWL"] = "\uD83E\uDD89";
+    HouseEmoji["RAVEN"] = "\uD83D\uDC41\uFE0F";
+    HouseEmoji["TURTLE"] = "\uD83D\uDC22";
+    HouseEmoji["PANDA"] = "\uD83D\uDC3C";
+})(HouseEmoji = exports.HouseEmoji || (exports.HouseEmoji = {}));
 var HouseDescription;
 (function (HouseDescription) {
     HouseDescription["TIGER"] = "Competitive, crud central, Fearless, Rage";
@@ -70,7 +78,7 @@ exports.HOUSE_COMMAND = new template_1.Command()
         return console.error(err);
     }
     interaction.editReply({ content: `You have successfully joined **${House[selection]}**`, components: [] }).catch(console.debug);
-    (0, misc_1.sendToLogChannel)(interaction.client, {
+    interaction.client.sendToLogChannel({
         content: `${interaction.user} **became ${selection === 'OWL' ? 'an' : 'a'}** <@&${RoleID[selection]}>`,
         components: [
             new discord_js_1.ActionRowBuilder()
@@ -78,6 +86,13 @@ exports.HOUSE_COMMAND = new template_1.Command()
         ],
         allowedMentions: { parse: [] }
     }).catch(console.debug);
+    const channel = await interaction.guild.channels.fetch(client_1.ChannelID[selection]).catch(console.debug);
+    if (channel && channel.isTextBased())
+        channel.send(`<@&${RoleID[selection]}> ${interaction.user} **has joined the house!** Give them a warm welcome! :smile:`)
+            .then(message => {
+            message.react('🥳');
+            message.react(HouseEmoji[selection]);
+        }).catch(console.debug);
 })
     .onSelectMenu(interaction => {
     const [selection] = interaction.values;

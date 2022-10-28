@@ -6,6 +6,13 @@ export declare enum House {
     TURTLE = "\uD83D\uDC22 Kame House",
     PANDA = "\uD83D\uDC3C Bamboo Forest"
 }
+export declare enum HouseEmoji {
+    TIGER = "\uD83D\uDC2F",
+    OWL = "\uD83E\uDD89",
+    RAVEN = "\uD83D\uDC41\uFE0F",
+    TURTLE = "\uD83D\uDC22",
+    PANDA = "\uD83D\uDC3C"
+}
 export declare enum HouseDescription {
     TIGER = "Competitive, crud central, Fearless, Rage",
     OWL = "observant, Integrity, judge, They do not speak a lot but when they do, they talk wisely.",

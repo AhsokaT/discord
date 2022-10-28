@@ -37,7 +37,7 @@ events.forEach(event => client.on(event.event, event.listener));
 
 client.on('ready', ready => {
     console.debug(`${ready.user.tag} is online!`);
-    ready.guilds.fetch().then(guilds => guilds.forEach(guild => console.log(guild.name)));
+    // ready.guilds.fetch().then(guilds => guilds.forEach(guild => console.log(guild.name)));
 });
 
 client.once('ready', async () => {

@@ -1,11 +1,9 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js';
 import { Client } from '../../client';
 import { MongoClientStatus } from '../../DataBase/DataBase';
-import { sendToLogChannel } from '../../misc';
 import { LeaderboardButton, UserInfoButton } from '../builders';
 import { Command } from '../template';
-import { House } from './housePicker';
-import { RoleID } from './housePicker';
+import { House, RoleID } from './housePicker';
 
 const SLASH_COMMAND = new SlashCommandBuilder()
     .setName('housepoints')

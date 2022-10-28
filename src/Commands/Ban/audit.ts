@@ -1,6 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, GuildMember, Message, MessageActionRowComponentBuilder } from 'discord.js';
 import { Client } from '../../client';
-import { sendToLogChannel } from '../../misc';
 import { buildBanRevokeButton } from './builders';
 
 export function audit(banned: GuildMember, moderator: GuildMember, reason: string): Promise<Message<true>> {
@@ -18,7 +17,7 @@ export function audit(banned: GuildMember, moderator: GuildMember, reason: strin
     if (reason)
         embed.addFields({ name: 'Reason', value: reason });
 
-    return sendToLogChannel(moderator.client as Client, {
+    return (moderator.client as Client).sendToLogChannel({
         components: [
             new ActionRowBuilder<MessageActionRowComponentBuilder>()
                 .addComponents(buildBanRevokeButton(banned))

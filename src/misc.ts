@@ -1,22 +1,6 @@
 import { ActionRowBuilder, Message, MessageActionRowComponentBuilder, SelectMenuBuilder, SelectMenuOptionBuilder, TextChannel, Client as DJSClient } from 'discord.js';
 import { Client } from './client';
 
-export async function sendToLogChannel(client: DJSClient, message: Parameters<TextChannel['send']>[0]): Promise<Message<true>> {
-    return new Promise((res, rej) => {
-        client.channels.fetch('1025143957186941038')
-            .then(channel => {
-                if (!channel)
-                    return rej('Channel could not be fetched');
-
-                if (!channel.isTextBased() || channel.isDMBased())
-                    return rej('Channel was not text-based or channel was DM-based.');
-
-                channel.send(message).then(res);
-            })
-            .catch(rej);
-    });
-}
-
 export async function postHousePicker(client: Client<true>): Promise<Message<true>> {
     return new Promise(async (res, rej) => {
         const channel = await client.channels.fetch('961986228926963732')

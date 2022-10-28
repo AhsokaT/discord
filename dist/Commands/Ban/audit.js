@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.audit = void 0;
 const discord_js_1 = require("discord.js");
-const misc_1 = require("../../misc");
 const builders_1 = require("./builders");
 function audit(banned, moderator, reason) {
     const embed = new discord_js_1.EmbedBuilder()
@@ -13,7 +12,7 @@ function audit(banned, moderator, reason) {
         .setFooter({ text: `Banned user ID ${banned.id}\nModerator ID ${moderator.id}` });
     if (reason)
         embed.addFields({ name: 'Reason', value: reason });
-    return (0, misc_1.sendToLogChannel)(moderator.client, {
+    return moderator.client.sendToLogChannel({
         components: [
             new discord_js_1.ActionRowBuilder()
                 .addComponents((0, builders_1.buildBanRevokeButton)(banned))

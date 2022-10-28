@@ -1,6 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageActionRowComponentBuilder } from 'discord.js';
-import { Client } from '../../client';
-import { sendToLogChannel } from '../../misc';
+import { ChannelID, Client } from '../../client';
 import { HouseInfoButton, UserInfoButton } from '../builders';
 import { Command } from '../template';
 import { HouseID } from './HousePointManager';
@@ -11,6 +10,14 @@ export enum House {
     RAVEN = '👁️ The Ravens',
     TURTLE = '🐢 Kame House',
     PANDA = '🐼 Bamboo Forest'
+}
+
+export enum HouseEmoji {
+    TIGER = '🐯',
+    OWL = '🦉',
+    RAVEN = '👁️',
+    TURTLE = '🐢',
+    PANDA = '🐼'
 }
 
 export enum HouseDescription {
@@ -78,7 +85,7 @@ export const HOUSE_COMMAND = new Command()
 
         interaction.editReply({ content: `You have successfully joined **${House[selection]}**`, components: []}).catch(console.debug);
 
-        sendToLogChannel(interaction.client as Client, {
+        (interaction.client as Client).sendToLogChannel({
             content: `${interaction.user} **became ${selection === 'OWL' ? 'an' : 'a'}** <@&${RoleID[selection]}>`,
             components: [
                 new ActionRowBuilder<MessageActionRowComponentBuilder>()
@@ -86,6 +93,15 @@ export const HOUSE_COMMAND = new Command()
             ],
             allowedMentions: { parse: [] }
         }).catch(console.debug);
+
+        const channel = await interaction.guild.channels.fetch(ChannelID[selection]).catch(console.debug);
+
+        if (channel && channel.isTextBased())
+            channel.send(`<@&${RoleID[selection]}> ${interaction.user} **has joined the house!** Give them a warm welcome! :smile:`)
+                .then(message => {
+                    message.react('🥳');
+                    message.react(HouseEmoji[selection]);
+                }).catch(console.debug);
     })
     .onSelectMenu(interaction => {
         const [selection] = interaction.values;

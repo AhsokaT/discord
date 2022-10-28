@@ -1,10 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Client = void 0;
+exports.Client = exports.ChannelID = void 0;
 const discord_js_1 = require("discord.js");
 const js_augmentations_1 = require("js-augmentations");
 const HousePointManager_1 = require("./Commands/House/HousePointManager");
 const DataBase_1 = require("./DataBase/DataBase");
+var ChannelID;
+(function (ChannelID) {
+    ChannelID["Logs"] = "1025143957186941038";
+    ChannelID["Competitions"] = "1028280826472955975";
+    ChannelID["RAVEN"] = "1023373249733738536";
+    ChannelID["TIGER"] = "1023372920170483713";
+    ChannelID["OWL"] = "1023373108389883979";
+    ChannelID["TURTLE"] = "1023373586465046528";
+    ChannelID["PANDA"] = "1023373723551666296";
+})(ChannelID = exports.ChannelID || (exports.ChannelID = {}));
 class Client extends discord_js_1.Client {
     commands = new js_augmentations_1.Collection();
     newCommands = new js_augmentations_1.Collection();
@@ -22,7 +32,7 @@ class Client extends discord_js_1.Client {
     }
     fetchCompetitionChannel() {
         return new Promise(async (res, rej) => {
-            const channel = await this.channels.fetch('1028280826472955975');
+            const channel = await this.channels.fetch(ChannelID.Competitions);
             if (!channel || !channel.isTextBased())
                 rej('Channel could not be fetched or channel was not text-based.');
             else
@@ -31,7 +41,7 @@ class Client extends discord_js_1.Client {
     }
     fetchLogChannel() {
         return new Promise(async (res, rej) => {
-            const channel = await this.channels.fetch('1025143957186941038');
+            const channel = await this.channels.fetch(ChannelID.Logs);
             if (!channel || !channel.isTextBased())
                 rej('Channel could not be fetched or channel was not text-based.');
             else

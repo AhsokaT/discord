@@ -1,21 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postHousePicker = exports.sendToLogChannel = void 0;
+exports.postHousePicker = void 0;
 const discord_js_1 = require("discord.js");
-async function sendToLogChannel(client, message) {
-    return new Promise((res, rej) => {
-        client.channels.fetch('1025143957186941038')
-            .then(channel => {
-            if (!channel)
-                return rej('Channel could not be fetched');
-            if (!channel.isTextBased() || channel.isDMBased())
-                return rej('Channel was not text-based or channel was DM-based.');
-            channel.send(message).then(res);
-        })
-            .catch(rej);
-    });
-}
-exports.sendToLogChannel = sendToLogChannel;
 async function postHousePicker(client) {
     return new Promise(async (res, rej) => {
         const channel = await client.channels.fetch('961986228926963732')

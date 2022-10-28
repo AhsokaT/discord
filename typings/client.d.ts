@@ -9,6 +9,15 @@ export interface Command {
     get guilds(): Snowflake[];
     get commandBuilders(): ApplicationCommandDataResolvable[];
 }
+export declare enum ChannelID {
+    Logs = "1025143957186941038",
+    Competitions = "1028280826472955975",
+    RAVEN = "1023373249733738536",
+    TIGER = "1023372920170483713",
+    OWL = "1023373108389883979",
+    TURTLE = "1023373586465046528",
+    PANDA = "1023373723551666296"
+}
 export declare class Client<Ready extends boolean = boolean> extends DJSClient<Ready> {
     readonly commands: Collection<Command>;
     readonly newCommands: Collection<NewCommand<"cached">>;
