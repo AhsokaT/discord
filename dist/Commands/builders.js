@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LeaderboardEmbed = exports.BanButton = exports.RevokeBanButton = exports.HouseInfoButton = exports.LeaderboardButton = exports.UndoChangesButton = exports.UserInfoButton = exports.buildChangesMessage = void 0;
+exports.LeaderboardEmbed = exports.BanButton = exports.RevokeBanButton = exports.HouseInfoButton = exports.LeaderboardButton = exports.UndoChangesButton = exports.UserInfoButton = exports.UpdateLeaderboardButton = exports.buildChangesMessage = void 0;
 const discord_js_1 = require("discord.js");
 const housePicker_1 = require("./House/housePicker");
 function buildChangesMessage(before, after) {
@@ -12,6 +12,11 @@ function buildChangesMessage(before, after) {
     }, '');
 }
 exports.buildChangesMessage = buildChangesMessage;
+const UpdateLeaderboardButton = (label = 'Refresh') => new discord_js_1.ButtonBuilder()
+    .setCustomId('UPDATELEADERBOARD')
+    .setStyle(discord_js_1.ButtonStyle.Primary)
+    .setLabel(label);
+exports.UpdateLeaderboardButton = UpdateLeaderboardButton;
 const UserInfoButton = (user, label = 'User') => new discord_js_1.ButtonBuilder()
     .setCustomId(`USERINFO_${user}`)
     .setStyle(discord_js_1.ButtonStyle.Primary)
@@ -47,6 +52,6 @@ function houseEmbedField(house, points) {
 }
 const LeaderboardEmbed = (sorted) => new discord_js_1.EmbedBuilder()
     .setColor('#2F3136')
-    .setTimestamp()
+    .setDescription(`Updated <t:${Math.round(Date.now() / 1000)}:T>`)
     .addFields(...sorted.map(([name, points]) => [housePicker_1.House[name], points]).map(data => houseEmbedField(...data)));
 exports.LeaderboardEmbed = LeaderboardEmbed;

@@ -13,6 +13,11 @@ export function buildChangesMessage(before: HousePoints, after: HousePoints) {
     }, '');
 }
 
+export const UpdateLeaderboardButton = (label = 'Refresh') => new ButtonBuilder()
+    .setCustomId('UPDATELEADERBOARD')
+    .setStyle(ButtonStyle.Primary)
+    .setLabel(label);
+
 export const UserInfoButton = (user: Snowflake, label = 'User') => new ButtonBuilder()
     .setCustomId(`USERINFO_${user}`)
     .setStyle(ButtonStyle.Primary)
@@ -49,5 +54,5 @@ function houseEmbedField(house: string, points: number) {
 
 export const LeaderboardEmbed = (sorted: [string, number][]) => new EmbedBuilder()
     .setColor('#2F3136')
-    .setTimestamp()
+    .setDescription(`Updated <t:${Math.round(Date.now() / 1000)}:T>`)
     .addFields(...sorted.map(([name, points]) => [House[name], points] as [string, number]).map(data => houseEmbedField(...data)));

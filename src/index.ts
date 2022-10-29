@@ -8,7 +8,7 @@ import { HOUSE_COMMAND } from './Commands/House/housePicker';
 import { USER_INFO_COMMAND } from './Commands/New/userinfo';
 import { UnbanCommand } from './Commands/unban';
 import { postHousePicker } from './misc';
-import { LEADERBOARD } from './Commands/House/leaderboard';
+import { LEADERBOARD, UPDATE_LEADERBOARD } from './Commands/House/leaderboard';
 import { HOUSE_INFO } from './Commands/House/houseInfo';
 import { guildMemberRemove } from './Events/guildMemberRemove';
 import { HOUSE_POINTS, UNDO_POINTS } from './Commands/House/housePoints';
@@ -52,7 +52,8 @@ client.once('ready', async () => {
         HOUSE_COMMAND,
         HOUSE_INFO,
         HOUSE_POINTS,
-        UNDO_POINTS
+        UNDO_POINTS,
+        UPDATE_LEADERBOARD
     );
 
     postHousePicker(client)

@@ -36,7 +36,7 @@ client.on('ready', ready => {
 });
 client.once('ready', async () => {
     client.registerCommands(new ban_1.BanCommand(), new unban_1.UnbanCommand());
-    client.addCommands(leaderboard_1.LEADERBOARD, userinfo_1.USER_INFO_COMMAND, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, housePoints_1.UNDO_POINTS);
+    client.addCommands(leaderboard_1.LEADERBOARD, userinfo_1.USER_INFO_COMMAND, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, housePoints_1.UNDO_POINTS, leaderboard_1.UPDATE_LEADERBOARD);
     (0, misc_1.postHousePicker)(client)
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
     // client.emit('guildMemberRemove', await (await client.guilds.fetch('509135025560616963')).members.fetch('509080069264769026'));
