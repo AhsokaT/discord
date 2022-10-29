@@ -23,21 +23,21 @@ export class HousePointManager extends TypedEmitter<HousePointManagerEvent> {
         super();
 
         this.client = client;
-        this.cache = { 'OWL': 0, 'PANDA': 0, 'TIGER': 0, 'RAVEN': 0, 'TURTLE': 0 };
+        this.cache = { OWL: 0, PANDA: 0, TIGER: 0, RAVEN: 0, TURTLE: 0 };
         this.initCache()
             .catch(console.debug);
     }
 
     private async initCache() {
         this.cache = await this.client.database.fetchAll();
+
+        return this.cache;
     }
 
     async addPoints(house: HouseID, points: number, closeConnection = true) {
         await this.client.database.edit(house, { points: this.cache[house] + points }, closeConnection);
 
-        await this.initCache();
-
-        return this.cache;
+        return this.initCache();
     }
 
     get sorted() {

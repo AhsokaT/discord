@@ -1,10 +1,26 @@
 import { ButtonBuilder, ButtonStyle, EmbedBuilder, Snowflake } from 'discord.js';
-import { House } from './House/housePicker';
-import { HouseID } from './House/HousePointManager';
+import { House, RoleID } from './House/housePicker';
+import { HouseID, HousePoints } from './House/HousePointManager';
+
+export function buildChangesMessage(before: HousePoints, after: HousePoints) {
+    return Object.keys(House).reduce((acc, house) => {
+        if (before[house] === after[house])
+            return acc;
+
+        const diff = Math.abs(before[house] - after[house]);
+
+        return acc + `\n<@&${RoleID[house]}> **\`${before[house]} -> ${after[house]}\`** ${diff} points ${before[house] < after[house] ? 'added' : 'removed'}`;
+    }, '');
+}
 
 export const UserInfoButton = (user: Snowflake, label = 'User') => new ButtonBuilder()
     .setCustomId(`USERINFO_${user}`)
     .setStyle(ButtonStyle.Primary)
+    .setLabel(label);
+
+export const UndoChangesButton = (changes: string, label = 'Undo changes') => new ButtonBuilder()
+    .setCustomId(`UNDO_${changes}`)
+    .setStyle(ButtonStyle.Danger)
     .setLabel(label);
 
 export const LeaderboardButton = (label = 'Leaderboard') => new ButtonBuilder()

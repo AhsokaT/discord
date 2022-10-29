@@ -92,7 +92,8 @@ exports.HOUSE_COMMAND = new template_1.Command()
             .then(message => {
             message.react('🥳');
             message.react(HouseEmoji[selection]);
-        }).catch(console.debug);
+        })
+            .catch(console.debug);
 })
     .onSelectMenu(interaction => {
     const [selection] = interaction.values;

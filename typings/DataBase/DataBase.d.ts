@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 import { HouseID, HousePoints } from '../Commands/House/HousePointManager';
-interface Document {
+interface HouseDocument {
     _id: string;
     points: number;
 }
@@ -13,8 +13,10 @@ export declare class DataBaseManager {
     status: MongoClientStatus;
     constructor(mongoURL: string);
     get database(): import("mongodb").Db;
-    get collection(): import("mongodb").Collection<Document>;
-    edit(id: HouseID, data: Partial<Omit<Document, '_id'>>, closeConnection?: boolean): Promise<Document | null>;
+    get collection(): import("mongodb").Collection<HouseDocument>;
+    closeConnection(): Promise<void>;
+    openConnection(): Promise<void>;
+    edit(id: HouseID, data: Partial<Omit<HouseDocument, '_id'>>, closeConnection?: boolean): Promise<HouseDocument | null>;
     fetch<House extends HouseID>(id: House): Promise<number | null>;
     fetchAll(): Promise<HousePoints>;
 }

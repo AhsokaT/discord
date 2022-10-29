@@ -11,17 +11,17 @@ class HousePointManager extends TypedEmitter_1.TypedEmitter {
         super();
         this.client = client;
         this.client = client;
-        this.cache = { 'OWL': 0, 'PANDA': 0, 'TIGER': 0, 'RAVEN': 0, 'TURTLE': 0 };
+        this.cache = { OWL: 0, PANDA: 0, TIGER: 0, RAVEN: 0, TURTLE: 0 };
         this.initCache()
             .catch(console.debug);
     }
     async initCache() {
         this.cache = await this.client.database.fetchAll();
+        return this.cache;
     }
     async addPoints(house, points, closeConnection = true) {
         await this.client.database.edit(house, { points: this.cache[house] + points }, closeConnection);
-        await this.initCache();
-        return this.cache;
+        return this.initCache();
     }
     get sorted() {
         return Object.keys(housePicker_1.House).map(name => [name, this.cache[name]]).sort((a, b) => b[1] - a[1]);

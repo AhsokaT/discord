@@ -1,9 +1,9 @@
-import { ActionRowBuilder, MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, MessageActionRowComponentBuilder, SlashCommandBuilder, messageLink } from 'discord.js';
 import { Client } from '../../client';
-import { MongoClientStatus } from '../../DataBase/DataBase';
-import { LeaderboardButton, UserInfoButton } from '../builders';
+import { buildChangesMessage, LeaderboardButton, LeaderboardEmbed, UndoChangesButton, UserInfoButton } from '../builders';
 import { Command } from '../template';
 import { House, RoleID } from './housePicker';
+import { HousePoints } from './HousePointManager';
 
 const SLASH_COMMAND = new SlashCommandBuilder()
     .setName('housepoints')
@@ -28,6 +28,46 @@ const SLASH_COMMAND = new SlashCommandBuilder()
         .setName('turtles')
         .setDescription('The number of points to add or remove')
     );
+
+export const UNDO_POINTS = new Command()
+    .addIdentifiers('UNDO')
+    .onButton(async interaction => {
+        await interaction.update({ components: [] }).catch(console.debug);
+
+        const client = interaction.client as Client;
+        const changes = JSON.parse(interaction.customId.split('_')[1]) as HousePoints;
+        const before = client.housePointManager.cache;
+
+        if (changes.TIGER)
+            await client.housePointManager.addPoints('TIGER', -changes.TIGER, false);
+
+        if (changes.OWL)
+            await client.housePointManager.addPoints('OWL', -changes.OWL, false);
+
+        if (changes.RAVEN)
+            await client.housePointManager.addPoints('RAVEN', -changes.RAVEN, false);
+
+        if (changes.TURTLE)
+            await client.housePointManager.addPoints('TURTLE', -changes.TURTLE, false);
+
+        if (changes.PANDA)
+            await client.housePointManager.addPoints('PANDA', -changes.PANDA, false);
+
+        client.database.closeConnection().catch(console.debug);
+
+        interaction.editReply({
+            content: buildChangesMessage(before, client.housePointManager.cache),
+            components: [
+                new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(UndoChangesButton(JSON.stringify({
+                    TIGER: -changes.TIGER,
+                    OWL: -changes.OWL,
+                    RAVEN: -changes.RAVEN,
+                    TURTLE: -changes.TURTLE,
+                    PANDA: -changes.PANDA
+                }), interaction.component.label?.startsWith('Undo') ? 'Redo changes' : 'Undo changes'))
+            ]
+        }).catch(console.debug);
+    });
 
 export const HOUSE_POINTS = new Command()
     .addIdentifiers('housepoints')
@@ -63,25 +103,23 @@ export const HOUSE_POINTS = new Command()
         if (pandas)
             await client.housePointManager.addPoints('PANDA', pandas, false);
 
-        if (client.database.status === MongoClientStatus.Connected) {
-            client.database.client.close();
+        client.database.closeConnection().catch(console.debug);
 
-            client.database.status = MongoClientStatus.Disconnected;
-        }
-
-        interaction.editReply('👍 **Changes applied**').catch(console.debug);
-
-        const logMessage = Object.keys(House).reduce((acc, house) => {
-            const change = interaction.options.getInteger(house.toLowerCase() + 's');
-
-            if (change)
-                return acc + `\n<@&${RoleID[house]}> **\`${before[house]} -> ${client.housePointManager.cache[house]}\`** ${change < 0 ? change * -1 : change} points ${change > 0 ? 'added' : 'removed'}`;
-
-            return acc;
-        }, '');
+        interaction.editReply({
+            content: buildChangesMessage(before, client.housePointManager.cache),
+            components: [
+                new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(UndoChangesButton(JSON.stringify({
+                    TIGER: tigers,
+                    OWL: owls,
+                    RAVEN: ravens,
+                    TURTLE: turtles,
+                    PANDA: pandas
+                })))
+            ]
+        }).catch(console.debug);
 
         client.sendToLogChannel({
-            content: logMessage,
+            content: buildChangesMessage(before, client.housePointManager.cache),
             allowedMentions: { parse: [] },
             components: [
                 new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
@@ -92,7 +130,7 @@ export const HOUSE_POINTS = new Command()
         }).catch(console.debug);
 
         client.sendToCompetitionsChannel({
-            content: logMessage,
+            content: buildChangesMessage(before, client.housePointManager.cache),
             allowedMentions: { parse: [] },
             components: [
                 new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(

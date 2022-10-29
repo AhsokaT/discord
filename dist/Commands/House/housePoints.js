@@ -1,11 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HOUSE_POINTS = void 0;
+exports.HOUSE_POINTS = exports.UNDO_POINTS = void 0;
 const discord_js_1 = require("discord.js");
-const DataBase_1 = require("../../DataBase/DataBase");
 const builders_1 = require("../builders");
 const template_1 = require("../template");
-const housePicker_1 = require("./housePicker");
 const SLASH_COMMAND = new discord_js_1.SlashCommandBuilder()
     .setName('housepoints')
     .setDescription('Add or remove points from any house')
@@ -24,6 +22,37 @@ const SLASH_COMMAND = new discord_js_1.SlashCommandBuilder()
     .addIntegerOption(option => option
     .setName('turtles')
     .setDescription('The number of points to add or remove'));
+exports.UNDO_POINTS = new template_1.Command()
+    .addIdentifiers('UNDO')
+    .onButton(async (interaction) => {
+    await interaction.update({ components: [] }).catch(console.debug);
+    const client = interaction.client;
+    const changes = JSON.parse(interaction.customId.split('_')[1]);
+    const before = client.housePointManager.cache;
+    if (changes.TIGER)
+        await client.housePointManager.addPoints('TIGER', -changes.TIGER, false);
+    if (changes.OWL)
+        await client.housePointManager.addPoints('OWL', -changes.OWL, false);
+    if (changes.RAVEN)
+        await client.housePointManager.addPoints('RAVEN', -changes.RAVEN, false);
+    if (changes.TURTLE)
+        await client.housePointManager.addPoints('TURTLE', -changes.TURTLE, false);
+    if (changes.PANDA)
+        await client.housePointManager.addPoints('PANDA', -changes.PANDA, false);
+    client.database.closeConnection().catch(console.debug);
+    interaction.editReply({
+        content: (0, builders_1.buildChangesMessage)(before, client.housePointManager.cache),
+        components: [
+            new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UndoChangesButton)(JSON.stringify({
+                TIGER: -changes.TIGER,
+                OWL: -changes.OWL,
+                RAVEN: -changes.RAVEN,
+                TURTLE: -changes.TURTLE,
+                PANDA: -changes.PANDA
+            }), interaction.component.label?.startsWith('Undo') ? 'Redo changes' : 'Undo changes'))
+        ]
+    }).catch(console.debug);
+});
 exports.HOUSE_POINTS = new template_1.Command()
     .addIdentifiers('housepoints')
     .addBuilders(SLASH_COMMAND)
@@ -49,26 +78,28 @@ exports.HOUSE_POINTS = new template_1.Command()
         await client.housePointManager.addPoints('TURTLE', turtles, false);
     if (pandas)
         await client.housePointManager.addPoints('PANDA', pandas, false);
-    if (client.database.status === DataBase_1.MongoClientStatus.Connected) {
-        client.database.client.close();
-        client.database.status = DataBase_1.MongoClientStatus.Disconnected;
-    }
-    interaction.editReply('👍 **Changes applied**').catch(console.debug);
-    const logMessage = Object.keys(housePicker_1.House).reduce((acc, house) => {
-        const change = interaction.options.getInteger(house.toLowerCase() + 's');
-        if (change)
-            return acc + `\n<@&${housePicker_1.RoleID[house]}> **\`${before[house]} -> ${client.housePointManager.cache[house]}\`** ${change < 0 ? change * -1 : change} points ${change > 0 ? 'added' : 'removed'}`;
-        return acc;
-    }, '');
+    client.database.closeConnection().catch(console.debug);
+    interaction.editReply({
+        content: (0, builders_1.buildChangesMessage)(before, client.housePointManager.cache),
+        components: [
+            new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UndoChangesButton)(JSON.stringify({
+                TIGER: tigers,
+                OWL: owls,
+                RAVEN: ravens,
+                TURTLE: turtles,
+                PANDA: pandas
+            })))
+        ]
+    }).catch(console.debug);
     client.sendToLogChannel({
-        content: logMessage,
+        content: (0, builders_1.buildChangesMessage)(before, client.housePointManager.cache),
         allowedMentions: { parse: [] },
         components: [
             new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UserInfoButton)(interaction.user.id, 'Changed by'), (0, builders_1.LeaderboardButton)())
         ]
     }).catch(console.debug);
     client.sendToCompetitionsChannel({
-        content: logMessage,
+        content: (0, builders_1.buildChangesMessage)(before, client.housePointManager.cache),
         allowedMentions: { parse: [] },
         components: [
             new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UserInfoButton)(interaction.user.id, 'Changed by'), (0, builders_1.LeaderboardButton)())

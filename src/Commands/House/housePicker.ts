@@ -101,7 +101,8 @@ export const HOUSE_COMMAND = new Command()
                 .then(message => {
                     message.react('🥳');
                     message.react(HouseEmoji[selection]);
-                }).catch(console.debug);
+                })
+                .catch(console.debug);
     })
     .onSelectMenu(interaction => {
         const [selection] = interaction.values;

@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb';
 import { HouseID, HousePoints } from '../Commands/House/HousePointManager';
 
-interface Document {
+interface HouseDocument {
     _id: string;
     points: number;
 }
@@ -25,41 +25,42 @@ export class DataBaseManager {
     }
 
     get collection() {
-        return this.database.collection<Document>('Houses');
+        return this.database.collection<HouseDocument>('Houses');
     }
 
-    async edit(id: HouseID, data: Partial<Omit<Document, '_id'>>, closeConnection = true): Promise<Document | null> {
-        if (this.status === MongoClientStatus.Disconnected) {
-            await this.client.connect();
-
-            this.status = MongoClientStatus.Connected;
-        }
-
-        let updated = await this.collection.findOneAndUpdate({ _id: id }, { $set: data });
-
-        if (closeConnection && this.status === MongoClientStatus.Connected) {
-            await this.client.close();
-
-            this.status = MongoClientStatus.Disconnected;
-        }
-
-        return updated.value;
-    }
-
-    async fetch<House extends HouseID>(id: House): Promise<number | null> {
-        if (this.status === MongoClientStatus.Disconnected) {
-            await this.client.connect();
-
-            this.status = MongoClientStatus.Connected;
-        }
-
-        const document = await this.collection.findOne({ _id: id });
-
+    async closeConnection() {
         if (this.status === MongoClientStatus.Connected) {
             await this.client.close();
 
             this.status = MongoClientStatus.Disconnected;
         }
+    }
+
+    async openConnection() {
+        if (this.status === MongoClientStatus.Disconnected) {
+            await this.client.connect();
+
+            this.status = MongoClientStatus.Connected;
+        }
+    }
+
+    async edit(id: HouseID, data: Partial<Omit<HouseDocument, '_id'>>, closeConnection = true): Promise<HouseDocument | null> {
+        await this.openConnection();
+
+        let updated = await this.collection.findOneAndUpdate({ _id: id }, { $set: data });
+
+        if (closeConnection)
+            await this.closeConnection();
+
+        return updated.value;
+    }
+
+    async fetch<House extends HouseID>(id: House): Promise<number | null> {
+        await this.openConnection();
+
+        const document = await this.collection.findOne({ _id: id });
+
+        await this.closeConnection();
 
         return document ? document.points : null;
     }
@@ -73,21 +74,13 @@ export class DataBaseManager {
             'TURTLE': 0
         };
 
-        if (this.status === MongoClientStatus.Disconnected) {
-            await this.client.connect();
-
-            this.status = MongoClientStatus.Connected;
-        }
+        await this.openConnection();
 
         const documents = await this.collection.find().toArray();
 
         documents.forEach(document => record[document._id] = document.points);
 
-        if (this.status === MongoClientStatus.Connected) {
-            await this.client.close();
-
-            this.status = MongoClientStatus.Disconnected;
-        }
+        await this.closeConnection();
 
         return record;
     }
