@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postHousePicker = void 0;
 const discord_js_1 = require("discord.js");
+const housePicker_1 = require("./Commands/House/housePicker");
 async function postHousePicker(client) {
     return new Promise(async (res, rej) => {
         const channel = await client.channels.fetch('961986228926963732')
@@ -19,26 +20,26 @@ async function postHousePicker(client) {
                     .setCustomId('HOUSE')
                     .setPlaceholder('Choose your house!')
                     .addOptions(new discord_js_1.SelectMenuOptionBuilder()
-                    .setLabel('House of Tiger')
+                    .setLabel(housePicker_1.House.TIGER)
                     .setValue('TIGER')
                     .setEmoji('🐯')
-                    .setDescription('Competitive, crud central, Fearless, Rage'), new discord_js_1.SelectMenuOptionBuilder()
-                    .setLabel('100 Acre Wood')
+                    .setDescription(housePicker_1.HouseDescription.TIGER), new discord_js_1.SelectMenuOptionBuilder()
+                    .setLabel(housePicker_1.House.OWL)
                     .setValue('OWL')
                     .setEmoji('🦉')
-                    .setDescription('Observant, integrity, judge'), new discord_js_1.SelectMenuOptionBuilder()
-                    .setLabel('The Ravens')
+                    .setDescription(housePicker_1.HouseDescription.OWL), new discord_js_1.SelectMenuOptionBuilder()
+                    .setLabel(housePicker_1.House.RAVEN)
                     .setValue('RAVEN')
                     .setEmoji('👁️')
-                    .setDescription('The eye of all eyes, Pure Daily Offenders'), new discord_js_1.SelectMenuOptionBuilder()
-                    .setLabel('Kame House')
+                    .setDescription(housePicker_1.HouseDescription.RAVEN), new discord_js_1.SelectMenuOptionBuilder()
+                    .setLabel(housePicker_1.House.TURTLE)
                     .setValue('TURTLE')
                     .setEmoji('🐢')
-                    .setDescription('chill, perseverance, otaku, cosplay & hentai enthusiast!'), new discord_js_1.SelectMenuOptionBuilder()
-                    .setLabel('Bamboo Forest')
+                    .setDescription(housePicker_1.HouseDescription.TURTLE), new discord_js_1.SelectMenuOptionBuilder()
+                    .setLabel(housePicker_1.House.PANDA)
                     .setValue('PANDA')
                     .setEmoji('🐼')
-                    .setDescription('bashful, emotional, foodie, jokes, sleepy')))
+                    .setDescription(housePicker_1.HouseDescription.PANDA)))
             ]
         };
         if (message)

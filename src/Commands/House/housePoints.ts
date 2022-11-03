@@ -1,8 +1,7 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, SlashCommandBuilder, messageLink } from 'discord.js';
 import { Client } from '../../client';
-import { buildChangesMessage, LeaderboardButton, LeaderboardEmbed, UndoChangesButton, UserInfoButton } from '../builders';
+import { buildChangesMessage, LeaderboardButton, UndoChangesButton, UserInfoButton } from '../builders';
 import { Command } from '../template';
-import { House, RoleID } from './housePicker';
 import { HousePoints } from './HousePointManager';
 
 const SLASH_COMMAND = new SlashCommandBuilder()

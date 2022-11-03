@@ -5,11 +5,11 @@ import { Command } from '../template';
 import { HouseID } from './HousePointManager';
 
 export enum House {
-    TIGER = '🐯 House of Tiger',
-    OWL = '🦉 100 Acre Wood',
-    RAVEN = '👁️ The Ravens',
-    TURTLE = '🐢 Kame House',
-    PANDA = '🐼 Bamboo Forest'
+    TIGER = 'Tiger Terror Squad',
+    OWL = 'Court of Owls',
+    RAVEN = 'The Ravens',
+    TURTLE = 'Kame House',
+    PANDA = 'Pandamonium'
 }
 
 export enum HouseEmoji {
@@ -24,8 +24,8 @@ export enum HouseDescription {
     TIGER = 'Competitive, crud central, Fearless, Rage',
     OWL = 'observant, Integrity, judge, They do not speak a lot but when they do, they talk wisely.',
     RAVEN = 'The eye of all eyes, Pure Daily Offenders, can be calm or on crud, depending on the tea or tequila!',
-    TURTLE = 'chill, perseverance, otaku, cosplay & hentai enthusiast! (LOT\'S OF NOSE BLEEDS)',
-    PANDA = 'bashful, emotional, foodie, jokes, sleepy'
+    TURTLE = 'chill, perseverance, otaku, cosplay(LOT\'S OF NOSE BLEEDS), gamers and tech enthusiast! ',
+    PANDA = 'bashful, emotional, foodie, jokes, sleepy, knowledgeable.'
 }
 
 export enum RoleID {
@@ -117,7 +117,8 @@ export const HOUSE_COMMAND = new Command()
 
         interaction.reply({
             ephemeral: true,
-            content: `Are you sure you want to join **${House[selection]}**? Once you join, you cannot change your house`,
+            content: `Are you sure you want to join **${House[selection]}** <@&${RoleID[selection]}>? Once you join, you cannot change your house`,
+            allowedMentions: { parse: [] },
             components: [
                 new ActionRowBuilder<MessageActionRowComponentBuilder>()
                     .addComponents(

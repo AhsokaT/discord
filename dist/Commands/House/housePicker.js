@@ -7,11 +7,11 @@ const builders_1 = require("../builders");
 const template_1 = require("../template");
 var House;
 (function (House) {
-    House["TIGER"] = "\uD83D\uDC2F House of Tiger";
-    House["OWL"] = "\uD83E\uDD89 100 Acre Wood";
-    House["RAVEN"] = "\uD83D\uDC41\uFE0F The Ravens";
-    House["TURTLE"] = "\uD83D\uDC22 Kame House";
-    House["PANDA"] = "\uD83D\uDC3C Bamboo Forest";
+    House["TIGER"] = "Tiger Terror Squad";
+    House["OWL"] = "Court of Owls";
+    House["RAVEN"] = "The Ravens";
+    House["TURTLE"] = "Kame House";
+    House["PANDA"] = "Pandamonium";
 })(House = exports.House || (exports.House = {}));
 var HouseEmoji;
 (function (HouseEmoji) {
@@ -26,8 +26,8 @@ var HouseDescription;
     HouseDescription["TIGER"] = "Competitive, crud central, Fearless, Rage";
     HouseDescription["OWL"] = "observant, Integrity, judge, They do not speak a lot but when they do, they talk wisely.";
     HouseDescription["RAVEN"] = "The eye of all eyes, Pure Daily Offenders, can be calm or on crud, depending on the tea or tequila!";
-    HouseDescription["TURTLE"] = "chill, perseverance, otaku, cosplay & hentai enthusiast! (LOT'S OF NOSE BLEEDS)";
-    HouseDescription["PANDA"] = "bashful, emotional, foodie, jokes, sleepy";
+    HouseDescription["TURTLE"] = "chill, perseverance, otaku, cosplay(LOT'S OF NOSE BLEEDS), gamers and tech enthusiast! ";
+    HouseDescription["PANDA"] = "bashful, emotional, foodie, jokes, sleepy, knowledgeable.";
 })(HouseDescription = exports.HouseDescription || (exports.HouseDescription = {}));
 var RoleID;
 (function (RoleID) {
@@ -105,7 +105,8 @@ exports.HOUSE_COMMAND = new template_1.Command()
         return void interaction.reply({ content: 'You cannot join another house', ephemeral: true }).catch(console.debug);
     interaction.reply({
         ephemeral: true,
-        content: `Are you sure you want to join **${House[selection]}**? Once you join, you cannot change your house`,
+        content: `Are you sure you want to join **${House[selection]}** <@&${RoleID[selection]}>? Once you join, you cannot change your house`,
+        allowedMentions: { parse: [] },
         components: [
             new discord_js_1.ActionRowBuilder()
                 .addComponents(new discord_js_1.ButtonBuilder()

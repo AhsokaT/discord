@@ -1,5 +1,6 @@
 import { ActionRowBuilder, Message, MessageActionRowComponentBuilder, SelectMenuBuilder, SelectMenuOptionBuilder, TextChannel, Client as DJSClient } from 'discord.js';
 import { Client } from './client';
+import { House, HouseDescription, HouseEmoji } from './Commands/House/housePicker';
 
 export async function postHousePicker(client: Client<true>): Promise<Message<true>> {
     return new Promise(async (res, rej) => {
@@ -23,30 +24,30 @@ export async function postHousePicker(client: Client<true>): Promise<Message<tru
                             .setPlaceholder('Choose your house!')
                             .addOptions(
                                 new SelectMenuOptionBuilder()
-                                    .setLabel('House of Tiger')
+                                    .setLabel(House.TIGER)
                                     .setValue('TIGER')
-                                    .setEmoji('🐯')
-                                    .setDescription('Competitive, crud central, Fearless, Rage'),
+                                    .setEmoji(HouseEmoji.TIGER)
+                                    .setDescription(HouseDescription.TIGER),
                                 new SelectMenuOptionBuilder()
-                                    .setLabel('100 Acre Wood')
+                                    .setLabel(House.OWL)
                                     .setValue('OWL')
-                                    .setEmoji('🦉')
-                                    .setDescription('Observant, integrity, judge'),
+                                    .setEmoji(HouseEmoji.OWL)
+                                    .setDescription(HouseDescription.OWL),
                                 new SelectMenuOptionBuilder()
-                                    .setLabel('The Ravens')
+                                    .setLabel(House.RAVEN)
                                     .setValue('RAVEN')
-                                    .setEmoji('👁️')
-                                    .setDescription('The eye of all eyes, Pure Daily Offenders'),
+                                    .setEmoji(HouseEmoji.RAVEN)
+                                    .setDescription(HouseDescription.RAVEN),
                                 new SelectMenuOptionBuilder()
-                                    .setLabel('Kame House')
+                                    .setLabel(House.TURTLE)
                                     .setValue('TURTLE')
-                                    .setEmoji('🐢')
-                                    .setDescription('chill, perseverance, otaku, cosplay & hentai enthusiast!'),
+                                    .setEmoji(HouseEmoji.TURTLE)
+                                    .setDescription(HouseDescription.TURTLE),
                                 new SelectMenuOptionBuilder()
-                                    .setLabel('Bamboo Forest')
+                                    .setLabel(House.PANDA)
                                     .setValue('PANDA')
-                                    .setEmoji('🐼')
-                                    .setDescription('bashful, emotional, foodie, jokes, sleepy')
+                                    .setEmoji(HouseEmoji.PANDA)
+                                    .setDescription(HouseDescription.PANDA)
                             )
                     )
             ]
