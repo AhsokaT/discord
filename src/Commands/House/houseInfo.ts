@@ -3,7 +3,7 @@ import { Client } from '../../client';
 import { Command } from '../template';
 import { House, HouseDescription, RoleID } from './housePicker';
 
-const Ordinal = {
+export const Ordinal = {
     1: '1st',
     2: '2nd',
     3: '3rd',

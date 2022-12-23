@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LeaderboardEmbed = exports.BanButton = exports.RevokeBanButton = exports.HouseInfoButton = exports.LeaderboardButton = exports.UndoChangesButton = exports.UserInfoButton = exports.UpdateLeaderboardButton = exports.buildChangesMessage = void 0;
 const discord_js_1 = require("discord.js");
+const houseInfo_1 = require("./House/houseInfo");
 const housePicker_1 = require("./House/housePicker");
 function buildChangesMessage(before, after) {
     return Object.keys(housePicker_1.House).reduce((acc, house) => {
@@ -48,10 +49,14 @@ const BanButton = (user, label = 'Ban') => new discord_js_1.ButtonBuilder()
     .setLabel(label);
 exports.BanButton = BanButton;
 function houseEmbedField(house, points) {
-    return { name: house, value: `${points} points` };
+    return {
+        name: `${houseInfo_1.Ordinal[points.findIndex(([name]) => name === house) + 1]} ${housePicker_1.House[house]}`,
+        value: `<@&${housePicker_1.RoleID[house]}> ${points.find(([name]) => name === house)[1]} points`
+    };
 }
-const LeaderboardEmbed = (sorted) => new discord_js_1.EmbedBuilder()
+const LeaderboardEmbed = (client) => new discord_js_1.EmbedBuilder()
     .setColor('#2F3136')
-    .setDescription(`Updated <t:${Math.round(Date.now() / 1000)}:T>`)
-    .addFields(...sorted.map(([name, points]) => [housePicker_1.House[name], points]).map(data => houseEmbedField(...data)));
+    .setAuthor({ name: client.user.tag, iconURL: client.user.displayAvatarURL({ size: 4096 }) })
+    .setDescription(`Updated <t:${Math.round(Date.now() / 1000)}:R>`)
+    .addFields(...client.housePointManager.sorted.map(([house]) => house).map(house => houseEmbedField(house, client.housePointManager.sorted)));
 exports.LeaderboardEmbed = LeaderboardEmbed;

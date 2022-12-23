@@ -1,7 +1,7 @@
 import { ApplicationCommandDataResolvable, ButtonInteraction, CacheType, ChatInputCommandInteraction, Interaction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, SelectMenuInteraction, Snowflake, UserContextMenuCommandInteraction } from 'discord.js';
-export declare type InteractionCallback<I extends Interaction> = (interaction: I, command: Command<I extends Interaction<infer Cached> ? Cached : never>) => void;
-export declare type BuilderFunction<B extends ApplicationCommandDataResolvable> = (builder: B) => B;
-export declare type Builder<B extends ApplicationCommandDataResolvable> = B | BuilderFunction<B>;
+export type InteractionCallback<I extends Interaction> = (interaction: I, command: Command<I extends Interaction<infer Cached> ? Cached : never>) => void;
+export type BuilderFunction<B extends ApplicationCommandDataResolvable> = (builder: B) => B;
+export type Builder<B extends ApplicationCommandDataResolvable> = B | BuilderFunction<B>;
 export declare class Command<Cached extends CacheType = 'cached'> {
     #private;
     get commandBuilders(): ApplicationCommandDataResolvable[];

@@ -30,6 +30,7 @@ export declare class Client<Ready extends boolean = boolean> extends DJSClient<R
     fetchCompetitionChannel(): Promise<TextBasedChannel>;
     fetchLogChannel(): Promise<TextBasedChannel>;
     sendToCompetitionsChannel(content: Parameters<TextChannel['send']>[0]): Promise<Message<true> | Message<false>>;
+    sendToChannel(id: Snowflake, message: Parameters<TextChannel['send']>[0]): Promise<Message<true> | Message<false>>;
     sendToLogChannel(message: Parameters<TextChannel['send']>[0]): Promise<Message<true>>;
     addCommands(...commands: NewCommand[]): void;
     private hasCustomID;

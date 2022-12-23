@@ -2,8 +2,8 @@ import { Command } from '../template';
 export declare enum House {
     TIGER = "Tiger Terror Squad",
     OWL = "Court of Owls",
-    RAVEN = "The Ravens",
-    TURTLE = "Kame House",
+    RAVEN = "Raven Reapers",
+    TURTLE = "The Otakus",
     PANDA = "Pandamonium"
 }
 export declare enum HouseEmoji {

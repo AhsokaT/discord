@@ -11,7 +11,8 @@ import { postHousePicker } from './misc';
 import { LEADERBOARD, UPDATE_LEADERBOARD } from './Commands/House/leaderboard';
 import { HOUSE_INFO } from './Commands/House/houseInfo';
 import { guildMemberRemove } from './Events/guildMemberRemove';
-import { HOUSE_POINTS, UNDO_POINTS } from './Commands/House/housePoints';
+import { HOUSE_POINTS } from './Commands/House/housePoints';
+import { RENAME_HOUSE } from './Commands/House/renameHouse';
 
 // dotenv
 config();
@@ -52,8 +53,8 @@ client.once('ready', async () => {
         HOUSE_COMMAND,
         HOUSE_INFO,
         HOUSE_POINTS,
-        UNDO_POINTS,
-        UPDATE_LEADERBOARD
+        UPDATE_LEADERBOARD,
+        RENAME_HOUSE
     );
 
     postHousePicker(client)

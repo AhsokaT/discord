@@ -1,58 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HOUSE_POINTS = exports.UNDO_POINTS = void 0;
+exports.HOUSE_POINTS = void 0;
 const discord_js_1 = require("discord.js");
+const client_1 = require("../../client");
 const builders_1 = require("../builders");
 const template_1 = require("../template");
+const houseInfo_1 = require("./houseInfo");
+const housePicker_1 = require("./housePicker");
 const SLASH_COMMAND = new discord_js_1.SlashCommandBuilder()
     .setName('housepoints')
     .setDescription('Add or remove points from any house')
     .addIntegerOption(option => option
     .setName('tigers')
-    .setDescription('The number of points to add or remove'))
+    .setDescription('New total'))
     .addIntegerOption(option => option
     .setName('owls')
-    .setDescription('The number of points to add or remove'))
+    .setDescription('New total'))
     .addIntegerOption(option => option
     .setName('ravens')
-    .setDescription('The number of points to add or remove'))
+    .setDescription('New total'))
     .addIntegerOption(option => option
     .setName('pandas')
-    .setDescription('The number of points to add or remove'))
+    .setDescription('New total'))
     .addIntegerOption(option => option
     .setName('turtles')
-    .setDescription('The number of points to add or remove'));
-exports.UNDO_POINTS = new template_1.Command()
-    .addIdentifiers('UNDO')
-    .onButton(async (interaction) => {
-    await interaction.update({ components: [] }).catch(console.debug);
-    const client = interaction.client;
-    const changes = JSON.parse(interaction.customId.split('_')[1]);
-    const before = client.housePointManager.cache;
-    if (changes.TIGER)
-        await client.housePointManager.addPoints('TIGER', -changes.TIGER, false);
-    if (changes.OWL)
-        await client.housePointManager.addPoints('OWL', -changes.OWL, false);
-    if (changes.RAVEN)
-        await client.housePointManager.addPoints('RAVEN', -changes.RAVEN, false);
-    if (changes.TURTLE)
-        await client.housePointManager.addPoints('TURTLE', -changes.TURTLE, false);
-    if (changes.PANDA)
-        await client.housePointManager.addPoints('PANDA', -changes.PANDA, false);
-    client.database.closeConnection().catch(console.debug);
-    interaction.editReply({
-        content: (0, builders_1.buildChangesMessage)(before, client.housePointManager.cache),
-        components: [
-            new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UndoChangesButton)(JSON.stringify({
-                TIGER: -changes.TIGER,
-                OWL: -changes.OWL,
-                RAVEN: -changes.RAVEN,
-                TURTLE: -changes.TURTLE,
-                PANDA: -changes.PANDA
-            }), interaction.component.label?.startsWith('Undo') ? 'Redo changes' : 'Undo changes'))
-        ]
-    }).catch(console.debug);
-});
+    .setDescription('New total'));
 exports.HOUSE_POINTS = new template_1.Command()
     .addIdentifiers('housepoints')
     .addBuilders(SLASH_COMMAND)
@@ -60,49 +32,63 @@ exports.HOUSE_POINTS = new template_1.Command()
     .onChatInputCommand(async (interaction) => {
     await interaction.deferReply({ ephemeral: true });
     const client = interaction.client;
-    const tigers = interaction.options.getInteger('tigers');
-    const owls = interaction.options.getInteger('owls');
-    const ravens = interaction.options.getInteger('ravens');
-    const turtles = interaction.options.getInteger('turtles');
-    const pandas = interaction.options.getInteger('pandas');
-    if (!tigers && !owls && !ravens && !turtles && !pandas)
-        return interaction.editReply(':x: You must specify at least one house to add or remove points from');
-    const before = client.housePointManager.cache;
-    if (tigers)
-        await client.housePointManager.addPoints('TIGER', tigers, false);
-    if (owls)
-        await client.housePointManager.addPoints('OWL', owls, false);
-    if (ravens)
-        await client.housePointManager.addPoints('RAVEN', ravens, false);
-    if (turtles)
-        await client.housePointManager.addPoints('TURTLE', turtles, false);
-    if (pandas)
-        await client.housePointManager.addPoints('PANDA', pandas, false);
-    client.database.closeConnection().catch(console.debug);
+    const manager = client.housePointManager;
+    const current = Object.fromEntries(Object.entries(manager.cache));
+    const newTotals = {
+        TIGER: interaction.options.getInteger('tigers') ?? current.TIGER,
+        OWL: interaction.options.getInteger('owls') ?? current.OWL,
+        RAVEN: interaction.options.getInteger('ravens') ?? current.RAVEN,
+        TURTLE: interaction.options.getInteger('turtles') ?? current.TURTLE,
+        PANDA: interaction.options.getInteger('pandas') ?? current.PANDA
+    };
+    let changes = Object.keys(newTotals)
+        .filter(house => newTotals[house] !== current[house])
+        .map(house => manager.addPoints(house, newTotals[house] - current[house], false));
+    try {
+        await Promise.all(changes);
+        await manager.initCache();
+    }
+    catch (err) {
+        console.error(err);
+    }
+    finally {
+        client.database.closeConnection()
+            .catch(console.debug);
+    }
+    Object.keys(newTotals)
+        .filter(house => newTotals[house] !== current[house])
+        .forEach(house => {
+        const position = manager.sorted.findIndex(([name]) => name === house) + 1;
+        const points = newTotals[house] - current[house];
+        const content = points > 0 ?
+            `:partying_face: Congratulations <@&${housePicker_1.RoleID[house]}> you earned **${points} points!** You are **${houseInfo_1.Ordinal[position]}** with **${manager.cache[house]} points**` :
+            `:confused: <@&${housePicker_1.RoleID[house]}> you lost **${-points} points** >:( do better. You are **${houseInfo_1.Ordinal[position]}** with **${manager.cache[house]} points**`;
+        client.sendToChannel(client_1.ChannelID[house], {
+            content,
+            components: [
+                new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.LeaderboardButton)())
+            ]
+        })
+            .catch(console.debug);
+    });
+    const changed = Object.keys(newTotals).some(house => newTotals[house] !== current[house]);
     interaction.editReply({
-        content: (0, builders_1.buildChangesMessage)(before, client.housePointManager.cache),
-        components: [
-            new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UndoChangesButton)(JSON.stringify({
-                TIGER: tigers,
-                OWL: owls,
-                RAVEN: ravens,
-                TURTLE: turtles,
-                PANDA: pandas
-            })))
-        ]
+        content: (0, builders_1.buildChangesMessage)(current, newTotals) || 'No changes were made',
+        allowedMentions: { parse: [] }
     }).catch(console.debug);
-    client.sendToLogChannel({
-        content: (0, builders_1.buildChangesMessage)(before, client.housePointManager.cache),
-        allowedMentions: { parse: [] },
-        components: [
-            new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UserInfoButton)(interaction.user.id, 'Changed by'), (0, builders_1.LeaderboardButton)())
-        ]
-    }).catch(console.debug);
-    client.sendToCompetitionsChannel({
-        content: (0, builders_1.buildChangesMessage)(before, client.housePointManager.cache),
-        allowedMentions: { parse: [] },
-        components: [
-            new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UserInfoButton)(interaction.user.id, 'Changed by'), (0, builders_1.LeaderboardButton)())
-        ]
-    }).catch(console.debug);
+    if (!changed)
+        return;
+    try {
+        const channels = await Promise.all([client.fetchLogChannel(), client.fetchCompetitionChannel()]);
+        channels.forEach(channel => channel.send({
+            content: (0, builders_1.buildChangesMessage)(current, newTotals),
+            allowedMentions: { parse: [] },
+            components: [
+                new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UserInfoButton)(interaction.user.id, 'Changed by'), (0, builders_1.LeaderboardButton)())
+            ]
+        }));
+    }
+    catch (err) {
+        console.error(err);
+    }
 });

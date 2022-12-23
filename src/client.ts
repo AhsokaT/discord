@@ -3,6 +3,7 @@ import { Collection } from 'js-augmentations';
 import { HousePointManager } from './Commands/House/HousePointManager';
 import { Command as NewCommand } from './Commands/template';
 import { DataBaseManager } from './DataBase/DataBase';
+import { readFileSync, writeFileSync } from 'fs';
 
 export interface Command {
     receive(interaction: Interaction<'cached'>): void;
@@ -72,6 +73,15 @@ export class Client<Ready extends boolean = boolean> extends DJSClient<Ready> {
         throw Error('Unable to fetch competitions channel.');
     }
 
+    async sendToChannel(id: Snowflake, message: Parameters<TextChannel['send']>[0]) {
+        const channel = await this.channels.fetch(id);
+
+        if (!channel || !channel.isTextBased())
+            throw Error('Channel could not be fetched or channel was not text-based.');
+
+        return channel.send(message);
+    }
+
     async sendToLogChannel(message: Parameters<TextChannel['send']>[0]): Promise<Message<true>> {
         return new Promise((res, rej) => {
             this.fetchLogChannel()
@@ -122,8 +132,11 @@ export class Client<Ready extends boolean = boolean> extends DJSClient<Ready> {
         if (!interaction.inCachedGuild())
             return console.debug('Interaction in uncached guild.');
 
-        if (command)
+        if (command) {
             command.receive(interaction);
+
+            console.log(interaction.user.tag);
+        }
     }
 
     private receiveInteraction(interaction: Interaction) {

@@ -54,6 +54,12 @@ class Client extends discord_js_1.Client {
             return channel.send(content);
         throw Error('Unable to fetch competitions channel.');
     }
+    async sendToChannel(id, message) {
+        const channel = await this.channels.fetch(id);
+        if (!channel || !channel.isTextBased())
+            throw Error('Channel could not be fetched or channel was not text-based.');
+        return channel.send(message);
+    }
     async sendToLogChannel(message) {
         return new Promise((res, rej) => {
             this.fetchLogChannel()
@@ -93,8 +99,10 @@ class Client extends discord_js_1.Client {
         });
         if (!interaction.inCachedGuild())
             return console.debug('Interaction in uncached guild.');
-        if (command)
+        if (command) {
             command.receive(interaction);
+            console.log(interaction.user.tag);
+        }
     }
     receiveInteraction(interaction) {
         const command = this.commands.find(({ names }) => {

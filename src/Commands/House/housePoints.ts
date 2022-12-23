@@ -1,7 +1,9 @@
-import { ActionRowBuilder, MessageActionRowComponentBuilder, SlashCommandBuilder, messageLink } from 'discord.js';
-import { Client } from '../../client';
+import { ActionRowBuilder, MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChannelID, Client } from '../../client';
 import { buildChangesMessage, LeaderboardButton, UndoChangesButton, UserInfoButton } from '../builders';
 import { Command } from '../template';
+import { Ordinal } from './houseInfo';
+import { RoleID } from './housePicker';
 import { HousePoints } from './HousePointManager';
 
 const SLASH_COMMAND = new SlashCommandBuilder()
@@ -9,64 +11,24 @@ const SLASH_COMMAND = new SlashCommandBuilder()
     .setDescription('Add or remove points from any house')
     .addIntegerOption(option => option
         .setName('tigers')
-        .setDescription('The number of points to add or remove')
+        .setDescription('New total')
     )
     .addIntegerOption(option => option
         .setName('owls')
-        .setDescription('The number of points to add or remove')
+        .setDescription('New total')
     )
     .addIntegerOption(option => option
         .setName('ravens')
-        .setDescription('The number of points to add or remove')
+        .setDescription('New total')
     )
     .addIntegerOption(option => option
         .setName('pandas')
-        .setDescription('The number of points to add or remove')
+        .setDescription('New total')
     )
     .addIntegerOption(option => option
         .setName('turtles')
-        .setDescription('The number of points to add or remove')
+        .setDescription('New total')
     );
-
-export const UNDO_POINTS = new Command()
-    .addIdentifiers('UNDO')
-    .onButton(async interaction => {
-        await interaction.update({ components: [] }).catch(console.debug);
-
-        const client = interaction.client as Client;
-        const changes = JSON.parse(interaction.customId.split('_')[1]) as HousePoints;
-        const before = client.housePointManager.cache;
-
-        if (changes.TIGER)
-            await client.housePointManager.addPoints('TIGER', -changes.TIGER, false);
-
-        if (changes.OWL)
-            await client.housePointManager.addPoints('OWL', -changes.OWL, false);
-
-        if (changes.RAVEN)
-            await client.housePointManager.addPoints('RAVEN', -changes.RAVEN, false);
-
-        if (changes.TURTLE)
-            await client.housePointManager.addPoints('TURTLE', -changes.TURTLE, false);
-
-        if (changes.PANDA)
-            await client.housePointManager.addPoints('PANDA', -changes.PANDA, false);
-
-        client.database.closeConnection().catch(console.debug);
-
-        interaction.editReply({
-            content: buildChangesMessage(before, client.housePointManager.cache),
-            components: [
-                new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(UndoChangesButton(JSON.stringify({
-                    TIGER: -changes.TIGER,
-                    OWL: -changes.OWL,
-                    RAVEN: -changes.RAVEN,
-                    TURTLE: -changes.TURTLE,
-                    PANDA: -changes.PANDA
-                }), interaction.component.label?.startsWith('Undo') ? 'Redo changes' : 'Undo changes'))
-            ]
-        }).catch(console.debug);
-    });
 
 export const HOUSE_POINTS = new Command()
     .addIdentifiers('housepoints')
@@ -76,66 +38,75 @@ export const HOUSE_POINTS = new Command()
         await interaction.deferReply({ ephemeral: true });
 
         const client = interaction.client as Client;
-        const tigers = interaction.options.getInteger('tigers');
-        const owls = interaction.options.getInteger('owls');
-        const ravens = interaction.options.getInteger('ravens');
-        const turtles = interaction.options.getInteger('turtles');
-        const pandas = interaction.options.getInteger('pandas');
+        const manager = client.housePointManager;
+        const current = Object.fromEntries(Object.entries(manager.cache)) as HousePoints;
 
-        if (!tigers && !owls && !ravens && !turtles && !pandas)
-            return interaction.editReply(':x: You must specify at least one house to add or remove points from');
+        const newTotals: HousePoints = {
+            TIGER: interaction.options.getInteger('tigers') ?? current.TIGER,
+            OWL: interaction.options.getInteger('owls') ?? current.OWL,
+            RAVEN: interaction.options.getInteger('ravens') ?? current.RAVEN,
+            TURTLE: interaction.options.getInteger('turtles') ?? current.TURTLE,
+            PANDA: interaction.options.getInteger('pandas') ?? current.PANDA
+        };
 
-        const before = client.housePointManager.cache;
+        let changes = Object.keys(newTotals)
+            .filter(house => newTotals[house] !== current[house])
+            .map(house => manager.addPoints(house as keyof HousePoints, newTotals[house] - current[house], false));
 
-        if (tigers)
-            await client.housePointManager.addPoints('TIGER', tigers, false);
+        try {
+            await Promise.all(changes);
 
-        if (owls)
-            await client.housePointManager.addPoints('OWL', owls, false);
+            await manager.initCache();
+        } catch(err) {
+            console.error(err);
+        } finally {
+            client.database.closeConnection()
+                .catch(console.debug);
+        }
 
-        if (ravens)
-            await client.housePointManager.addPoints('RAVEN', ravens, false);
+        Object.keys(newTotals)
+            .filter(house => newTotals[house] !== current[house])
+            .forEach(house => {
+                const position = manager.sorted.findIndex(([name]) => name === house) + 1;
+                const points = newTotals[house] - current[house];
 
-        if (turtles)
-            await client.housePointManager.addPoints('TURTLE', turtles, false);
+                const content = points > 0 ?
+                    `:partying_face: Congratulations <@&${RoleID[house]}> you earned **${points} points!** You are **${Ordinal[position]}** with **${manager.cache[house]} points**` :
+                    `:confused: <@&${RoleID[house]}> you lost **${-points} points** >:( do better. You are **${Ordinal[position]}** with **${manager.cache[house]} points**`;
 
-        if (pandas)
-            await client.housePointManager.addPoints('PANDA', pandas, false);
+                client.sendToChannel(ChannelID[house], {
+                    content,
+                    components: [
+                        new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(LeaderboardButton())
+                    ]
+                })
+                .catch(console.debug);
+            });
 
-        client.database.closeConnection().catch(console.debug);
+        const changed = Object.keys(newTotals).some(house => newTotals[house] !== current[house]);
 
         interaction.editReply({
-            content: buildChangesMessage(before, client.housePointManager.cache),
-            components: [
-                new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(UndoChangesButton(JSON.stringify({
-                    TIGER: tigers,
-                    OWL: owls,
-                    RAVEN: ravens,
-                    TURTLE: turtles,
-                    PANDA: pandas
-                })))
-            ]
+            content: buildChangesMessage(current, newTotals) || 'No changes were made',
+            allowedMentions: { parse: [] }
         }).catch(console.debug);
 
-        client.sendToLogChannel({
-            content: buildChangesMessage(before, client.housePointManager.cache),
-            allowedMentions: { parse: [] },
-            components: [
-                new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-                    UserInfoButton(interaction.user.id, 'Changed by'),
-                    LeaderboardButton()
-                )
-            ]
-        }).catch(console.debug);
+        if (!changed)
+            return;
 
-        client.sendToCompetitionsChannel({
-            content: buildChangesMessage(before, client.housePointManager.cache),
-            allowedMentions: { parse: [] },
-            components: [
-                new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-                    UserInfoButton(interaction.user.id, 'Changed by'),
-                    LeaderboardButton()
-                )
-            ]
-        }).catch(console.debug);
+        try {
+            const channels = await Promise.all([client.fetchLogChannel(), client.fetchCompetitionChannel()]);
+
+            channels.forEach(channel => channel.send({
+                content: buildChangesMessage(current, newTotals),
+                allowedMentions: { parse: [] },
+                components: [
+                    new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+                        UserInfoButton(interaction.user.id, 'Changed by'),
+                        LeaderboardButton()
+                    )
+                ]
+            }));
+        } catch(err) {
+            console.error(err);
+        }
     });

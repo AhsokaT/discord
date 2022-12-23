@@ -7,8 +7,8 @@ import { HouseID } from './HousePointManager';
 export enum House {
     TIGER = 'Tiger Terror Squad',
     OWL = 'Court of Owls',
-    RAVEN = 'The Ravens',
-    TURTLE = 'Kame House',
+    RAVEN = 'Raven Reapers',
+    TURTLE = 'The Otakus',
     PANDA = 'Pandamonium'
 }
 

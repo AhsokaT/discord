@@ -1,4 +1,6 @@
 import { ButtonBuilder, ButtonStyle, EmbedBuilder, Snowflake } from 'discord.js';
+import { Client } from '../client';
+import { Ordinal } from './House/houseInfo';
 import { House, RoleID } from './House/housePicker';
 import { HouseID, HousePoints } from './House/HousePointManager';
 
@@ -48,11 +50,15 @@ export const BanButton = (user: Snowflake, label = 'Ban') => new ButtonBuilder()
     .setStyle(ButtonStyle.Danger)
     .setLabel(label);
 
-function houseEmbedField(house: string, points: number) {
-    return { name: house, value: `${points} points` };
+function houseEmbedField(house: string, points: [string, number][]) {
+    return {
+        name: `${Ordinal[points.findIndex(([name]) => name === house) + 1]} ${House[house]}`,
+        value: `<@&${RoleID[house]}> ${points.find(([name]) => name === house)![1]} points`
+    };
 }
 
-export const LeaderboardEmbed = (sorted: [string, number][]) => new EmbedBuilder()
+export const LeaderboardEmbed = (client: Client<true>) => new EmbedBuilder()
     .setColor('#2F3136')
-    .setDescription(`Updated <t:${Math.round(Date.now() / 1000)}:T>`)
-    .addFields(...sorted.map(([name, points]) => [House[name], points] as [string, number]).map(data => houseEmbedField(...data)));
+    .setAuthor({ name: client.user.tag, iconURL: client.user.displayAvatarURL({ size: 4096 }) })
+    .setDescription(`Updated <t:${Math.round(Date.now() / 1000)}:R>`)
+    .addFields(...client.housePointManager.sorted.map(([house]) => house).map(house => houseEmbedField(house, client.housePointManager.sorted)));

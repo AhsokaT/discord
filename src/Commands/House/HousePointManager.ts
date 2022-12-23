@@ -1,6 +1,9 @@
 import { TypedEmitter } from '../../../TypedEmitter';
-import { House } from './housePicker';
-import { Client } from '../../client';
+import { House, RoleID } from './housePicker';
+import { ChannelID, Client } from '../../client';
+import { ActionRowBuilder, MessageActionRowComponentBuilder } from 'discord.js';
+import { LeaderboardButton } from '../builders';
+import { Ordinal } from './houseInfo';
 
 export type HouseID =
     | 'TIGER'
@@ -28,7 +31,7 @@ export class HousePointManager extends TypedEmitter<HousePointManagerEvent> {
             .catch(console.debug);
     }
 
-    private async initCache() {
+    async initCache() {
         this.cache = await this.client.database.fetchAll();
 
         return this.cache;
@@ -37,7 +40,9 @@ export class HousePointManager extends TypedEmitter<HousePointManagerEvent> {
     async addPoints(house: HouseID, points: number, closeConnection = true) {
         await this.client.database.edit(house, { points: this.cache[house] + points }, closeConnection);
 
-        return this.initCache();
+        this.cache[house] += points;
+
+        return this.cache;
     }
 
     get sorted() {

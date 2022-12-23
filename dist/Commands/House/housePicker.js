@@ -9,8 +9,8 @@ var House;
 (function (House) {
     House["TIGER"] = "Tiger Terror Squad";
     House["OWL"] = "Court of Owls";
-    House["RAVEN"] = "The Ravens";
-    House["TURTLE"] = "Kame House";
+    House["RAVEN"] = "Raven Reapers";
+    House["TURTLE"] = "The Otakus";
     House["PANDA"] = "Pandamonium";
 })(House = exports.House || (exports.House = {}));
 var HouseEmoji;
