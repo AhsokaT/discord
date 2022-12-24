@@ -66,22 +66,12 @@ export class DataBaseManager {
     }
 
     async fetchAll(): Promise<HousePoints> {
-        const record: HousePoints = {
-            'OWL': 0,
-            'PANDA': 0,
-            'TIGER': 0,
-            'RAVEN': 0,
-            'TURTLE': 0
-        };
-
         await this.openConnection();
 
         const documents = await this.collection.find().toArray();
 
-        documents.forEach(document => record[document._id] = document.points);
-
         await this.closeConnection();
 
-        return record;
+        return Object.fromEntries(documents.map(doc => [doc._id, doc.points])) as HousePoints;
     }
 }

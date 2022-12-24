@@ -4,7 +4,6 @@ import { HouseID, HousePoints } from './House/HousePointManager';
 export declare function buildChangesMessage(before: HousePoints, after: HousePoints): string;
 export declare const UpdateLeaderboardButton: (label?: string) => ButtonBuilder;
 export declare const UserInfoButton: (user: Snowflake, label?: string) => ButtonBuilder;
-export declare const UndoChangesButton: (changes: string, label?: string) => ButtonBuilder;
 export declare const LeaderboardButton: (label?: string) => ButtonBuilder;
 export declare const HouseInfoButton: (house: HouseID, label?: string) => ButtonBuilder;
 export declare const RevokeBanButton: (user: Snowflake, label?: string) => ButtonBuilder;

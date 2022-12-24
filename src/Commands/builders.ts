@@ -25,11 +25,6 @@ export const UserInfoButton = (user: Snowflake, label = 'User') => new ButtonBui
     .setStyle(ButtonStyle.Primary)
     .setLabel(label);
 
-export const UndoChangesButton = (changes: string, label = 'Undo changes') => new ButtonBuilder()
-    .setCustomId(`UNDO_${changes}`)
-    .setStyle(ButtonStyle.Danger)
-    .setLabel(label);
-
 export const LeaderboardButton = (label = 'Leaderboard') => new ButtonBuilder()
     .setCustomId('LEADERBOARD')
     .setStyle(ButtonStyle.Primary)
@@ -42,7 +37,7 @@ export const HouseInfoButton = (house: HouseID, label = 'House') => new ButtonBu
 
 export const RevokeBanButton = (user: Snowflake, label = 'Revoke ban') => new ButtonBuilder()
     .setCustomId(`UNBAN_${user}`)
-    .setStyle(ButtonStyle.Primary)
+    .setStyle(ButtonStyle.Danger)
     .setLabel(label);
 
 export const BanButton = (user: Snowflake, label = 'Ban') => new ButtonBuilder()

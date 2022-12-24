@@ -1,4 +1,4 @@
-import { GatewayIntentBits } from 'discord.js';
+import { ActivityType, GatewayIntentBits, GuildBan } from 'discord.js';
 import { Client } from './client';
 import { config } from 'dotenv';
 
@@ -13,18 +13,28 @@ import { HOUSE_INFO } from './Commands/House/houseInfo';
 import { guildMemberRemove } from './Events/guildMemberRemove';
 import { HOUSE_POINTS } from './Commands/House/housePoints';
 import { RENAME_HOUSE } from './Commands/House/renameHouse';
+import { guildMemberAdd } from './Events/guildMemberAdd';
+import { guildBanAdd } from './Events/guildBanAdd';
 
 // dotenv
 config();
 
-const events = [guildMemberRemove];
+const events = [
+    guildMemberRemove,
+    guildMemberAdd,
+    guildBanAdd
+];
+
 const mongoURL = process.env.MONGO;
 
 if (!mongoURL)
     throw new Error('process.env.MONGO is undefined');
 
 const client = new Client({
-    presence: { status: 'idle' },
+    presence: {
+        status: 'idle',
+        activities: [{ type: ActivityType.Playing, name: 'Merry christmas :D' }]
+    },
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
@@ -60,7 +70,7 @@ client.once('ready', async () => {
     postHousePicker(client)
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
 
-    // client.emit('guildMemberRemove', await (await client.guilds.fetch('509135025560616963')).members.fetch('509080069264769026'));
+    // client.emit('guildMemberRemove', await (await client.fetchDO()).fetchOwner());
 });
 
 client.login(process.env.TOKEN);

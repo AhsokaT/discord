@@ -3,7 +3,6 @@ import { Collection } from 'js-augmentations';
 import { HousePointManager } from './Commands/House/HousePointManager';
 import { Command as NewCommand } from './Commands/template';
 import { DataBaseManager } from './DataBase/DataBase';
-import { readFileSync, writeFileSync } from 'fs';
 
 export interface Command {
     receive(interaction: Interaction<'cached'>): void;

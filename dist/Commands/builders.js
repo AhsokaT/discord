@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LeaderboardEmbed = exports.BanButton = exports.RevokeBanButton = exports.HouseInfoButton = exports.LeaderboardButton = exports.UndoChangesButton = exports.UserInfoButton = exports.UpdateLeaderboardButton = exports.buildChangesMessage = void 0;
+exports.LeaderboardEmbed = exports.BanButton = exports.RevokeBanButton = exports.HouseInfoButton = exports.LeaderboardButton = exports.UserInfoButton = exports.UpdateLeaderboardButton = exports.buildChangesMessage = void 0;
 const discord_js_1 = require("discord.js");
 const houseInfo_1 = require("./House/houseInfo");
 const housePicker_1 = require("./House/housePicker");
@@ -23,11 +23,6 @@ const UserInfoButton = (user, label = 'User') => new discord_js_1.ButtonBuilder(
     .setStyle(discord_js_1.ButtonStyle.Primary)
     .setLabel(label);
 exports.UserInfoButton = UserInfoButton;
-const UndoChangesButton = (changes, label = 'Undo changes') => new discord_js_1.ButtonBuilder()
-    .setCustomId(`UNDO_${changes}`)
-    .setStyle(discord_js_1.ButtonStyle.Danger)
-    .setLabel(label);
-exports.UndoChangesButton = UndoChangesButton;
 const LeaderboardButton = (label = 'Leaderboard') => new discord_js_1.ButtonBuilder()
     .setCustomId('LEADERBOARD')
     .setStyle(discord_js_1.ButtonStyle.Primary)
@@ -40,7 +35,7 @@ const HouseInfoButton = (house, label = 'House') => new discord_js_1.ButtonBuild
 exports.HouseInfoButton = HouseInfoButton;
 const RevokeBanButton = (user, label = 'Revoke ban') => new discord_js_1.ButtonBuilder()
     .setCustomId(`UNBAN_${user}`)
-    .setStyle(discord_js_1.ButtonStyle.Primary)
+    .setStyle(discord_js_1.ButtonStyle.Danger)
     .setLabel(label);
 exports.RevokeBanButton = RevokeBanButton;
 const BanButton = (user, label = 'Ban') => new discord_js_1.ButtonBuilder()

@@ -3,14 +3,19 @@ import { Client } from '../client';
 import { UserInfoButton } from '../Commands/builders';
 import { ClientEvent } from './ClientEvent';
 
-export const guildMemberRemove = new ClientEvent('guildMemberRemove', member => {
+export const guildMemberRemove = new ClientEvent('guildMemberRemove', async member => {
+    const ban = await member.guild.bans.fetch(member).catch(() => null);
+
+    if (ban)
+        return;
+
     const embed = new EmbedBuilder()
         .setColor('#2F3136')
         .setTitle('Member left')
         .setAuthor({ name: member.user.tag })
         .addFields(
             { name: 'Member', value: member.toString(), inline: true },
-            { name: 'Time', value: `<t:${Math.round(Date.now() / 1000)}:R>`, inline: true }
+            { name: 'Left', value: `<t:${Math.round(Date.now() / 1000)}:R>`, inline: true }
         );
 
     if (member.joinedTimestamp)
@@ -23,6 +28,5 @@ export const guildMemberRemove = new ClientEvent('guildMemberRemove', member => 
         ],
         allowedMentions: { parse: [] }
     })
-    .then(message => setTimeout(() => message.delete(), 15_000))
     .catch(console.debug);
 });

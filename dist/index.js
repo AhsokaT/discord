@@ -14,14 +14,23 @@ const houseInfo_1 = require("./Commands/House/houseInfo");
 const guildMemberRemove_1 = require("./Events/guildMemberRemove");
 const housePoints_1 = require("./Commands/House/housePoints");
 const renameHouse_1 = require("./Commands/House/renameHouse");
+const guildMemberAdd_1 = require("./Events/guildMemberAdd");
+const guildBanAdd_1 = require("./Events/guildBanAdd");
 // dotenv
 (0, dotenv_1.config)();
-const events = [guildMemberRemove_1.guildMemberRemove];
+const events = [
+    guildMemberRemove_1.guildMemberRemove,
+    guildMemberAdd_1.guildMemberAdd,
+    guildBanAdd_1.guildBanAdd
+];
 const mongoURL = process.env.MONGO;
 if (!mongoURL)
     throw new Error('process.env.MONGO is undefined');
 const client = new client_1.Client({
-    presence: { status: 'idle' },
+    presence: {
+        status: 'idle',
+        activities: [{ type: discord_js_1.ActivityType.Playing, name: 'Merry christmas :D' }]
+    },
     intents: [
         discord_js_1.GatewayIntentBits.Guilds,
         discord_js_1.GatewayIntentBits.GuildMessages,
@@ -40,7 +49,7 @@ client.once('ready', async () => {
     client.addCommands(leaderboard_1.LEADERBOARD, userinfo_1.USER_INFO_COMMAND, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, leaderboard_1.UPDATE_LEADERBOARD, renameHouse_1.RENAME_HOUSE);
     (0, misc_1.postHousePicker)(client)
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
-    // client.emit('guildMemberRemove', await (await client.guilds.fetch('509135025560616963')).members.fetch('509080069264769026'));
+    // client.emit('guildMemberRemove', await (await client.fetchDO()).fetchOwner());
 });
 client.login(process.env.TOKEN);
 process.on('unhandledRejection', console.error);

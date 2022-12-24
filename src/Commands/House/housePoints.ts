@@ -1,6 +1,6 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js';
 import { ChannelID, Client } from '../../client';
-import { buildChangesMessage, LeaderboardButton, UndoChangesButton, UserInfoButton } from '../builders';
+import { buildChangesMessage, LeaderboardButton, UserInfoButton } from '../builders';
 import { Command } from '../template';
 import { Ordinal } from './houseInfo';
 import { RoleID } from './housePicker';

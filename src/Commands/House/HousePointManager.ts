@@ -1,9 +1,6 @@
 import { TypedEmitter } from '../../../TypedEmitter';
-import { House, RoleID } from './housePicker';
-import { ChannelID, Client } from '../../client';
-import { ActionRowBuilder, MessageActionRowComponentBuilder } from 'discord.js';
-import { LeaderboardButton } from '../builders';
-import { Ordinal } from './houseInfo';
+import { House } from './housePicker';
+import { Client } from '../../client';
 
 export type HouseID =
     | 'TIGER'

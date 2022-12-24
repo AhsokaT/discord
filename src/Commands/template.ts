@@ -1,4 +1,4 @@
-import { ApplicationCommandDataResolvable, ButtonInteraction, CacheType, ChatInputCommandInteraction, Interaction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, SelectMenuInteraction, SlashCommandBuilder, Snowflake, UserContextMenuCommandInteraction } from 'discord.js';
+import { ApplicationCommandDataResolvable, ButtonInteraction, CacheType, ChatInputCommandInteraction, Interaction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, SelectMenuInteraction, Snowflake, UserContextMenuCommandInteraction } from 'discord.js';
 
 export type InteractionCallback<I extends Interaction> = (interaction: I, command: Command<I extends Interaction<infer Cached> ? Cached : never>) => void;
 export type BuilderFunction<B extends ApplicationCommandDataResolvable> = (builder: B) => B;

@@ -1,9 +1,9 @@
-import { ActionRowBuilder, Message, MessageActionRowComponentBuilder, SelectMenuBuilder, SelectMenuOptionBuilder, TextChannel, Client as DJSClient } from 'discord.js';
+import { ActionRowBuilder, Message, MessageActionRowComponentBuilder, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
 import { Client } from './client';
 import { House, HouseDescription, HouseEmoji } from './Commands/House/housePicker';
 
-export async function postHousePicker(client: Client<true>): Promise<Message<true>> {
-    return new Promise(async (res, rej) => {
+export async function postHousePicker(client: Client<true>) {
+    return new Promise<Message<true>>(async (res, rej) => {
         const channel = await client.channels.fetch('961986228926963732')
             .catch(console.debug);
 
