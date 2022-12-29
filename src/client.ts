@@ -1,8 +1,9 @@
-import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Guild, Interaction, Message, Snowflake, TextBasedChannel, TextChannel } from 'discord.js';
-import { Collection } from 'js-augmentations';
+import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Collection, Guild, Interaction, Message, Snowflake, TextBasedChannel, TextChannel } from 'discord.js';
 import { HousePointManager } from './Commands/House/HousePointManager';
 import { Command as NewCommand } from './Commands/template';
 import { DataBaseManager } from './DataBase/DataBase';
+import { Subscription } from './Music/subscription';
+import YouTube = require('discord-youtube-api');
 
 export interface Command {
     receive(interaction: Interaction<'cached'>): void;
@@ -22,13 +23,20 @@ export enum ChannelID {
 }
 
 export class Client<Ready extends boolean = boolean> extends DJSClient<Ready> {
-    readonly commands = new Collection<Command>();
-    readonly newCommands = new Collection<NewCommand>();
+    readonly youtube: YouTube;
+    readonly commands = new Set<Command>();
+    readonly newCommands = new Set<NewCommand>();
+    readonly subscriptions = new Collection<Snowflake, Subscription>();
     readonly housePointManager: HousePointManager;
     readonly database: DataBaseManager;
 
     constructor(options: ClientOptions & { mongoURL: string; }) {
         super(options);
+
+        if (!process.env.YOUTUBEAPI)
+            throw Error('YouTube API key not found.');
+
+        this.youtube = new YouTube(process.env.YOUTUBEAPI);
 
         this.database = new DataBaseManager(options.mongoURL);
         this.housePointManager = new HousePointManager(this);
@@ -118,7 +126,7 @@ export class Client<Ready extends boolean = boolean> extends DJSClient<Ready> {
     }
 
     private receiveInteractionNew(interaction: Interaction) {
-        const command = this.newCommands.find(command => {
+        const command = [...this.newCommands].find(command => {
             if (this.hasCustomID(interaction))
                 return command.identifiers.some(id => interaction.customId.split('_').shift() === id);
 
@@ -139,7 +147,7 @@ export class Client<Ready extends boolean = boolean> extends DJSClient<Ready> {
     }
 
     private receiveInteraction(interaction: Interaction) {
-        const command = this.commands.find(({ names }) => {
+        const command = [...this.commands].find(({ names }) => {
             if (interaction.isMessageComponent() || interaction.isModalSubmit())
                 return names.some(name => interaction.customId.startsWith(name));
 

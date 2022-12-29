@@ -1,4 +1,4 @@
-import { ActivityType, GatewayIntentBits, GuildBan } from 'discord.js';
+import { ActivityType, GatewayIntentBits } from 'discord.js';
 import { Client } from './client';
 import { config } from 'dotenv';
 
@@ -15,6 +15,8 @@ import { HOUSE_POINTS } from './Commands/House/housePoints';
 import { RENAME_HOUSE } from './Commands/House/renameHouse';
 import { guildMemberAdd } from './Events/guildMemberAdd';
 import { guildBanAdd } from './Events/guildBanAdd';
+import { guildBanRemove } from './Events/guildBanRemove';
+import { PLAY } from './Commands/play';
 
 // dotenv
 config();
@@ -22,7 +24,8 @@ config();
 const events = [
     guildMemberRemove,
     guildMemberAdd,
-    guildBanAdd
+    guildBanAdd,
+    guildBanRemove
 ];
 
 const mongoURL = process.env.MONGO;
@@ -39,7 +42,8 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildBans,
-        GatewayIntentBits.GuildInvites
+        GatewayIntentBits.GuildInvites,
+        GatewayIntentBits.GuildVoiceStates
     ],
     mongoURL
 });
@@ -64,7 +68,8 @@ client.once('ready', async () => {
         HOUSE_INFO,
         HOUSE_POINTS,
         UPDATE_LEADERBOARD,
-        RENAME_HOUSE
+        RENAME_HOUSE,
+        PLAY
     );
 
     postHousePicker(client)

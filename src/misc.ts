@@ -1,4 +1,4 @@
-import { ActionRowBuilder, Message, MessageActionRowComponentBuilder, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
+import { ActionRowBuilder, Message, MessageActionRowComponentBuilder, StringSelectMenuBuilder, SelectMenuOptionBuilder, StringSelectMenuOptionBuilder } from 'discord.js';
 import { Client } from './client';
 import { House, HouseDescription, HouseEmoji } from './Commands/House/housePicker';
 
@@ -19,34 +19,34 @@ export async function postHousePicker(client: Client<true>) {
             components: [
                 new ActionRowBuilder<MessageActionRowComponentBuilder>()
                     .addComponents(
-                        new SelectMenuBuilder()
+                        new StringSelectMenuBuilder()
                             .setCustomId('HOUSE')
                             .setPlaceholder('Choose your house!')
                             .addOptions(
-                                new SelectMenuOptionBuilder()
+                                new StringSelectMenuOptionBuilder()
                                     .setLabel(House.TIGER)
                                     .setValue('TIGER')
-                                    .setEmoji(HouseEmoji.TIGER)
+                                    .setEmoji({ name: HouseEmoji.TIGER })
                                     .setDescription(HouseDescription.TIGER),
-                                new SelectMenuOptionBuilder()
+                                new StringSelectMenuOptionBuilder()
                                     .setLabel(House.OWL)
                                     .setValue('OWL')
-                                    .setEmoji(HouseEmoji.OWL)
+                                    .setEmoji({ name: HouseEmoji.OWL })
                                     .setDescription(HouseDescription.OWL),
-                                new SelectMenuOptionBuilder()
+                                new StringSelectMenuOptionBuilder()
                                     .setLabel(House.RAVEN)
                                     .setValue('RAVEN')
-                                    .setEmoji(HouseEmoji.RAVEN)
+                                    .setEmoji({ name: HouseEmoji.RAVEN })
                                     .setDescription(HouseDescription.RAVEN),
-                                new SelectMenuOptionBuilder()
+                                new StringSelectMenuOptionBuilder()
                                     .setLabel(House.TURTLE)
                                     .setValue('TURTLE')
-                                    .setEmoji(HouseEmoji.TURTLE)
+                                    .setEmoji({ name: HouseEmoji.TURTLE })
                                     .setDescription(HouseDescription.TURTLE),
-                                new SelectMenuOptionBuilder()
+                                new StringSelectMenuOptionBuilder()
                                     .setLabel(House.PANDA)
                                     .setValue('PANDA')
-                                    .setEmoji(HouseEmoji.PANDA)
+                                    .setEmoji({ name: HouseEmoji.PANDA })
                                     .setDescription(HouseDescription.PANDA)
                             )
                     )

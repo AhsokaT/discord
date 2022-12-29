@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Client = exports.ChannelID = void 0;
 const discord_js_1 = require("discord.js");
-const js_augmentations_1 = require("js-augmentations");
 const HousePointManager_1 = require("./Commands/House/HousePointManager");
 const DataBase_1 = require("./DataBase/DataBase");
+const YouTube = require("discord-youtube-api");
 var ChannelID;
 (function (ChannelID) {
     ChannelID["Logs"] = "1025143957186941038";
@@ -16,12 +16,17 @@ var ChannelID;
     ChannelID["PANDA"] = "1023373723551666296";
 })(ChannelID = exports.ChannelID || (exports.ChannelID = {}));
 class Client extends discord_js_1.Client {
-    commands = new js_augmentations_1.Collection();
-    newCommands = new js_augmentations_1.Collection();
+    youtube;
+    commands = new Set();
+    newCommands = new Set();
+    subscriptions = new discord_js_1.Collection();
     housePointManager;
     database;
     constructor(options) {
         super(options);
+        if (!process.env.YOUTUBEAPI)
+            throw Error('YouTube API key not found.');
+        this.youtube = new YouTube(process.env.YOUTUBEAPI);
         this.database = new DataBase_1.DataBaseManager(options.mongoURL);
         this.housePointManager = new HousePointManager_1.HousePointManager(this);
         this.on('interactionCreate', interaction => this.receiveInteraction(interaction));
@@ -90,7 +95,7 @@ class Client extends discord_js_1.Client {
         return 'commandName' in interaction;
     }
     receiveInteractionNew(interaction) {
-        const command = this.newCommands.find(command => {
+        const command = [...this.newCommands].find(command => {
             if (this.hasCustomID(interaction))
                 return command.identifiers.some(id => interaction.customId.split('_').shift() === id);
             if (this.hasCommandName(interaction))
@@ -105,7 +110,7 @@ class Client extends discord_js_1.Client {
         }
     }
     receiveInteraction(interaction) {
-        const command = this.commands.find(({ names }) => {
+        const command = [...this.commands].find(({ names }) => {
             if (interaction.isMessageComponent() || interaction.isModalSubmit())
                 return names.some(name => interaction.customId.startsWith(name));
             if (interaction.isChatInputCommand() || interaction.isContextMenuCommand())

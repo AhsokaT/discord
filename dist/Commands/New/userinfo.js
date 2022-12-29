@@ -24,8 +24,8 @@ async function replyWithEmbed(target, interaction) {
         return;
     let user = target instanceof discord_js_1.User ? target : target.user;
     let member = target instanceof discord_js_1.GuildMember ? target : null;
-    if (user.id === '451448994128723978')
-        return interaction.reply({ content: user.toString(), ephemeral: true, allowedMentions: { parse: [] } });
+    // if (user.id === '451448994128723978')
+    //     return interaction.reply({ content: user.toString(), ephemeral: true, allowedMentions: { parse: [] } });
     let userInfo = `**\`• Username\`** ${user.tag}\n` +
         `**\`• ID\`** ${user.id}\n` +
         `**\`• Created\`** <t:${Math.round(user.createdTimestamp / 1000)}:R>`;

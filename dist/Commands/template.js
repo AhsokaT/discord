@@ -37,7 +37,7 @@ class Command {
             this.#interactionCallback(interaction, this);
         if (interaction.isButton() && this.#buttonCallback)
             return this.#buttonCallback(interaction, this);
-        if (interaction.isSelectMenu() && this.#selectMenuCallback)
+        if (interaction.isStringSelectMenu() && this.#selectMenuCallback)
             return this.#selectMenuCallback(interaction, this);
         if (interaction.isUserContextMenuCommand() && this.#userContextMenuCallback)
             return this.#userContextMenuCallback(interaction, this);

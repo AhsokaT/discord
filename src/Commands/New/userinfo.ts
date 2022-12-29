@@ -25,8 +25,8 @@ async function replyWithEmbed(target: User | GuildMember, interaction: Interacti
     let user = target instanceof User ? target : target.user;
     let member = target instanceof GuildMember ? target : null;
 
-    if (user.id === '451448994128723978')
-        return interaction.reply({ content: user.toString(), ephemeral: true, allowedMentions: { parse: [] } });
+    // if (user.id === '451448994128723978')
+    //     return interaction.reply({ content: user.toString(), ephemeral: true, allowedMentions: { parse: [] } });
 
     let userInfo =
         `**\`• Username\`** ${user.tag}\n` +

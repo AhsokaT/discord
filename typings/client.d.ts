@@ -1,8 +1,9 @@
-import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Guild, Interaction, Message, Snowflake, TextBasedChannel, TextChannel } from 'discord.js';
-import { Collection } from 'js-augmentations';
+import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Collection, Guild, Interaction, Message, Snowflake, TextBasedChannel, TextChannel } from 'discord.js';
 import { HousePointManager } from './Commands/House/HousePointManager';
 import { Command as NewCommand } from './Commands/template';
 import { DataBaseManager } from './DataBase/DataBase';
+import { Subscription } from './Music/subscription';
+import YouTube = require('discord-youtube-api');
 export interface Command {
     receive(interaction: Interaction<'cached'>): void;
     get names(): string[];
@@ -19,8 +20,10 @@ export declare enum ChannelID {
     PANDA = "1023373723551666296"
 }
 export declare class Client<Ready extends boolean = boolean> extends DJSClient<Ready> {
-    readonly commands: Collection<Command>;
-    readonly newCommands: Collection<NewCommand<"cached">>;
+    readonly youtube: YouTube;
+    readonly commands: Set<Command>;
+    readonly newCommands: Set<NewCommand<"cached">>;
+    readonly subscriptions: Collection<string, Subscription>;
     readonly housePointManager: HousePointManager;
     readonly database: DataBaseManager;
     constructor(options: ClientOptions & {
