@@ -134,7 +134,6 @@ class Subscription {
         try {
             const resource = await nextTrack.createAudioResource();
             this.player.play(resource);
-            this.nowPlaying = nextTrack;
             if (!this.nowPlayingMessage) {
                 let message = await this.interaction.editReply(this.buildNowPlayingMessage(nextTrack));
                 this.listenForInteraction(message);
@@ -150,6 +149,7 @@ class Subscription {
         }
         finally {
             this.queueLock = false;
+            this.nowPlaying = nextTrack;
         }
     }
     buildNowPlayingMessage(track) {

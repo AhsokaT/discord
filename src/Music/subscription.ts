@@ -154,12 +154,11 @@ export class Subscription {
 
 		this.queueLock = true;
 
-		const nextTrack = this.queue.shift()!;
+		const nextTrack = this.queue.shift()!
 
 		try {
 			const resource = await nextTrack.createAudioResource();
 			this.player.play(resource);
-            this.nowPlaying = nextTrack;
 
             if (!this.nowPlayingMessage) {
                 let message = await this.interaction.editReply(this.buildNowPlayingMessage(nextTrack));
@@ -175,6 +174,7 @@ export class Subscription {
 			return this.processQueue();
 		} finally {
             this.queueLock = false;
+            this.nowPlaying = nextTrack;
         }
 	}
 
