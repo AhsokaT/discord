@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Track = void 0;
 const voice_1 = require("@discordjs/voice");
 const discord_js_1 = require("discord.js");
-const youtube_dl_exec_1 = require("youtube-dl-exec");
 const ytdl_core_1 = require("ytdl-core");
+const youtube_dl_exec_1 = require("youtube-dl-exec");
 class Track {
     subscription;
     url;
@@ -81,14 +81,7 @@ class Track {
     }
     createAudioResource() {
         return new Promise((resolve, reject) => {
-            const process = (0, youtube_dl_exec_1.raw)(this.url, {
-                o: '-',
-                q: '',
-                f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-                r: '100K'
-            }, {
-                stdio: ['ignore', 'pipe', 'ignore']
-            });
+            const process = (0, youtube_dl_exec_1.raw)(this.url, { dumpSingleJson: false });
             if (!process.stdout) {
                 reject(Error('No stdout'));
                 return;
@@ -103,6 +96,10 @@ class Track {
             process
                 .once('spawn', () => {
                 (0, voice_1.demuxProbe)(stream)
+                    .then(probe => {
+                    console.log(probe);
+                    return probe;
+                })
                     .then(probe => resolve((0, voice_1.createAudioResource)(probe.stream, { metadata: this, inputType: probe.type })))
                     .catch(onError);
             })

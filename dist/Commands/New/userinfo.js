@@ -5,6 +5,9 @@ const builders_1 = require("@discordjs/builders");
 const discord_js_1 = require("discord.js");
 const housePicker_1 = require("../House/housePicker");
 const template_1 = require("../template");
+const MENU = new builders_1.ContextMenuCommandBuilder()
+    .setName('Info')
+    .setType(discord_js_1.ApplicationCommandType.User);
 const FLAG_EMOJIS = {
     'VerifiedDeveloper': '<:VERIFIED_DEVELOPER:766737559174119454>',
     'VerifiedBot': '<:VERIFIED_BOT:766737558896902155>',
@@ -82,8 +85,9 @@ async function replyWithEmbed(target, interaction) {
     });
 }
 exports.USER_INFO_COMMAND = new template_1.Command()
-    .addIdentifiers('Information', 'USERINFO')
+    .addIdentifiers('Information', 'USERINFO', 'Info')
     .addGuilds('509135025560616963')
+    .addBuilders(MENU)
     .onButton(async (interaction) => {
     let targetID = interaction.customId.split('_').pop();
     if (!targetID)

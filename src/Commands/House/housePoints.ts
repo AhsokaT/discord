@@ -51,7 +51,7 @@ export const HOUSE_POINTS = new Command()
 
         let changes = Object.keys(newTotals)
             .filter(house => newTotals[house] !== current[house])
-            .map(house => manager.addPoints(house as keyof HousePoints, newTotals[house] - current[house], false));
+            .map(house => manager.setPoints(house as keyof HousePoints, newTotals[house], false));
 
         try {
             await Promise.all(changes);

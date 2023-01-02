@@ -43,7 +43,7 @@ exports.HOUSE_POINTS = new template_1.Command()
     };
     let changes = Object.keys(newTotals)
         .filter(house => newTotals[house] !== current[house])
-        .map(house => manager.addPoints(house, newTotals[house] - current[house], false));
+        .map(house => manager.setPoints(house, newTotals[house], false));
     try {
         await Promise.all(changes);
         await manager.initCache();

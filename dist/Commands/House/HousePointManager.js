@@ -20,8 +20,11 @@ class HousePointManager extends TypedEmitter_1.TypedEmitter {
         return this.cache;
     }
     async addPoints(house, points, closeConnection = true) {
-        await this.client.database.edit(house, { points: this.cache[house] + points }, closeConnection);
-        this.cache[house] += points;
+        return this.setPoints(house, this.cache[house] + points, closeConnection);
+    }
+    async setPoints(house, points, closeConnection = true) {
+        await this.client.database.edit(house, { points }, closeConnection);
+        this.cache[house] = points;
         return this.cache;
     }
     get sorted() {

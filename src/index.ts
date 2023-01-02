@@ -1,4 +1,4 @@
-import { ActivityType, GatewayIntentBits } from 'discord.js';
+import { ActivitiesOptions, ActivityType, GatewayIntentBits } from 'discord.js';
 import { Client } from './client';
 import { config } from 'dotenv';
 
@@ -33,10 +33,22 @@ const mongoURL = process.env.MONGO;
 if (!mongoURL)
     throw new Error('process.env.MONGO is undefined');
 
+const activities: ActivitiesOptions[] = [
+    'The Clone Wars',
+    'The Mandalorian',
+    'Wednesday',
+    'Breaking Bad',
+    'Better Call Saul',
+    'Endgame',
+    'Iron Man',
+    'Captain America',
+    'Thor',
+].map(name => ({ type: ActivityType.Watching, name }));
+
 const client = new Client({
     presence: {
         status: 'idle',
-        activities: [{ type: ActivityType.Playing, name: 'Merry christmas :D' }]
+        activities
     },
     intents: [
         GatewayIntentBits.Guilds,
@@ -52,7 +64,19 @@ events.forEach(event => client.on(event.event, event.listener));
 
 client.on('ready', ready => {
     console.debug(`${ready.user.tag} is online!`);
-    // ready.guilds.fetch().then(guilds => guilds.forEach(guild => console.log(guild.name)));
+
+    let index = 0;
+
+    function setActivity() {
+        ready.user.setActivity(activities[index++]);
+
+        if (index === activities.length)
+            index = 0;
+
+        setTimeout(setActivity, [60_000 * 5, 60_000 * 7, 60_000 * 10][Math.floor(Math.random() * 3)]);
+    }
+
+    setActivity();
 });
 
 client.once('ready', async () => {

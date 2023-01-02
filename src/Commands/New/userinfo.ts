@@ -1,7 +1,11 @@
-import { ButtonBuilder } from '@discordjs/builders';
-import { ActionRowBuilder, ButtonStyle, EmbedBuilder, GuildMember, Interaction, MessageActionRowComponentBuilder, PermissionFlagsBits, Snowflake, User } from 'discord.js';
+import { ButtonBuilder, ContextMenuCommandBuilder } from '@discordjs/builders';
+import { ActionRowBuilder, ButtonStyle, EmbedBuilder, GuildMember, Interaction, MessageActionRowComponentBuilder, PermissionFlagsBits, Snowflake, User, ApplicationCommandType } from 'discord.js';
 import { RoleHouse, RoleID } from '../House/housePicker';
 import { Command } from '../template';
+
+const MENU = new ContextMenuCommandBuilder()
+    .setName('Info')
+    .setType(ApplicationCommandType.User);
 
 const FLAG_EMOJIS = {
     'VerifiedDeveloper': '<:VERIFIED_DEVELOPER:766737559174119454>',
@@ -105,8 +109,9 @@ async function replyWithEmbed(target: User | GuildMember, interaction: Interacti
 }
 
 export const USER_INFO_COMMAND = new Command()
-    .addIdentifiers('Information', 'USERINFO')
+    .addIdentifiers('Information', 'USERINFO', 'Info')
     .addGuilds('509135025560616963')
+    .addBuilders(MENU)
     .onButton(async interaction => {
         let targetID = interaction.customId.split('_').pop();
 

@@ -35,9 +35,13 @@ export class HousePointManager extends TypedEmitter<HousePointManagerEvent> {
     }
 
     async addPoints(house: HouseID, points: number, closeConnection = true) {
-        await this.client.database.edit(house, { points: this.cache[house] + points }, closeConnection);
+        return this.setPoints(house, this.cache[house] + points, closeConnection);
+    }
 
-        this.cache[house] += points;
+    async setPoints(house: HouseID, points: number, closeConnection = true) {
+        await this.client.database.edit(house, { points }, closeConnection);
+
+        this.cache[house] = points;
 
         return this.cache;
     }

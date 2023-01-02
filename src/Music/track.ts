@@ -1,8 +1,8 @@
 import { AudioResource, createAudioResource, demuxProbe } from '@discordjs/voice';
 import { Subscription } from './subscription';
 import { ActionRowBuilder, ButtonBuilder, Message, GuildMember, ButtonStyle, MessageActionRowComponentBuilder } from 'discord.js';
-import { raw as ytdl } from 'youtube-dl-exec';
 import { getBasicInfo } from 'ytdl-core';
+import { raw as ytdl} from 'youtube-dl-exec';
 
 interface VideoData {
     url: string;
@@ -109,17 +109,7 @@ export class Track implements Required<VideoData> {
 
 	createAudioResource(): Promise<AudioResource<Track>> {
 		return new Promise((resolve, reject) => {
-			const process = ytdl(
-				this.url, {
-					o: '-',
-					q: '',
-					f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-					r: '100K'
-				},
-				{
-					stdio: ['ignore', 'pipe', 'ignore']
-				}
-			);
+			const process = ytdl(this.url, { dumpSingleJson: false });
 
 			if (!process.stdout) {
 				reject(Error('No stdout'));
@@ -139,6 +129,10 @@ export class Track implements Required<VideoData> {
 			process
 				.once('spawn', () => {
 					demuxProbe(stream)
+						.then(probe => {
+							console.log(probe);
+							return probe;
+						})
 						.then(probe => resolve(createAudioResource(probe.stream, { metadata: this, inputType: probe.type })))
 						.catch(onError);
 				})

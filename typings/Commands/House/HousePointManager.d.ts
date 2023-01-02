@@ -12,5 +12,6 @@ export declare class HousePointManager extends TypedEmitter<HousePointManagerEve
     constructor(client: Client);
     initCache(): Promise<HousePoints>;
     addPoints(house: HouseID, points: number, closeConnection?: boolean): Promise<HousePoints>;
+    setPoints(house: HouseID, points: number, closeConnection?: boolean): Promise<HousePoints>;
     get sorted(): [string, number][];
 }
