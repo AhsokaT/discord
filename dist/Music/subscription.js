@@ -90,12 +90,10 @@ class Subscription {
         try {
             channel = await this.voice.fetch();
         }
-        catch {
-            console.warn('stopping with reason: err');
-            return this.stop(true);
+        catch (err) {
+            return console.warn(err);
         }
         if (channel.members.size < 2 && this.connection.state.status !== voice_1.VoiceConnectionStatus.Destroyed) {
-            console.warn('stopping with reason: empty channel');
             return this.stop(true);
         }
         setTimeout(() => this.checkMemberCount(), 15_000);

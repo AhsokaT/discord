@@ -101,13 +101,11 @@ export class Subscription {
 
         try {
             channel = await this.voice.fetch();
-        } catch {
-            console.warn('stopping with reason: err');
-            return this.stop(true);
+        } catch(err) {
+            return console.warn(err);
         }
 
         if (channel.members.size < 2 && this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
-            console.warn('stopping with reason: empty channel');
             return this.stop(true);
         }
 
@@ -154,7 +152,7 @@ export class Subscription {
 
 		this.queueLock = true;
 
-		const nextTrack = this.queue.shift()!
+		const nextTrack = this.queue.shift()!;
 
 		try {
 			const resource = await nextTrack.createAudioResource();

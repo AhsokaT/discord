@@ -1,4 +1,4 @@
-// @ts-nocheck
+// // @ts-nocheck
 
 import { EventEmitter } from 'events';
 
@@ -11,7 +11,7 @@ interface DefaultListener {
 }
 
 export class TypedEmitter<L extends Listeners<L> = DefaultListener> extends EventEmitter {
-    on<E extends keyof L>(event: E, listener: L[E]): this;
+    on<E extends keyof L>(event: Exclude<E, symbol>, listener: L[E]): this;
     once<E extends keyof L>(event: E, listener: L[E]): this;
     emit<E extends keyof L>(event: E, ...args: Parameters<L[E]>): boolean;
     off<E extends keyof L>(event: E, listener: L[E]): this;

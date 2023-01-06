@@ -81,7 +81,14 @@ class Track {
     }
     createAudioResource() {
         return new Promise((resolve, reject) => {
-            const process = (0, youtube_dl_exec_1.raw)(this.url, { dumpSingleJson: false });
+            const process = (0, youtube_dl_exec_1.raw)(this.url, {
+                o: '-',
+                q: '',
+                f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
+                r: '100K'
+            }, {
+                stdio: ['ignore', 'pipe', 'ignore']
+            });
             if (!process.stdout) {
                 reject(Error('No stdout'));
                 return;
