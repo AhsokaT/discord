@@ -8,7 +8,7 @@ import {
     VoiceConnectionDisconnectReason,
     VoiceConnectionStatus
 } from '@discordjs/voice';
-import { VoiceChannel, Guild, Message, ComponentType, ButtonInteraction, ChatInputCommandInteraction, ButtonBuilder, ButtonStyle, MessageActionRowComponentBuilder, ActionRowBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, MessageComponentInteraction } from 'discord.js';
+import { VoiceChannel, Guild, Message, ComponentType, ChatInputCommandInteraction, ButtonBuilder, ButtonStyle, MessageActionRowComponentBuilder, ActionRowBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, MessageComponentInteraction } from 'discord.js';
 import { Track } from './track';
 import { promisify } from 'util';
 import { Client } from '../client';
@@ -78,15 +78,6 @@ export class Subscription {
             } else if (newState.status === AudioPlayerStatus.Playing) {
                 (newState.resource as AudioResource<Track>).metadata.onStart().catch(console.warn);
             }
-
-            if (newState.status === AudioPlayerStatus.Idle && oldState.status !== AudioPlayerStatus.Idle || newState.status === AudioPlayerStatus.Playing)
-                this.queue.forEach(track => {
-                    for (let i = 0; i < track.messages.length; i++) {
-                        track.messages[i].delete().catch(console.warn);
-
-                        track.messages.splice(i, 1);
-                    }
-                });
         });
 
 		this.player.on('error', error => (error.resource as AudioResource<Track>).metadata.onError(error));
@@ -112,18 +103,11 @@ export class Subscription {
         setTimeout(() => this.checkMemberCount(), 15_000);
     }
 
-	enqueue(track: Track, position: 'next' | 'last' = 'last') {
-        if (position === 'last')
-            this.queue.push(track);
-        else
-            this.queue = [track, ...this.queue];
+	enqueue(track: Track[]) {
+        this.queue.push(...track);
 
-        if (this.player.state.status === AudioPlayerStatus.Playing) {
-            track.onEnqueue().catch(console.warn);
-
-            if (this.interaction.replied && this.nowPlaying && this.nowPlayingMessage)
-                this.nowPlayingMessage.edit(this.buildNowPlayingMessage(this.nowPlaying)).catch(console.warn);
-        }
+        if (this.player.state.status === AudioPlayerStatus.Playing && this.interaction.replied && this.nowPlaying && this.nowPlayingMessage)
+            this.nowPlayingMessage.edit(this.buildNowPlayingMessage(this.nowPlaying)).catch(console.warn);
 
 		void this.processQueue();
 	}
@@ -200,7 +184,7 @@ export class Subscription {
                 .setCustomId('shuffle')
                 .setStyle(ButtonStyle.Primary)
                 .setLabel('Shuffle')
-                .setDisabled(this.queue.length === 0),
+                .setDisabled(this.queue.length <= 1),
             new ButtonBuilder()
                 .setCustomId('stop')
                 .setStyle(ButtonStyle.Danger)
@@ -210,7 +194,7 @@ export class Subscription {
         const actionRow2 = new ActionRowBuilder<MessageActionRowComponentBuilder>();
 
         if (this.queue.length > 0) {
-            let options = this.queue.map(track => new StringSelectMenuOptionBuilder().setLabel(track.toString()).setValue(track.url));
+            let options = this.queue.map(track => new StringSelectMenuOptionBuilder().setLabel(track.toString()).setValue(track.url)).slice(0, 25);
 
             actionRow2.addComponents(new StringSelectMenuBuilder().addOptions(options).setCustomId('QUEUE').setPlaceholder('Up next'));
         }

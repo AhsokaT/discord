@@ -1,5 +1,5 @@
 import { AudioPlayer, VoiceConnection } from '@discordjs/voice';
-import { VoiceChannel, Guild, Message, ButtonInteraction, ChatInputCommandInteraction, MessageActionRowComponentBuilder, ActionRowBuilder, EmbedBuilder } from 'discord.js';
+import { VoiceChannel, Guild, Message, ChatInputCommandInteraction, MessageActionRowComponentBuilder, ActionRowBuilder, EmbedBuilder } from 'discord.js';
 import { Track } from './track';
 import { Client } from '../client';
 export declare class Subscription {
@@ -17,7 +17,7 @@ export declare class Subscription {
     nowPlaying: Track | null;
     constructor(client: Client, guild: Guild, connection: VoiceConnection, interaction: ChatInputCommandInteraction<'cached'>, voice: VoiceChannel);
     private checkMemberCount;
-    enqueue(track: Track, position?: 'next' | 'last'): void;
+    enqueue(track: Track[]): void;
     skip(): void;
     stop(leave?: boolean): void;
     private processQueue;
@@ -29,6 +29,6 @@ export declare class Subscription {
             parse: never[];
         };
     };
-    listenForInteraction(message: Message): import("discord.js").InteractionCollector<import("discord.js").StringSelectMenuInteraction<import("discord.js").CacheType> | import("discord.js").UserSelectMenuInteraction<import("discord.js").CacheType> | import("discord.js").RoleSelectMenuInteraction<import("discord.js").CacheType> | import("discord.js").MentionableSelectMenuInteraction<import("discord.js").CacheType> | import("discord.js").ChannelSelectMenuInteraction<import("discord.js").CacheType> | ButtonInteraction<import("discord.js").CacheType>>;
+    listenForInteraction(message: Message): import("discord.js").InteractionCollector<import("discord.js").StringSelectMenuInteraction<import("discord.js").CacheType> | import("discord.js").UserSelectMenuInteraction<import("discord.js").CacheType> | import("discord.js").RoleSelectMenuInteraction<import("discord.js").CacheType> | import("discord.js").MentionableSelectMenuInteraction<import("discord.js").CacheType> | import("discord.js").ChannelSelectMenuInteraction<import("discord.js").CacheType> | import("discord.js").ButtonInteraction<import("discord.js").CacheType>>;
     private onInteraction;
 }

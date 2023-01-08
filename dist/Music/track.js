@@ -3,25 +3,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Track = void 0;
 const voice_1 = require("@discordjs/voice");
 const discord_js_1 = require("discord.js");
-const ytdl_core_1 = require("ytdl-core");
 const youtube_dl_exec_1 = require("youtube-dl-exec");
 class Track {
+    video;
     subscription;
-    url;
-    title;
     addedBy;
-    messages = [];
-    loopOnce;
-    static async from(url, subscription, addedBy) {
-        const info = await (0, ytdl_core_1.getBasicInfo)(url);
-        return new Track({ url, subscription, addedBy, title: info.videoDetails.title });
-    }
-    constructor({ url, title, loopOnce = false, subscription, addedBy }) {
-        this.url = url;
-        this.title = title;
-        this.loopOnce = loopOnce;
+    constructor(video, subscription, addedBy) {
+        this.video = video;
         this.subscription = subscription;
         this.addedBy = addedBy;
+        this.video = video;
+        this.subscription = subscription;
+        this.addedBy = addedBy;
+    }
+    get url() {
+        return this.video.url;
+    }
+    get title() {
+        return this.video.title;
     }
     get queueActions() {
         const playNext = new discord_js_1.ButtonBuilder()
@@ -69,12 +68,8 @@ class Track {
         // this.listenForInteraction(message);
     }
     onFinish() {
-        if (this.loopOnce) {
-            this.loopOnce = false;
-            this.subscription.enqueue(this);
-        }
         if (this.subscription.loop)
-            this.subscription.enqueue(this);
+            this.subscription.enqueue([this]);
     }
     onError(error) {
         console.warn(`Track error: ${error}`);
@@ -103,10 +98,6 @@ class Track {
             process
                 .once('spawn', () => {
                 (0, voice_1.demuxProbe)(stream)
-                    .then(probe => {
-                    console.log(probe);
-                    return probe;
-                })
                     .then(probe => resolve((0, voice_1.createAudioResource)(probe.stream, { metadata: this, inputType: probe.type })))
                     .catch(onError);
             })

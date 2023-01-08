@@ -73,13 +73,6 @@ class Subscription {
             else if (newState.status === voice_1.AudioPlayerStatus.Playing) {
                 newState.resource.metadata.onStart().catch(console.warn);
             }
-            if (newState.status === voice_1.AudioPlayerStatus.Idle && oldState.status !== voice_1.AudioPlayerStatus.Idle || newState.status === voice_1.AudioPlayerStatus.Playing)
-                this.queue.forEach(track => {
-                    for (let i = 0; i < track.messages.length; i++) {
-                        track.messages[i].delete().catch(console.warn);
-                        track.messages.splice(i, 1);
-                    }
-                });
         });
         this.player.on('error', error => error.resource.metadata.onError(error));
         connection.subscribe(this.player);
@@ -98,16 +91,10 @@ class Subscription {
         }
         setTimeout(() => this.checkMemberCount(), 15_000);
     }
-    enqueue(track, position = 'last') {
-        if (position === 'last')
-            this.queue.push(track);
-        else
-            this.queue = [track, ...this.queue];
-        if (this.player.state.status === voice_1.AudioPlayerStatus.Playing) {
-            track.onEnqueue().catch(console.warn);
-            if (this.interaction.replied && this.nowPlaying && this.nowPlayingMessage)
-                this.nowPlayingMessage.edit(this.buildNowPlayingMessage(this.nowPlaying)).catch(console.warn);
-        }
+    enqueue(track) {
+        this.queue.push(...track);
+        if (this.player.state.status === voice_1.AudioPlayerStatus.Playing && this.interaction.replied && this.nowPlaying && this.nowPlayingMessage)
+            this.nowPlayingMessage.edit(this.buildNowPlayingMessage(this.nowPlaying)).catch(console.warn);
         void this.processQueue();
     }
     skip() {
@@ -170,13 +157,13 @@ class Subscription {
             .setCustomId('shuffle')
             .setStyle(discord_js_1.ButtonStyle.Primary)
             .setLabel('Shuffle')
-            .setDisabled(this.queue.length === 0), new discord_js_1.ButtonBuilder()
+            .setDisabled(this.queue.length <= 1), new discord_js_1.ButtonBuilder()
             .setCustomId('stop')
             .setStyle(discord_js_1.ButtonStyle.Danger)
             .setLabel('Stop'));
         const actionRow2 = new discord_js_1.ActionRowBuilder();
         if (this.queue.length > 0) {
-            let options = this.queue.map(track => new discord_js_1.StringSelectMenuOptionBuilder().setLabel(track.toString()).setValue(track.url));
+            let options = this.queue.map(track => new discord_js_1.StringSelectMenuOptionBuilder().setLabel(track.toString()).setValue(track.url)).slice(0, 25);
             actionRow2.addComponents(new discord_js_1.StringSelectMenuBuilder().addOptions(options).setCustomId('QUEUE').setPlaceholder('Up next'));
         }
         return {

@@ -19,6 +19,7 @@
         "declaration": true,
         "emitDeclarationOnly": false,
         "outDir": "./dist",
-        "declarationDir": "./typings/"
+        "declarationDir": "./typings/",
+        "esModuleInterop": true
     }
 }

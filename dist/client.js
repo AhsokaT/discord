@@ -1,10 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Client = exports.ChannelID = void 0;
 const discord_js_1 = require("discord.js");
 const HousePointManager_1 = require("./Commands/House/HousePointManager");
 const DataBase_1 = require("./DataBase/DataBase");
-const YouTube = require("discord-youtube-api");
+const discord_youtube_api_1 = __importDefault(require("discord-youtube-api"));
 var ChannelID;
 (function (ChannelID) {
     ChannelID["Logs"] = "1025143957186941038";
@@ -26,7 +29,7 @@ class Client extends discord_js_1.Client {
         super(options);
         if (!process.env.YOUTUBEAPI)
             throw Error('YouTube API key not found.');
-        this.youtube = new YouTube(process.env.YOUTUBEAPI);
+        this.youtube = new discord_youtube_api_1.default(process.env.YOUTUBEAPI);
         this.database = new DataBase_1.DataBaseManager(options.mongoURL);
         this.housePointManager = new HousePointManager_1.HousePointManager(this);
         this.on('interactionCreate', interaction => this.receiveInteraction(interaction));

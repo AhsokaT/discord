@@ -1,5 +1,6 @@
-import { AudioPlayerStatus, entersState, joinVoiceChannel, VoiceConnectionStatus } from '@discordjs/voice';
-import { ActionRowBuilder, ChannelSelectMenuBuilder, ChannelType, MentionableSelectMenuBuilder, MessageActionRowComponentBuilder, PermissionFlagsBits, RoleSelectMenuBuilder, SlashCommandBuilder, UserSelectMenuBuilder } from 'discord.js';
+import { entersState, joinVoiceChannel, VoiceConnectionStatus } from '@discordjs/voice';
+import { Video } from 'discord-youtube-api';
+import { ChannelType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { validateURL } from 'ytdl-core';
 import { Client } from '../client';
 import { Subscription } from '../Music/subscription';
@@ -75,32 +76,40 @@ export const PLAY = new Command()
 
         const input = interaction.options.getString('track', true);
 
-        let url: string | null = null;
+        let videos: Video[] = [];
 
-        if (validateURL(input)) {
-            url = input;
+        if (validateURL(input) && input.includes('list')) {
+            const id = input.split('list=')[1].split('&')[0];
+
+            const playlist = await client.youtube.getPlaylistByID(id).catch(() => null);
+
+            if (playlist)
+                videos.push(...playlist);
+        } else if (validateURL(input)) {
+            const video = await client.youtube.getVideo(input).catch(() => null);
+
+            if (video)
+                videos.push(video);
         } else {
-            const search = await client.youtube.searchVideos(input, 1).catch(console.warn);
+            const search = await client.youtube.searchVideos(input, 10).catch(() => null);
 
             if (search)
-                url = search.url;
+                videos.push(search);
         }
 
-        if (!url)
-            return void interaction.editReply(':x: Search returned no videos').catch(console.warn);
+        if (videos.length === 0) {
+            if (createdSubscription)
+                subscription.stop(true);
 
-        if (subscription.queue.find((video) => video.url === url))
-            return void interaction.editReply('Track is already in the queue 🎶').catch(console.warn);
-
-        try {
-            const track = await Track.from(url, subscription, interaction.member);
-
-            subscription.enqueue(track);
-
-            if (!createdSubscription)
-                interaction.editReply(`[${track}](<${url}>) is number ${subscription.queue.findIndex(track => track.url === url) + 1} in the queue`);
-        } catch(err) {
-            console.warn(err);
-            interaction.editReply(':x: An error occurred whilst fetching the track').catch(console.warn);
+            return void interaction.editReply(':x: Search returned no videos')
+                .then(reply => setTimeout(() => reply.delete(), 15000))
+                .catch(console.warn);
         }
+
+        const tracks = videos.map(video => new Track(video, subscription!, interaction.member));
+
+        subscription.enqueue(tracks);
+
+        if (!createdSubscription)
+            interaction.editReply(tracks.length === 1 ? `Added [${tracks[0]}](<${tracks[0].url}>) to the queue` : `Added ${tracks.length} tracks to the queue`).catch(console.warn);
     });

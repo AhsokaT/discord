@@ -3,7 +3,7 @@ import { HousePointManager } from './Commands/House/HousePointManager';
 import { Command as NewCommand } from './Commands/template';
 import { DataBaseManager } from './DataBase/DataBase';
 import { Subscription } from './Music/subscription';
-import YouTube = require('discord-youtube-api');
+import YouTube from 'discord-youtube-api';
 
 export interface Command {
     receive(interaction: Interaction<'cached'>): void;

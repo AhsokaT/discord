@@ -1,20 +1,14 @@
 import { AudioResource } from '@discordjs/voice';
 import { Subscription } from './subscription';
-import { ActionRowBuilder, Message, GuildMember, MessageActionRowComponentBuilder } from 'discord.js';
-interface VideoData {
-    url: string;
-    loopOnce?: boolean;
-    title: string;
-}
-export declare class Track implements Required<VideoData> {
+import { ActionRowBuilder, GuildMember, MessageActionRowComponentBuilder } from 'discord.js';
+import { Video } from 'discord-youtube-api';
+export declare class Track {
+    readonly video: Video;
     readonly subscription: Subscription;
-    readonly url: string;
-    readonly title: string;
     readonly addedBy: GuildMember;
-    messages: Message[];
-    loopOnce: boolean;
-    static from(url: string, subscription: Subscription, addedBy: GuildMember): Promise<Track>;
-    private constructor();
+    constructor(video: Video, subscription: Subscription, addedBy: GuildMember);
+    get url(): string;
+    get title(): string;
     get queueActions(): ActionRowBuilder<MessageActionRowComponentBuilder>;
     onStart(): Promise<void>;
     onEnqueue(): Promise<void>;
@@ -23,4 +17,3 @@ export declare class Track implements Required<VideoData> {
     createAudioResource(): Promise<AudioResource<Track>>;
     toString(): string;
 }
-export {};

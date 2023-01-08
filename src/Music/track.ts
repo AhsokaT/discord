@@ -1,41 +1,26 @@
 import { AudioResource, createAudioResource, demuxProbe } from '@discordjs/voice';
 import { Subscription } from './subscription';
-import { ActionRowBuilder, ButtonBuilder, Message, GuildMember, ButtonStyle, MessageActionRowComponentBuilder } from 'discord.js';
-import { getBasicInfo } from 'ytdl-core';
+import { ActionRowBuilder, ButtonBuilder, GuildMember, ButtonStyle, MessageActionRowComponentBuilder } from 'discord.js';
 import { raw as ytdl } from 'youtube-dl-exec';
+import { Video } from 'discord-youtube-api';
 
-interface VideoData {
-    url: string;
-    loopOnce?: boolean;
-    title: string;
-}
-
-interface TrackOptions extends VideoData {
-	subscription: Subscription;
-    addedBy: GuildMember;
-}
-
-export class Track implements Required<VideoData> {
-	readonly subscription: Subscription;
-	readonly url: string;
-	readonly title: string;
-    readonly addedBy: GuildMember;
-
-	public messages: Message[] = [];
-	public loopOnce: boolean;
-
-	static async from(url: string, subscription: Subscription, addedBy: GuildMember): Promise<Track> {
-        const info = await getBasicInfo(url);
-
-		return new Track({ url, subscription, addedBy, title: info.videoDetails.title });
-	}
-
-	private constructor({ url, title, loopOnce = false, subscription, addedBy }: TrackOptions) {
-		this.url = url;
-		this.title = title;
-		this.loopOnce = loopOnce;
+export class Track {
+	constructor(
+		readonly video: Video,
+		readonly subscription: Subscription,
+		readonly addedBy: GuildMember
+	) {
+		this.video = video;
 		this.subscription = subscription;
         this.addedBy = addedBy;
+	}
+
+	get url() {
+		return this.video.url;
+	}
+
+	get title() {
+		return this.video.title;
 	}
 
     get queueActions() {
@@ -94,13 +79,8 @@ export class Track implements Required<VideoData> {
 	}
 
 	onFinish() {
-		if (this.loopOnce) {
-			this.loopOnce = false;
-			this.subscription.enqueue(this);
-		}
-
 		if (this.subscription.loop)
-			this.subscription.enqueue(this);
+			this.subscription.enqueue([this]);
 	}
 
 	onError(error: any): void {
@@ -139,10 +119,6 @@ export class Track implements Required<VideoData> {
 			process
 				.once('spawn', () => {
 					demuxProbe(stream)
-						.then(probe => {
-							console.log(probe);
-							return probe;
-						})
 						.then(probe => resolve(createAudioResource(probe.stream, { metadata: this, inputType: probe.type })))
 						.catch(onError);
 				})
