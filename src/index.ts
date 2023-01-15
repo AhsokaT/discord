@@ -17,6 +17,8 @@ import { guildMemberAdd } from './Events/guildMemberAdd';
 import { guildBanAdd } from './Events/guildBanAdd';
 import { guildBanRemove } from './Events/guildBanRemove';
 import { PLAY } from './Commands/play';
+import { MESSAGE } from './Commands/message';
+import { MESSAGE_DELETE } from './Commands/messageDelete';
 
 // dotenv
 config();
@@ -93,7 +95,9 @@ client.once('ready', async () => {
         HOUSE_POINTS,
         UPDATE_LEADERBOARD,
         RENAME_HOUSE,
-        PLAY
+        PLAY,
+        MESSAGE,
+        MESSAGE_DELETE
     );
 
     postHousePicker(client)

@@ -18,6 +18,8 @@ const guildMemberAdd_1 = require("./Events/guildMemberAdd");
 const guildBanAdd_1 = require("./Events/guildBanAdd");
 const guildBanRemove_1 = require("./Events/guildBanRemove");
 const play_1 = require("./Commands/play");
+const message_1 = require("./Commands/message");
+const messageDelete_1 = require("./Commands/messageDelete");
 // dotenv
 (0, dotenv_1.config)();
 const events = [
@@ -68,7 +70,7 @@ client.on('ready', ready => {
 });
 client.once('ready', async () => {
     client.registerCommands(new ban_1.BanCommand(), new unban_1.UnbanCommand());
-    client.addCommands(leaderboard_1.LEADERBOARD, userinfo_1.USER_INFO_COMMAND, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, leaderboard_1.UPDATE_LEADERBOARD, renameHouse_1.RENAME_HOUSE, play_1.PLAY);
+    client.addCommands(leaderboard_1.LEADERBOARD, userinfo_1.USER_INFO_COMMAND, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, leaderboard_1.UPDATE_LEADERBOARD, renameHouse_1.RENAME_HOUSE, play_1.PLAY, message_1.MESSAGE, messageDelete_1.MESSAGE_DELETE);
     (0, misc_1.postHousePicker)(client)
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
     // client.emit('guildMemberRemove', await (await client.fetchDO()).fetchOwner());
