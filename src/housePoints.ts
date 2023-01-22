@@ -26,7 +26,7 @@ export class HousePoints implements Record<HouseID, number> {
     }
 
     toJSON() {
-        return JSON.stringify(Object.keys(this).reduce((acc, h) => Object.assign(acc, { [h]: this[h] }), {}));
+        return JSON.stringify(Object.assign({}, this));
     }
 
     difference(other: HousePoints) {
@@ -35,5 +35,9 @@ export class HousePoints implements Record<HouseID, number> {
 
     equals(other: HousePoints) {
         return HousePoints.equals(this, other);
+    }
+
+    copy() {
+        return new HousePoints(this);
     }
 }

@@ -8,7 +8,7 @@ import { House, HOUSE_COMMAND } from './Commands/House/housePicker';
 import { USER_INFO_COMMAND } from './Commands/New/userinfo';
 import { UnbanCommand } from './Commands/unban';
 import { postHousePicker } from './misc';
-import { LEADERBOARD, UPDATE_LEADERBOARD } from './Commands/House/leaderboard';
+import { DELETE_LEADERBOARD, LEADERBOARD, UPDATE_LEADERBOARD } from './Commands/House/leaderboard';
 import { HOUSE_INFO } from './Commands/House/houseInfo';
 import { guildMemberRemove } from './Events/guildMemberRemove';
 import { HOUSE_POINTS } from './Commands/House/housePoints';
@@ -102,7 +102,8 @@ client.once('ready', async () => {
         MESSAGE,
         MESSAGE_DELETE,
         TEST,
-        POINT_CHANGE
+        POINT_CHANGE,
+        DELETE_LEADERBOARD
     );
 
     postHousePicker(client)

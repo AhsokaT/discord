@@ -5,6 +5,7 @@ export declare const pointChangeButton: (before: HousePoints, after: HousePoints
 export declare function pointChangeEmbed(house: HouseID, before: number, after: number): EmbedBuilder;
 export declare function allPointChangeEmbed(before: HousePoints, after: HousePoints): EmbedBuilder;
 export declare const UpdateLeaderboardButton: (label?: string) => ButtonBuilder;
+export declare const DeleteLeaderboardButton: () => ButtonBuilder;
 export declare const UserInfoButton: (user: Snowflake, label?: string) => ButtonBuilder;
 export declare const LeaderboardButton: (label?: string) => ButtonBuilder;
 export declare const HouseInfoButton: (house: HouseID, label?: string) => ButtonBuilder;

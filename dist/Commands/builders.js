@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LeaderboardEmbed = exports.BanButton = exports.RevokeBanButton = exports.HouseInfoButton = exports.LeaderboardButton = exports.UserInfoButton = exports.UpdateLeaderboardButton = exports.allPointChangeEmbed = exports.pointChangeEmbed = exports.pointChangeButton = void 0;
+exports.LeaderboardEmbed = exports.BanButton = exports.RevokeBanButton = exports.HouseInfoButton = exports.LeaderboardButton = exports.UserInfoButton = exports.DeleteLeaderboardButton = exports.UpdateLeaderboardButton = exports.allPointChangeEmbed = exports.pointChangeEmbed = exports.pointChangeButton = void 0;
 const discord_js_1 = require("discord.js");
 const houseInfo_1 = require("./House/houseInfo");
 const housePicker_1 = require("./House/housePicker");
@@ -50,6 +50,11 @@ const UpdateLeaderboardButton = (label = 'Refresh') => new discord_js_1.ButtonBu
     .setStyle(discord_js_1.ButtonStyle.Primary)
     .setLabel(label);
 exports.UpdateLeaderboardButton = UpdateLeaderboardButton;
+const DeleteLeaderboardButton = () => new discord_js_1.ButtonBuilder()
+    .setCustomId('DELETELEADERBOARD')
+    .setStyle(discord_js_1.ButtonStyle.Danger)
+    .setEmoji('🗑️');
+exports.DeleteLeaderboardButton = DeleteLeaderboardButton;
 const UserInfoButton = (user, label = 'User') => new discord_js_1.ButtonBuilder()
     .setCustomId(`USERINFO_${user}`)
     .setStyle(discord_js_1.ButtonStyle.Primary)

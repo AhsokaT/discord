@@ -22,13 +22,16 @@ class HousePoints {
             Object.assign(this, points);
     }
     toJSON() {
-        return JSON.stringify(Object.keys(this).reduce((acc, h) => Object.assign(acc, { [h]: this[h] }), {}));
+        return JSON.stringify(Object.assign({}, this));
     }
     difference(other) {
         return HousePoints.difference(this, other);
     }
     equals(other) {
         return HousePoints.equals(this, other);
+    }
+    copy() {
+        return new HousePoints(this);
     }
 }
 exports.HousePoints = HousePoints;

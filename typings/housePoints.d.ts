@@ -12,4 +12,5 @@ export declare class HousePoints implements Record<HouseID, number> {
     toJSON(): string;
     difference(other: HousePoints): any;
     equals(other: HousePoints): boolean;
+    copy(): HousePoints;
 }

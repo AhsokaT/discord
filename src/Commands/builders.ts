@@ -62,6 +62,11 @@ export const UpdateLeaderboardButton = (label = 'Refresh') => new ButtonBuilder(
     .setStyle(ButtonStyle.Primary)
     .setLabel(label);
 
+export const DeleteLeaderboardButton = () => new ButtonBuilder()
+    .setCustomId('DELETELEADERBOARD')
+    .setStyle(ButtonStyle.Danger)
+    .setEmoji('🗑️');
+
 export const UserInfoButton = (user: Snowflake, label = 'User') => new ButtonBuilder()
     .setCustomId(`USERINFO_${user}`)
     .setStyle(ButtonStyle.Primary)
