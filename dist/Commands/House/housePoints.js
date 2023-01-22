@@ -5,8 +5,6 @@ const discord_js_1 = require("discord.js");
 const client_1 = require("../../client");
 const builders_1 = require("../builders");
 const template_1 = require("../template");
-const houseInfo_1 = require("./houseInfo");
-const housePicker_1 = require("./housePicker");
 const SLASH_COMMAND = new discord_js_1.SlashCommandBuilder()
     .setName('housepoints')
     .setDescription('Add or remove points from any house')
@@ -58,33 +56,29 @@ exports.HOUSE_POINTS = new template_1.Command()
     Object.keys(newTotals)
         .filter(house => newTotals[house] !== current[house])
         .forEach(house => {
-        const position = manager.sorted.findIndex(([name]) => name === house) + 1;
-        const points = newTotals[house] - current[house];
-        const content = points > 0 ?
-            `:partying_face: Congratulations <@&${housePicker_1.RoleID[house]}> you earned **${points} points!** You are **${houseInfo_1.Ordinal[position]}** with **${manager.cache[house]} points**` :
-            `:confused: <@&${housePicker_1.RoleID[house]}> you lost **${-points} points** >:( do better. You are **${houseInfo_1.Ordinal[position]}** with **${manager.cache[house]} points**`;
+        const changeButton = (0, builders_1.pointChangeButton)(current, newTotals);
+        const actionRow = new discord_js_1.ActionRowBuilder();
+        if (changeButton)
+            actionRow.addComponents(changeButton, (0, builders_1.LeaderboardButton)());
+        else
+            actionRow.addComponents((0, builders_1.LeaderboardButton)());
         client.sendToChannel(client_1.ChannelID[house], {
-            content,
-            components: [
-                new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.LeaderboardButton)())
-            ]
+            embeds: [(0, builders_1.pointChangeEmbed)(house, current[house], newTotals[house])],
+            components: [actionRow]
         })
             .catch(console.debug);
     });
     const changed = Object.keys(newTotals).some(house => newTotals[house] !== current[house]);
-    interaction.editReply({
-        content: (0, builders_1.buildChangesMessage)(current, newTotals) || 'No changes were made',
-        allowedMentions: { parse: [] }
-    }).catch(console.debug);
+    interaction.editReply(changed ? 'Changes made' : 'No changes were made').catch(console.debug);
     if (!changed)
         return;
     try {
         const channels = await Promise.all([client.fetchLogChannel(), client.fetchCompetitionChannel()]);
         channels.forEach(channel => channel.send({
-            content: (0, builders_1.buildChangesMessage)(current, newTotals),
+            embeds: [(0, builders_1.allPointChangeEmbed)(current, newTotals)],
             allowedMentions: { parse: [] },
             components: [
-                new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.UserInfoButton)(interaction.user.id, 'Changed by'), (0, builders_1.LeaderboardButton)())
+                new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.LeaderboardButton)())
             ]
         }));
     }

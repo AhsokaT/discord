@@ -4,7 +4,7 @@ import { config } from 'dotenv';
 
 // Commands
 import { BanCommand as OldBan } from './Commands/ban';
-import { HOUSE_COMMAND } from './Commands/House/housePicker';
+import { House, HOUSE_COMMAND } from './Commands/House/housePicker';
 import { USER_INFO_COMMAND } from './Commands/New/userinfo';
 import { UnbanCommand } from './Commands/unban';
 import { postHousePicker } from './misc';
@@ -19,6 +19,9 @@ import { guildBanRemove } from './Events/guildBanRemove';
 import { PLAY } from './Commands/play';
 import { MESSAGE } from './Commands/message';
 import { MESSAGE_DELETE } from './Commands/messageDelete';
+import { TEST } from './Commands/test';
+import { POINT_CHANGE } from './Commands/seeAllChanges';
+import { HousePoints } from './housePoints';
 
 // dotenv
 config();
@@ -97,15 +100,24 @@ client.once('ready', async () => {
         RENAME_HOUSE,
         PLAY,
         MESSAGE,
-        MESSAGE_DELETE
+        MESSAGE_DELETE,
+        TEST,
+        POINT_CHANGE
     );
 
     postHousePicker(client)
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
-
-    // client.emit('guildMemberRemove', await (await client.fetchDO()).fetchOwner());
 });
 
 client.login(process.env.TOKEN);
 
 process.on('unhandledRejection', console.error);
+
+const x = HousePoints.sample();
+const y = HousePoints.sample();
+
+console.debug(x);
+console.debug(y);
+console.debug(x.difference(y));
+console.debug(y.toJSON());
+console.debug(x.equals(y));

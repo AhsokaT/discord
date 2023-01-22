@@ -4,7 +4,20 @@ exports.guildMemberAdd = void 0;
 const discord_js_1 = require("discord.js");
 const builders_1 = require("../Commands/builders");
 const ClientEvent_1 = require("./ClientEvent");
-exports.guildMemberAdd = new ClientEvent_1.ClientEvent('guildMemberAdd', member => {
+exports.guildMemberAdd = new ClientEvent_1.ClientEvent('guildMemberAdd', async (member) => {
+    // const channel = await (member.client as Client).channels.fetch('1017094377690108046');
+    // if (channel && channel.isTextBased())
+    //     channel.send({
+    //         content: `Welcome ${member}`,
+    //         components: [
+    //             new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+    //                 new ButtonBuilder()
+    //                     .setLabel('Choose house')
+    //                     .setCustomId('SETUP')
+    //                     .setStyle(ButtonStyle.Primary)
+    //             )
+    //         ]
+    //     }).then(m => setTimeout(() => m.delete(), 10000));
     const embed = new discord_js_1.EmbedBuilder()
         .setColor('#2F3136')
         .setTitle('Member joined')

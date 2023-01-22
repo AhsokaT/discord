@@ -1,10 +1,10 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js';
 import { ChannelID, Client } from '../../client';
-import { buildChangesMessage, LeaderboardButton, UserInfoButton } from '../builders';
+import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed, UserInfoButton } from '../builders';
 import { Command } from '../template';
 import { Ordinal } from './houseInfo';
 import { RoleID } from './housePicker';
-import { HousePoints } from './HousePointManager';
+import { HouseID, HousePoints } from './HousePointManager';
 
 const SLASH_COMMAND = new SlashCommandBuilder()
     .setName('housepoints')
@@ -67,28 +67,25 @@ export const HOUSE_POINTS = new Command()
         Object.keys(newTotals)
             .filter(house => newTotals[house] !== current[house])
             .forEach(house => {
-                const position = manager.sorted.findIndex(([name]) => name === house) + 1;
-                const points = newTotals[house] - current[house];
+                const changeButton = pointChangeButton(current, newTotals);
 
-                const content = points > 0 ?
-                    `:partying_face: Congratulations <@&${RoleID[house]}> you earned **${points} points!** You are **${Ordinal[position]}** with **${manager.cache[house]} points**` :
-                    `:confused: <@&${RoleID[house]}> you lost **${-points} points** >:( do better. You are **${Ordinal[position]}** with **${manager.cache[house]} points**`;
+                const actionRow = new ActionRowBuilder<MessageActionRowComponentBuilder>();
+
+                if (changeButton)
+                    actionRow.addComponents(changeButton, LeaderboardButton());
+                else
+                    actionRow.addComponents(LeaderboardButton());
 
                 client.sendToChannel(ChannelID[house], {
-                    content,
-                    components: [
-                        new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(LeaderboardButton())
-                    ]
+                    embeds: [pointChangeEmbed(house as HouseID, current[house], newTotals[house])],
+                    components: [actionRow]
                 })
                 .catch(console.debug);
             });
 
         const changed = Object.keys(newTotals).some(house => newTotals[house] !== current[house]);
 
-        interaction.editReply({
-            content: buildChangesMessage(current, newTotals) || 'No changes were made',
-            allowedMentions: { parse: [] }
-        }).catch(console.debug);
+        interaction.editReply(changed ? 'Changes made' : 'No changes were made').catch(console.debug);
 
         if (!changed)
             return;
@@ -97,13 +94,10 @@ export const HOUSE_POINTS = new Command()
             const channels = await Promise.all([client.fetchLogChannel(), client.fetchCompetitionChannel()]);
 
             channels.forEach(channel => channel.send({
-                content: buildChangesMessage(current, newTotals),
+                embeds: [allPointChangeEmbed(current, newTotals)],
                 allowedMentions: { parse: [] },
                 components: [
-                    new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-                        UserInfoButton(interaction.user.id, 'Changed by'),
-                        LeaderboardButton()
-                    )
+                    new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(LeaderboardButton())
                 ]
             }));
         } catch(err) {

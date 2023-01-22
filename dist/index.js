@@ -20,6 +20,9 @@ const guildBanRemove_1 = require("./Events/guildBanRemove");
 const play_1 = require("./Commands/play");
 const message_1 = require("./Commands/message");
 const messageDelete_1 = require("./Commands/messageDelete");
+const test_1 = require("./Commands/test");
+const seeAllChanges_1 = require("./Commands/seeAllChanges");
+const housePoints_2 = require("./housePoints");
 // dotenv
 (0, dotenv_1.config)();
 const events = [
@@ -70,10 +73,16 @@ client.on('ready', ready => {
 });
 client.once('ready', async () => {
     client.registerCommands(new ban_1.BanCommand(), new unban_1.UnbanCommand());
-    client.addCommands(leaderboard_1.LEADERBOARD, userinfo_1.USER_INFO_COMMAND, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, leaderboard_1.UPDATE_LEADERBOARD, renameHouse_1.RENAME_HOUSE, play_1.PLAY, message_1.MESSAGE, messageDelete_1.MESSAGE_DELETE);
+    client.addCommands(leaderboard_1.LEADERBOARD, userinfo_1.USER_INFO_COMMAND, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, leaderboard_1.UPDATE_LEADERBOARD, renameHouse_1.RENAME_HOUSE, play_1.PLAY, message_1.MESSAGE, messageDelete_1.MESSAGE_DELETE, test_1.TEST, seeAllChanges_1.POINT_CHANGE);
     (0, misc_1.postHousePicker)(client)
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
-    // client.emit('guildMemberRemove', await (await client.fetchDO()).fetchOwner());
 });
 client.login(process.env.TOKEN);
 process.on('unhandledRejection', console.error);
+const x = housePoints_2.HousePoints.sample();
+const y = housePoints_2.HousePoints.sample();
+console.debug(x);
+console.debug(y);
+console.debug(x.difference(y));
+console.debug(y.toJSON());
+console.debug(x.equals(y));
