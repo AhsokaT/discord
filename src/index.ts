@@ -17,7 +17,7 @@ import { guildMemberAdd } from './Events/guildMemberAdd';
 import { guildBanAdd } from './Events/guildBanAdd';
 import { guildBanRemove } from './Events/guildBanRemove';
 import { PLAY } from './Commands/play';
-import { MESSAGE } from './Commands/message';
+import { MESSAGE } from './Commands/send';
 import { MESSAGE_DELETE } from './Commands/messageDelete';
 import { TEST } from './Commands/test';
 import { POINT_CHANGE } from './Commands/seeAllChanges';

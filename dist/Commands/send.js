@@ -21,7 +21,7 @@ const SLASH = new discord_js_1.SlashCommandBuilder()
     .setRequired(true)))
     .addSubcommand(new discord_js_1.SlashCommandSubcommandBuilder()
     .setName('embed')
-    .setDescription('Send an embed')
+    .setDescription('Construct and send an embed to a channel')
     .addChannelOption(option => option
     .addChannelTypes(discord_js_1.ChannelType.GuildText)
     .setName('channel')
@@ -51,22 +51,42 @@ exports.MESSAGE = new template_1.Command()
     catch {
         return;
     }
+    if (interaction.commandName === 'send message') {
+        const channel = interaction.options.getChannel('channel', true);
+        const content = interaction.options.getString('message', true);
+        let message;
+        try {
+            message = await channel.send(`\` Author \` ${interaction.user}\n${content}}`);
+        }
+        catch {
+            return void interaction.editReply('Failed to send message :(');
+        }
+        return void interaction.editReply({
+            content: `[Message](${message.url}) sent to ${channel}`,
+            components: [
+                new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder()
+                    .setCustomId(`MESSAGEDELETE_${message.channelId}_${message.id}`)
+                    .setLabel('Delete')
+                    .setStyle(discord_js_1.ButtonStyle.Danger))
+            ]
+        }).catch(console.warn);
+    }
     const channel = interaction.options.getChannel('channel', true);
-    const content = interaction.options.getString('message', true);
-    let message;
-    try {
-        message = await channel.send(`\` Author \` ${interaction.user}\n${content}}`);
-    }
-    catch {
-        return void interaction.editReply('Failed to send message :(');
-    }
-    interaction.editReply({
-        content: `[Message](${message.url}) sent to ${channel}`,
-        components: [
-            new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder()
-                .setCustomId(`MESSAGEDELETE_${message.channelId}_${message.id}`)
-                .setLabel('Delete')
-                .setStyle(discord_js_1.ButtonStyle.Danger))
-        ]
-    }).catch(console.warn);
+    const colour = interaction.options.getString('color', false);
+    const description = interaction.options.getString('description', false);
+    const title = interaction.options.getString('title', false);
+    const embed = new discord_js_1.EmbedBuilder();
+    if (colour)
+        embed.setColor(discord_js_1.Colors[colour]);
+    if (description)
+        embed.setDescription(description);
+    if (title)
+        embed.setTitle(title);
+    channel.send({ embeds: [embed] })
+        .then(m => {
+        setTimeout(() => m.delete(), 15000);
+        return m;
+    })
+        .then(m => interaction.editReply(`[Message](${m.url}) sent in ${m.channel}`))
+        .catch(() => interaction.editReply('Failed to send message'));
 });
