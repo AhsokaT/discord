@@ -86,6 +86,5 @@ function housePosition([h, p], index, all) {
 const LeaderboardEmbed = (client) => new discord_js_1.EmbedBuilder()
     .setColor('#2F3136')
     .setTitle('Leaderboard')
-    .setAuthor({ name: client.user.tag, iconURL: client.user.displayAvatarURL({ size: 4096 }) })
     .setDescription(client.housePointManager.sorted.reduce((acc, h, i, a) => acc + housePosition(h, i, a), `Refreshed <t:${Math.round(Date.now() / 1000)}:R>\n`));
 exports.LeaderboardEmbed = LeaderboardEmbed;

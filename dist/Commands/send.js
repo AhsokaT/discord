@@ -39,11 +39,39 @@ const SLASH = new discord_js_1.SlashCommandBuilder()
     .setName('color')
     .setDescription('Color of the embed')
     .addChoices(...Object.keys(discord_js_1.Colors).slice(0, 25).map(colour => ({ name: colour, value: colour })))
+    .setRequired(false))
+    .addStringOption(option => option
+    .setName('author')
+    .setDescription('Author of the embed')
+    .setRequired(false))
+    .addStringOption(option => option
+    .setName('footer')
+    .setDescription('Footer of the embed')
+    .setRequired(false))
+    .addStringOption(option => option
+    .setName('thumbnail')
+    .setDescription('Thumbnail of the embed')
+    .setRequired(false))
+    .addStringOption(option => option
+    .setName('image')
+    .setDescription('Image of the embed')
+    .setRequired(false))
+    .addStringOption(option => option
+    .setName('url')
+    .setDescription('URL of the title of the embed')
+    .setRequired(false))
+    .addStringOption(option => option
+    .setName('authoriconurl')
+    .setDescription('Icon of the author of the embed')
+    .setRequired(false))
+    .addStringOption(option => option
+    .setName('footericonurl')
+    .setDescription('Icon of the footer of the embed')
     .setRequired(false)));
 exports.MESSAGE = new template_1.Command()
     .addGuilds('509135025560616963')
     .addBuilders(SLASH)
-    .addIdentifiers('message')
+    .addIdentifiers('send', 'send message', 'send embed')
     .onChatInputCommand(async (interaction) => {
     try {
         await interaction.deferReply({ ephemeral: true });
@@ -51,7 +79,7 @@ exports.MESSAGE = new template_1.Command()
     catch {
         return;
     }
-    if (interaction.commandName === 'send message') {
+    if (interaction.options.getSubcommand(true) === 'message') {
         const channel = interaction.options.getChannel('channel', true);
         const content = interaction.options.getString('message', true);
         let message;
@@ -75,6 +103,13 @@ exports.MESSAGE = new template_1.Command()
     const colour = interaction.options.getString('color', false);
     const description = interaction.options.getString('description', false);
     const title = interaction.options.getString('title', false);
+    const author = interaction.options.getString('author', false);
+    const footer = interaction.options.getString('footer', false);
+    const thumbnail = interaction.options.getString('thumbnail', false);
+    const image = interaction.options.getString('image', false);
+    const url = interaction.options.getString('url', false);
+    const authorIcon = interaction.options.getString('authoriconurl', false);
+    const footerIcon = interaction.options.getString('footericonurl', false);
     const embed = new discord_js_1.EmbedBuilder();
     if (colour)
         embed.setColor(discord_js_1.Colors[colour]);
@@ -82,6 +117,20 @@ exports.MESSAGE = new template_1.Command()
         embed.setDescription(description);
     if (title)
         embed.setTitle(title);
+    if (author && authorIcon)
+        embed.setAuthor({ name: author, iconURL: authorIcon });
+    else if (author)
+        embed.setAuthor({ name: author });
+    else if (authorIcon)
+        embed.setAuthor({ name: '', iconURL: authorIcon });
+    if (footer)
+        embed.setFooter({ text: footer });
+    if (thumbnail)
+        embed.setThumbnail(thumbnail);
+    if (image)
+        embed.setImage(image);
+    if (url)
+        embed.setURL(url);
     channel.send({ embeds: [embed] })
         .then(m => {
         setTimeout(() => m.delete(), 15000);

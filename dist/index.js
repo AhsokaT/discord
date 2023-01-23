@@ -73,12 +73,6 @@ client.on('ready', ready => {
 });
 client.once('ready', async () => {
     client.registerCommands(new ban_1.BanCommand(), new unban_1.UnbanCommand());
-    client.fetchDO()
-        .then(DO => DO.commands.fetch())
-        .then(c => {
-        c.find(i => i.name === 'embed').delete();
-        c.find(i => i.name === 'message').delete();
-    });
     client.addCommands(leaderboard_1.LEADERBOARD, userinfo_1.USER_INFO_COMMAND, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, leaderboard_1.UPDATE_LEADERBOARD, renameHouse_1.RENAME_HOUSE, play_1.PLAY, send_1.MESSAGE, messageDelete_1.MESSAGE_DELETE, test_1.TEST, seeAllChanges_1.POINT_CHANGE, leaderboard_1.DELETE_LEADERBOARD);
     (0, misc_1.postHousePicker)(client)
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
