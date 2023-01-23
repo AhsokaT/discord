@@ -52,7 +52,7 @@ const SLASH = new SlashCommandBuilder()
 export const MESSAGE = new Command()
     .addGuilds('509135025560616963')
     .addBuilders(SLASH)
-    .addIdentifiers('message')
+    .addIdentifiers('send message', 'send embed')
     .onChatInputCommand(async interaction => {
         try {
             await interaction.deferReply({ ephemeral: true });
