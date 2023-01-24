@@ -16,7 +16,7 @@ exports.TEST = new template_1.Command()
     .onChatInputCommand(i => i.reply({
     embeds: [
         (0, builders_1.allPointChangeEmbed)(Object.keys(housePicker_1.House).reduce((acc, h) => Object.assign(acc, { [h]: Math.floor(Math.random() * 100) }), {}), Object.keys(housePicker_1.House).reduce((acc, h) => Object.assign(acc, { [h]: Math.floor(Math.random() * 100) }), {})),
-        (0, builders_1.pointChangeEmbed)(housePicker_1.RoleHouse[housePicker_1.RoleID.OWL], Math.floor(Math.random() * 100), Math.floor(Math.random() * 100))
+        (0, builders_1.pointChangeEmbed)(housePicker_1.RoleHouse[housePicker_1.RoleID.TIGER], Math.floor(Math.random() * 100), Math.floor(Math.random() * 100))
     ],
     components: [
         new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.pointChangeButton)(Object.keys(housePicker_1.House).reduce((acc, h) => Object.assign(acc, { [h]: Math.floor(Math.random() * 100) }), {}), Object.keys(housePicker_1.House).reduce((acc, h) => Object.assign(acc, { [h]: Math.floor(Math.random() * 100) }), {})), (0, builders_1.LeaderboardButton)())

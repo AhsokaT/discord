@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LeaderboardEmbed = exports.BanButton = exports.RevokeBanButton = exports.HouseInfoButton = exports.LeaderboardButton = exports.UserInfoButton = exports.DeleteLeaderboardButton = exports.UpdateLeaderboardButton = exports.allPointChangeEmbed = exports.pointChangeEmbed = exports.pointChangeButton = void 0;
+exports.LeaderboardEmbed = exports.BanButton = exports.RevokeBanButton = exports.HouseInfoButton = exports.LeaderboardButton = exports.UserInfoButton = exports.DeleteInteractionButton = exports.UpdateLeaderboardButton = exports.allPointChangeEmbed = exports.pointChangeEmbed = exports.pointChangeButton = void 0;
 const discord_js_1 = require("discord.js");
 const houseInfo_1 = require("./House/houseInfo");
 const housePicker_1 = require("./House/housePicker");
@@ -14,7 +14,7 @@ function padString(str, points) {
     return str.padStart(padLength(points.map(p => p.toString())), ' ').padEnd(padLength(points.map(p => p.toString())) + 1, ' ');
 }
 const pointChangeButton = (before, after) => {
-    const json = JSON.stringify(Object.keys(housePicker_1.House).reduce((acc, h) => Object.assign(acc, { [h]: [before[h], after[h]] }), {}));
+    const json = JSON.stringify(Object.keys(before).reduce((acc, h) => Object.assign(acc, { [h]: [before[h], after[h]] }), {}));
     if (json.length > 98)
         return null;
     return new discord_js_1.ButtonBuilder()
@@ -23,6 +23,21 @@ const pointChangeButton = (before, after) => {
         .setStyle(discord_js_1.ButtonStyle.Primary);
 };
 exports.pointChangeButton = pointChangeButton;
+// const _padString = (str: string, length: number) => str.padStart(length, ' ').padEnd(length++, ' ');
+// export const reverseString = (str: string) => Array.from(str).reduceRight((acc, c) => acc + c, '');
+// export function pointDifferenceString(difference: number) {
+//     return `\`${_padString(reverseString(`${difference > 0 ? 'Removed' : 'Added'} ${difference}`), String(difference).length)}\``;
+// }
+// export function pointUpdateRow(before: HousePoints, after: HousePoints, house: string) {
+//     const difference = pointDifferenceString(before[house] - after[house]);
+//     return `${difference} \`${_padString(String(before), padLength)}\` → \`${_padString(String(after), padLength)}\` <@&${RoleID[house]}>`;
+// }
+// export function pointUpdateEmbed(before: HousePoints, after: HousePoints) {
+//     return new EmbedBuilder()
+//         .setColor('#2F3136')
+//         .setTitle('Point update')
+//         .setDescription('Loading...');
+// }
 function pointChangeEmbed(house, before, after) {
     const diff = `${(before - after > 0 ? 'Removed' : 'Added')} ${Math.abs(before - after)} points`;
     return new discord_js_1.EmbedBuilder()
@@ -50,11 +65,11 @@ const UpdateLeaderboardButton = (label = 'Refresh') => new discord_js_1.ButtonBu
     .setStyle(discord_js_1.ButtonStyle.Primary)
     .setLabel(label);
 exports.UpdateLeaderboardButton = UpdateLeaderboardButton;
-const DeleteLeaderboardButton = () => new discord_js_1.ButtonBuilder()
-    .setCustomId('DELETELEADERBOARD')
+const DeleteInteractionButton = () => new discord_js_1.ButtonBuilder()
+    .setCustomId('DELETEINTERACTION')
     .setStyle(discord_js_1.ButtonStyle.Danger)
     .setEmoji('🗑️');
-exports.DeleteLeaderboardButton = DeleteLeaderboardButton;
+exports.DeleteInteractionButton = DeleteInteractionButton;
 const UserInfoButton = (user, label = 'User') => new discord_js_1.ButtonBuilder()
     .setCustomId(`USERINFO_${user}`)
     .setStyle(discord_js_1.ButtonStyle.Primary)

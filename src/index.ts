@@ -4,11 +4,11 @@ import { config } from 'dotenv';
 
 // Commands
 import { BanCommand as OldBan } from './Commands/ban';
-import { House, HOUSE_COMMAND } from './Commands/House/housePicker';
+import { HOUSE_COMMAND } from './Commands/House/housePicker';
 import { USER_INFO_COMMAND } from './Commands/New/userinfo';
 import { UnbanCommand } from './Commands/unban';
 import { postHousePicker } from './misc';
-import { DELETE_LEADERBOARD, LEADERBOARD, UPDATE_LEADERBOARD } from './Commands/House/leaderboard';
+import { LEADERBOARD, UPDATE_LEADERBOARD } from './Commands/House/leaderboard';
 import { HOUSE_INFO } from './Commands/House/houseInfo';
 import { guildMemberRemove } from './Events/guildMemberRemove';
 import { HOUSE_POINTS } from './Commands/House/housePoints';
@@ -22,6 +22,7 @@ import { MESSAGE_DELETE } from './Commands/messageDelete';
 import { TEST } from './Commands/test';
 import { POINT_CHANGE } from './Commands/seeAllChanges';
 import { HousePoints } from './housePoints';
+import { DELETE_INTERACTION } from './Commands/DeleteInteraction';
 
 // dotenv
 config();
@@ -103,7 +104,7 @@ client.once('ready', async () => {
         MESSAGE_DELETE,
         TEST,
         POINT_CHANGE,
-        DELETE_LEADERBOARD
+        DELETE_INTERACTION
     );
 
     postHousePicker(client)

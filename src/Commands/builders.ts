@@ -19,7 +19,7 @@ function padString(str: string, points: (string | number)[]) {
 }
 
 export const pointChangeButton = (before: HousePoints, after: HousePoints) => {
-    const json = JSON.stringify(Object.keys(House).reduce((acc, h) => Object.assign(acc, { [h]: [before[h], after[h]] }), {}));
+    const json = JSON.stringify(Object.keys(before).reduce((acc, h) => Object.assign(acc, { [h]: [before[h], after[h]] }), {}));
 
     if (json.length > 98)
         return null;
@@ -29,6 +29,27 @@ export const pointChangeButton = (before: HousePoints, after: HousePoints) => {
         .setLabel('See all changes')
         .setStyle(ButtonStyle.Primary);
 }
+
+// const _padString = (str: string, length: number) => str.padStart(length, ' ').padEnd(length++, ' ');
+
+// export const reverseString = (str: string) => Array.from(str).reduceRight((acc, c) => acc + c, '');
+
+// export function pointDifferenceString(difference: number) {
+//     return `\`${_padString(reverseString(`${difference > 0 ? 'Removed' : 'Added'} ${difference}`), String(difference).length)}\``;
+// }
+
+// export function pointUpdateRow(before: HousePoints, after: HousePoints, house: string) {
+//     const difference = pointDifferenceString(before[house] - after[house]);
+
+//     return `${difference} \`${_padString(String(before), padLength)}\` → \`${_padString(String(after), padLength)}\` <@&${RoleID[house]}>`;
+// }
+
+// export function pointUpdateEmbed(before: HousePoints, after: HousePoints) {
+//     return new EmbedBuilder()
+//         .setColor('#2F3136')
+//         .setTitle('Point update')
+//         .setDescription('Loading...');
+// }
 
 export function pointChangeEmbed(house: HouseID, before: number, after: number) {
     const diff = `${(before - after > 0 ? 'Removed' : 'Added')} ${Math.abs(before - after)} points`;
@@ -62,8 +83,8 @@ export const UpdateLeaderboardButton = (label = 'Refresh') => new ButtonBuilder(
     .setStyle(ButtonStyle.Primary)
     .setLabel(label);
 
-export const DeleteLeaderboardButton = () => new ButtonBuilder()
-    .setCustomId('DELETELEADERBOARD')
+export const DeleteInteractionButton = () => new ButtonBuilder()
+    .setCustomId('DELETEINTERACTION')
     .setStyle(ButtonStyle.Danger)
     .setEmoji('🗑️');
 

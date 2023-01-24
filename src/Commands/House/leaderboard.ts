@@ -1,6 +1,6 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, SlashCommandBuilder, RepliableInteraction } from 'discord.js';
 import { Client } from '../../client';
-import { LeaderboardEmbed, UpdateLeaderboardButton, DeleteLeaderboardButton } from '../builders';
+import { LeaderboardEmbed, UpdateLeaderboardButton, DeleteInteractionButton } from '../builders';
 import { Command } from '../template';
 
 const SLASH_COMMAND = new SlashCommandBuilder()
@@ -13,17 +13,12 @@ export const UPDATE_LEADERBOARD = new Command()
         embeds: [LeaderboardEmbed(interaction.client as Client)]
     }).catch(console.debug));
 
-export const DELETE_LEADERBOARD = new Command()
-    .addIdentifiers('DELETELEADERBOARD')
-    .onButton(i => i.message.delete().catch(console.debug));
-
 function replyInteraction(interaction: RepliableInteraction) {
     interaction.reply({
-        ephemeral: false,
         embeds: [LeaderboardEmbed(interaction.client as Client)],
         components: [
             new ActionRowBuilder<MessageActionRowComponentBuilder>()
-                .addComponents(UpdateLeaderboardButton(), DeleteLeaderboardButton())
+                .addComponents(UpdateLeaderboardButton(), DeleteInteractionButton())
         ],
         allowedMentions: { parse: [] }
     }).catch(console.error);

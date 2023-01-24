@@ -19,7 +19,7 @@ export const TEST = new Command()
                 Object.keys(House).reduce((acc, h) => Object.assign(acc, { [h]: Math.floor(Math.random() * 100) }), {} as HousePoints),
                 Object.keys(House).reduce((acc, h) => Object.assign(acc, { [h]: Math.floor(Math.random() * 100) }), {} as HousePoints)
             ),
-            pointChangeEmbed(RoleHouse[RoleID.OWL], Math.floor(Math.random() * 100), Math.floor(Math.random() * 100))
+            pointChangeEmbed(RoleHouse[RoleID.TIGER], Math.floor(Math.random() * 100), Math.floor(Math.random() * 100))
         ],
         components: [
             new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
