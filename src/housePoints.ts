@@ -9,7 +9,7 @@ export class HousePoints implements Record<HouseID, number> {
     PANDA = 0;
 
     static difference(h1: HousePoints, h2: HousePoints) {
-        return new HousePoints(Object.keys(h1).reduce((acc, h) => Object.assign(acc, { [h]: h1[h] - h2[h] }), new HousePoints()));
+        return Object.keys(h1).reduce((acc, h) => Object.assign(acc, { [h]: h1[h] - h2[h] }), new HousePoints());
     }
 
     static equals(h1: HousePoints, h2: HousePoints) {
@@ -17,7 +17,7 @@ export class HousePoints implements Record<HouseID, number> {
     }
 
     static sample() {
-        return Object.keys(House).reduce((acc, h) => Object.assign(acc, { [h]: Math.floor(Math.random() * 100) }), new HousePoints());
+        return Object.keys(House).reduce((acc, h) => Object.assign(acc, { [h]: ~~(Math.random() * 100) }), new HousePoints());
     }
 
     constructor(points?: Partial<HousePoints>) {

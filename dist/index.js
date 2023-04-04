@@ -20,7 +20,6 @@ const guildBanRemove_1 = require("./Events/guildBanRemove");
 const play_1 = require("./Commands/play");
 const send_1 = require("./Commands/send");
 const messageDelete_1 = require("./Commands/messageDelete");
-const test_1 = require("./Commands/test");
 const seeAllChanges_1 = require("./Commands/seeAllChanges");
 const housePoints_2 = require("./housePoints");
 const DeleteInteraction_1 = require("./Commands/DeleteInteraction");
@@ -68,15 +67,18 @@ client.on('ready', ready => {
         ready.user.setActivity(activities[index++]);
         if (index === activities.length)
             index = 0;
-        setTimeout(setActivity, [60_000 * 5, 60_000 * 7, 60_000 * 10][Math.floor(Math.random() * 3)]);
+        setTimeout(setActivity, [60_000 * 5, 60_000 * 7, 60_000 * 10][~~(Math.random() * 3)]);
     }
     setActivity();
 });
 client.once('ready', async () => {
     client.registerCommands(new ban_1.BanCommand(), new unban_1.UnbanCommand());
-    client.addCommands(leaderboard_1.LEADERBOARD, userinfo_1.USER_INFO_COMMAND, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, leaderboard_1.UPDATE_LEADERBOARD, renameHouse_1.RENAME_HOUSE, play_1.PLAY, send_1.MESSAGE, messageDelete_1.MESSAGE_DELETE, test_1.TEST, seeAllChanges_1.POINT_CHANGE, DeleteInteraction_1.DELETE_INTERACTION);
+    client.addCommands(leaderboard_1.LEADERBOARD, userinfo_1.USER_INFO_COMMAND, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, leaderboard_1.UPDATE_LEADERBOARD, renameHouse_1.RENAME_HOUSE, play_1.PLAY, send_1.MESSAGE, messageDelete_1.MESSAGE_DELETE, 
+    // TEST,
+    seeAllChanges_1.POINT_CHANGE, DeleteInteraction_1.DELETE_INTERACTION);
     (0, misc_1.postHousePicker)(client)
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
+    client.emit('guildMemberAdd', await (await client.fetchDO()).members.fetch('451448994128723978'));
 });
 client.login(process.env.TOKEN);
 process.on('unhandledRejection', console.error);

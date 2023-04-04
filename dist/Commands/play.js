@@ -9,6 +9,7 @@ const track_1 = require("../Music/track");
 const template_1 = require("./template");
 const PLAY_SLASH_COMMAND = new discord_js_1.SlashCommandBuilder()
     .setName('play')
+    .setName('test2')
     .setDescription('Stream music')
     .setDefaultMemberPermissions(discord_js_1.PermissionFlagsBits.Speak)
     .addStringOption(option => option
@@ -16,7 +17,7 @@ const PLAY_SLASH_COMMAND = new discord_js_1.SlashCommandBuilder()
     .setDescription('URL or search query')
     .setRequired(true));
 exports.PLAY = new template_1.Command()
-    .addIdentifiers('play')
+    .addIdentifiers('play', 'test2')
     .addBuilders(PLAY_SLASH_COMMAND)
     .addGuilds('509135025560616963')
     .onChatInputCommand(async (interaction) => {

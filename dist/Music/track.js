@@ -1,9 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Track = void 0;
 const voice_1 = require("@discordjs/voice");
 const discord_js_1 = require("discord.js");
-const youtube_dl_exec_1 = require("youtube-dl-exec");
+const ytdl_core_1 = __importDefault(require("ytdl-core"));
 class Track {
     video;
     subscription;
@@ -74,35 +77,13 @@ class Track {
     onError(error) {
         console.warn(`Track error: ${error}`);
     }
-    createAudioResource() {
-        return new Promise((resolve, reject) => {
-            const process = (0, youtube_dl_exec_1.raw)(this.url, {
-                o: '-',
-                q: '',
-                f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-                r: '100K'
-            }, {
-                stdio: ['ignore', 'pipe', 'ignore']
-            });
-            if (!process.stdout) {
-                reject(Error('No stdout'));
-                return;
-            }
-            const stream = process.stdout;
-            function onError(error) {
-                if (!process.killed)
-                    process.kill();
-                stream.resume();
-                reject(error);
-            }
-            process
-                .once('spawn', () => {
-                (0, voice_1.demuxProbe)(stream)
-                    .then(probe => resolve((0, voice_1.createAudioResource)(probe.stream, { metadata: this, inputType: probe.type })))
-                    .catch(onError);
-            })
-                .catch(onError);
-        });
+    async createAudioResource() {
+        const { stream, type } = await (0, voice_1.demuxProbe)((0, ytdl_core_1.default)(this.url, {
+            filter: 'audioonly',
+            quality: 'highestaudio',
+            highWaterMark: 1 << 25
+        }));
+        return (0, voice_1.createAudioResource)(stream, { inputType: type, metadata: this });
     }
     toString() {
         return this.title ?? this.url;

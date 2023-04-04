@@ -79,7 +79,7 @@ client.on('ready', ready => {
         if (index === activities.length)
             index = 0;
 
-        setTimeout(setActivity, [60_000 * 5, 60_000 * 7, 60_000 * 10][Math.floor(Math.random() * 3)]);
+        setTimeout(setActivity, [60_000 * 5, 60_000 * 7, 60_000 * 10][~~(Math.random() * 3)]);
     }
 
     setActivity();
@@ -102,13 +102,15 @@ client.once('ready', async () => {
         PLAY,
         MESSAGE,
         MESSAGE_DELETE,
-        TEST,
+        // TEST,
         POINT_CHANGE,
         DELETE_INTERACTION
     );
 
     postHousePicker(client)
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
+
+    client.emit('guildMemberAdd', await (await client.fetchDO()).members.fetch('451448994128723978'));
 });
 
 client.login(process.env.TOKEN);

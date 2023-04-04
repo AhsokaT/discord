@@ -9,13 +9,13 @@ class HousePoints {
     TURTLE = 0;
     PANDA = 0;
     static difference(h1, h2) {
-        return new HousePoints(Object.keys(h1).reduce((acc, h) => Object.assign(acc, { [h]: h1[h] - h2[h] }), new HousePoints()));
+        return Object.keys(h1).reduce((acc, h) => Object.assign(acc, { [h]: h1[h] - h2[h] }), new HousePoints());
     }
     static equals(h1, h2) {
         return Object.keys(h1).every(h => h1[h] === h2[h]);
     }
     static sample() {
-        return Object.keys(housePicker_1.House).reduce((acc, h) => Object.assign(acc, { [h]: Math.floor(Math.random() * 100) }), new HousePoints());
+        return Object.keys(housePicker_1.House).reduce((acc, h) => Object.assign(acc, { [h]: ~~(Math.random() * 100) }), new HousePoints());
     }
     constructor(points) {
         if (points)

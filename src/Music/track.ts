@@ -1,8 +1,8 @@
 import { AudioResource, createAudioResource, demuxProbe } from '@discordjs/voice';
 import { Subscription } from './subscription';
 import { ActionRowBuilder, ButtonBuilder, GuildMember, ButtonStyle, MessageActionRowComponentBuilder } from 'discord.js';
-import { raw as ytdl } from 'youtube-dl-exec';
 import { Video } from 'discord-youtube-api';
+import ytdl from 'ytdl-core';
 
 export class Track {
 	constructor(
@@ -87,43 +87,14 @@ export class Track {
 		console.warn(`Track error: ${error}`);
 	}
 
-	createAudioResource(): Promise<AudioResource<Track>> {
-		return new Promise((resolve, reject) => {
-			const process = ytdl(
-				this.url, {
-					o: '-',
-					q: '',
-					f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-					r: '100K'
-				},
-				{
-					stdio: ['ignore', 'pipe', 'ignore']
-				}
-			);
+	async createAudioResource(): Promise<AudioResource<Track>> {
+		const { stream, type } = await demuxProbe(ytdl(this.url, {
+			filter: 'audioonly',
+			quality: 'highestaudio',
+			highWaterMark: 1 << 25
+		}));
 
-			if (!process.stdout) {
-				reject(Error('No stdout'));
-                return;
-            }
-
-			const stream = process.stdout;
-
-			function onError(error: any) {
-				if (!process.killed)
-					process.kill();
-
-				stream.resume();
-				reject(error);
-			}
-
-			process
-				.once('spawn', () => {
-					demuxProbe(stream)
-						.then(probe => resolve(createAudioResource(probe.stream, { metadata: this, inputType: probe.type })))
-						.catch(onError);
-				})
-				.catch(onError);
-		});
+		return createAudioResource(stream, { inputType: type, metadata: this });
 	}
 
 	toString() {

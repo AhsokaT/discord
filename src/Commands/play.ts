@@ -9,6 +9,7 @@ import { Command } from './template';
 
 const PLAY_SLASH_COMMAND = new SlashCommandBuilder()
     .setName('play')
+    .setName('test2')
     .setDescription('Stream music')
     .setDefaultMemberPermissions(PermissionFlagsBits.Speak)
     .addStringOption(option => option
@@ -18,7 +19,7 @@ const PLAY_SLASH_COMMAND = new SlashCommandBuilder()
     );
 
 export const PLAY = new Command()
-    .addIdentifiers('play')
+    .addIdentifiers('play', 'test2')
     .addBuilders(PLAY_SLASH_COMMAND)
     .addGuilds('509135025560616963')
     .onChatInputCommand(async interaction => {
