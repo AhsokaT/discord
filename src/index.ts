@@ -59,7 +59,7 @@ const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.GuildBans,
+        GatewayIntentBits.GuildModeration,
         GatewayIntentBits.GuildInvites,
         GatewayIntentBits.GuildVoiceStates
     ],
@@ -110,7 +110,7 @@ client.once('ready', async () => {
     postHousePicker(client)
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
 
-    client.emit('guildMemberAdd', await (await client.fetchDO()).members.fetch('451448994128723978'));
+    // client.emit('guildMemberAdd', await (await client.fetchDO()).members.fetch('451448994128723978'));
 });
 
 client.login(process.env.TOKEN);

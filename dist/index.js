@@ -53,7 +53,7 @@ const client = new client_1.Client({
     intents: [
         discord_js_1.GatewayIntentBits.Guilds,
         discord_js_1.GatewayIntentBits.GuildMessages,
-        discord_js_1.GatewayIntentBits.GuildBans,
+        discord_js_1.GatewayIntentBits.GuildModeration,
         discord_js_1.GatewayIntentBits.GuildInvites,
         discord_js_1.GatewayIntentBits.GuildVoiceStates
     ],
@@ -78,7 +78,7 @@ client.once('ready', async () => {
     seeAllChanges_1.POINT_CHANGE, DeleteInteraction_1.DELETE_INTERACTION);
     (0, misc_1.postHousePicker)(client)
         .catch(err => console.debug(`Unable to post house picker: ${err}`));
-    client.emit('guildMemberAdd', await (await client.fetchDO()).members.fetch('451448994128723978'));
+    // client.emit('guildMemberAdd', await (await client.fetchDO()).members.fetch('451448994128723978'));
 });
 client.login(process.env.TOKEN);
 process.on('unhandledRejection', console.error);
