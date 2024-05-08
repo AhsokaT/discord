@@ -1,8 +1,7 @@
-import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Collection, Guild, Interaction, Message, Snowflake, TextBasedChannel, TextChannel } from 'discord.js';
+import { ApplicationCommandDataResolvable, Client as DJSClient, ClientOptions, Collection, Guild, Interaction, Message, Snowflake, TextBasedChannel, TextChannel, Routes, SlashCommandBuilder, APIApplicationCommand } from 'discord.js';
 import { HousePointManager } from './Commands/House/HousePointManager';
 import { Command as NewCommand } from './Commands/template';
 import { DataBaseManager } from './DataBase/DataBase';
-import { Subscription } from './Music/subscription';
 import YouTube from 'discord-youtube-api';
 
 export interface Command {
@@ -26,9 +25,9 @@ export class Client<Ready extends boolean = boolean> extends DJSClient<Ready> {
     readonly youtube: YouTube;
     readonly commands = new Set<Command>();
     readonly newCommands = new Set<NewCommand>();
-    readonly subscriptions = new Collection<Snowflake, Subscription>();
     readonly housePointManager: HousePointManager;
     readonly database: DataBaseManager;
+    public choosehouseId: Ready extends true ? string : undefined = null as any;
 
     constructor(options: ClientOptions & { mongoURL: string; }) {
         super(options);
@@ -105,16 +104,24 @@ export class Client<Ready extends boolean = boolean> extends DJSClient<Ready> {
         });
     }
 
-    addCommands(...commands: NewCommand[]) {
-        commands.forEach(command => {
+    async addCommands(this: Client<true>, ...commands: NewCommand[]) {
+        for (const command of commands)
             this.newCommands.add(command);
 
-            command.guilds.forEach(id => {
-                this.guilds.fetch(id)
-                    .then(guild => command.commandBuilders.forEach(builder => guild.commands.create(builder)))
-                    .catch(console.debug);
-            });
-        });
+        const guilds = commands.reduce((guilds, command) => {
+            for (const guildId of command.guilds)
+                guilds.set(guildId, [...(guilds.get(guildId) || []), command]);
+
+            return guilds;
+        }, new Map<Snowflake, NewCommand[]>());
+
+        for (const [guildId, commands] of guilds) {
+            const body = commands.flatMap(command => command.commandBuilders).filter(builder => builder instanceof SlashCommandBuilder);
+
+            const posted = await this.rest.put(Routes.applicationGuildCommands(this.application.id, guildId), { body }) as APIApplicationCommand[];
+
+            this.choosehouseId = posted.find(({ name }) => name === 'choosehouse')?.id as any;
+        }
     }
 
     private hasCustomID<I extends Interaction>(interaction: I): interaction is I & { customId: string; } {

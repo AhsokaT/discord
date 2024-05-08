@@ -4,25 +4,19 @@ const discord_js_1 = require("discord.js");
 const client_1 = require("./client");
 const dotenv_1 = require("dotenv");
 // Commands
-const ban_1 = require("./Commands/ban");
 const housePicker_1 = require("./Commands/House/housePicker");
-const userinfo_1 = require("./Commands/New/userinfo");
-const unban_1 = require("./Commands/unban");
 const misc_1 = require("./misc");
 const leaderboard_1 = require("./Commands/House/leaderboard");
 const houseInfo_1 = require("./Commands/House/houseInfo");
 const guildMemberRemove_1 = require("./Events/guildMemberRemove");
 const housePoints_1 = require("./Commands/House/housePoints");
-const renameHouse_1 = require("./Commands/House/renameHouse");
 const guildMemberAdd_1 = require("./Events/guildMemberAdd");
 const guildBanAdd_1 = require("./Events/guildBanAdd");
 const guildBanRemove_1 = require("./Events/guildBanRemove");
-const play_1 = require("./Commands/play");
-const send_1 = require("./Commands/send");
 const messageDelete_1 = require("./Commands/messageDelete");
 const seeAllChanges_1 = require("./Commands/seeAllChanges");
-const housePoints_2 = require("./housePoints");
 const DeleteInteraction_1 = require("./Commands/DeleteInteraction");
+const choosehouse_1 = require("./Commands/House/choosehouse");
 // dotenv
 (0, dotenv_1.config)();
 const events = [
@@ -71,21 +65,20 @@ client.on('ready', ready => {
     }
     setActivity();
 });
-client.once('ready', async () => {
-    client.registerCommands(new ban_1.BanCommand(), new unban_1.UnbanCommand());
-    client.addCommands(leaderboard_1.LEADERBOARD, userinfo_1.USER_INFO_COMMAND, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, leaderboard_1.UPDATE_LEADERBOARD, renameHouse_1.RENAME_HOUSE, play_1.PLAY, send_1.MESSAGE, messageDelete_1.MESSAGE_DELETE, 
-    // TEST,
-    seeAllChanges_1.POINT_CHANGE, DeleteInteraction_1.DELETE_INTERACTION);
-    (0, misc_1.postHousePicker)(client)
-        .catch(err => console.debug(`Unable to post house picker: ${err}`));
-    // client.emit('guildMemberAdd', await (await client.fetchDO()).members.fetch('451448994128723978'));
+client.once('ready', async (ready) => {
+    ready.addCommands(leaderboard_1.LEADERBOARD, housePicker_1.HOUSE_COMMAND, houseInfo_1.HOUSE_INFO, housePoints_1.HOUSE_POINTS, leaderboard_1.UPDATE_LEADERBOARD, messageDelete_1.MESSAGE_DELETE, seeAllChanges_1.POINT_CHANGE, DeleteInteraction_1.DELETE_INTERACTION, choosehouse_1.HOUSES);
+    try {
+        (0, misc_1.postHousePicker)(ready);
+    }
+    catch (err) {
+        console.debug(`Unable to post house picker: ${err}`);
+    }
+});
+client.on('guildMemberAdd', async (member) => {
+    if (member.guild.id !== '509135025560616963')
+        return;
+    const channel = await member.guild.channels.fetch('961986228926963732');
+    channel.send({ content: `Welcome to the server, ${member}! When you're ready, use </choosehouse:${client.choosehouseId}> to join a house and begin collecting points!` });
 });
 client.login(process.env.TOKEN);
 process.on('unhandledRejection', console.error);
-const x = housePoints_2.HousePoints.sample();
-const y = housePoints_2.HousePoints.sample();
-console.debug(x);
-console.debug(y);
-console.debug(x.difference(y));
-console.debug(y.toJSON());
-console.debug(x.equals(y));

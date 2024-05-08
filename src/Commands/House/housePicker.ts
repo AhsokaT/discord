@@ -45,11 +45,8 @@ export enum RoleHouse {
 }
 
 export const HOUSE_COMMAND = new Command()
-    .addIdentifiers('HOUSE', 'HOUSECONFIRM', 'HOUSEUNSURE')
+    .addIdentifiers('HOUSE', 'HOUSECONFIRM')
     .onButton(async interaction => {
-        if (interaction.customId === 'HOUSEUNSURE')
-            return void interaction.update({ content: 'No house selected', components: [] }).catch(console.debug);
-    
         if (!interaction.customId.startsWith('HOUSECONFIRM'))
             return;
 

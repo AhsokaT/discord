@@ -6,7 +6,7 @@ var MongoClientStatus;
 (function (MongoClientStatus) {
     MongoClientStatus[MongoClientStatus["Connected"] = 0] = "Connected";
     MongoClientStatus[MongoClientStatus["Disconnected"] = 1] = "Disconnected";
-})(MongoClientStatus = exports.MongoClientStatus || (exports.MongoClientStatus = {}));
+})(MongoClientStatus || (exports.MongoClientStatus = MongoClientStatus = {}));
 class DataBaseManager {
     client;
     status;

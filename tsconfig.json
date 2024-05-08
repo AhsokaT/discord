@@ -2,9 +2,6 @@
     "include": [
         "src/**/*"
     ],
-    "exclude": [
-        "./typings/**/*"
-    ],
     "compileOnSave": false,
     "compilerOptions": {
         "allowJs": true,
@@ -16,10 +13,7 @@
         "target": "ESNext",
         "moduleResolution": "Node",
         "module": "CommonJS",
-        "declaration": true,
-        "emitDeclarationOnly": false,
         "outDir": "./dist",
-        "declarationDir": "./typings/",
         "esModuleInterop": true
     }
 }

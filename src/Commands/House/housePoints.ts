@@ -1,9 +1,7 @@
-import { ActionRowBuilder, MessageActionRowComponentBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, MessageActionRowComponentBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { ChannelID, Client } from '../../client';
-import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed, UserInfoButton } from '../builders';
+import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../builders';
 import { Command } from '../template';
-import { Ordinal } from './houseInfo';
-import { RoleID } from './housePicker';
 import { HouseID, HousePoints } from './HousePointManager';
 
 const SLASH_COMMAND = new SlashCommandBuilder()
@@ -28,7 +26,8 @@ const SLASH_COMMAND = new SlashCommandBuilder()
     .addIntegerOption(option => option
         .setName('turtles')
         .setDescription('New total')
-    );
+    )
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
 
 export const HOUSE_POINTS = new Command()
     .addIdentifiers('housepoints')

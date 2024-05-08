@@ -22,7 +22,8 @@ const SLASH_COMMAND = new discord_js_1.SlashCommandBuilder()
     .setDescription('New total'))
     .addIntegerOption(option => option
     .setName('turtles')
-    .setDescription('New total'));
+    .setDescription('New total'))
+    .setDefaultMemberPermissions(discord_js_1.PermissionFlagsBits.ManageGuild);
 exports.HOUSE_POINTS = new template_1.Command()
     .addIdentifiers('housepoints')
     .addBuilders(SLASH_COMMAND)

@@ -12,7 +12,7 @@ var House;
     House["RAVEN"] = "Raven Reapers";
     House["TURTLE"] = "The Otakus";
     House["PANDA"] = "Pandamonium";
-})(House = exports.House || (exports.House = {}));
+})(House || (exports.House = House = {}));
 var HouseEmoji;
 (function (HouseEmoji) {
     HouseEmoji["TIGER"] = "\uD83D\uDC2F";
@@ -20,7 +20,7 @@ var HouseEmoji;
     HouseEmoji["RAVEN"] = "\uD83D\uDC41\uFE0F";
     HouseEmoji["TURTLE"] = "\uD83D\uDC22";
     HouseEmoji["PANDA"] = "\uD83D\uDC3C";
-})(HouseEmoji = exports.HouseEmoji || (exports.HouseEmoji = {}));
+})(HouseEmoji || (exports.HouseEmoji = HouseEmoji = {}));
 var HouseDescription;
 (function (HouseDescription) {
     HouseDescription["TIGER"] = "Competitive, crud central, Fearless, Rage";
@@ -28,7 +28,7 @@ var HouseDescription;
     HouseDescription["RAVEN"] = "The eye of all eyes, Pure Daily Offenders, can be calm or on crud, depending on the tea or tequila!";
     HouseDescription["TURTLE"] = "chill, perseverance, otaku, cosplay(LOT'S OF NOSE BLEEDS), gamers and tech enthusiast! ";
     HouseDescription["PANDA"] = "bashful, emotional, foodie, jokes, sleepy, knowledgeable.";
-})(HouseDescription = exports.HouseDescription || (exports.HouseDescription = {}));
+})(HouseDescription || (exports.HouseDescription = HouseDescription = {}));
 var RoleID;
 (function (RoleID) {
     RoleID["TIGER"] = "1024014286416261191";
@@ -36,7 +36,7 @@ var RoleID;
     RoleID["RAVEN"] = "1024014477789773965";
     RoleID["TURTLE"] = "1024014510723432478";
     RoleID["PANDA"] = "1024014614536667239";
-})(RoleID = exports.RoleID || (exports.RoleID = {}));
+})(RoleID || (exports.RoleID = RoleID = {}));
 var RoleHouse;
 (function (RoleHouse) {
     RoleHouse["1024014286416261191"] = "TIGER";
@@ -44,12 +44,10 @@ var RoleHouse;
     RoleHouse["1024014477789773965"] = "RAVEN";
     RoleHouse["1024014510723432478"] = "TURTLE";
     RoleHouse["1024014614536667239"] = "PANDA";
-})(RoleHouse = exports.RoleHouse || (exports.RoleHouse = {}));
+})(RoleHouse || (exports.RoleHouse = RoleHouse = {}));
 exports.HOUSE_COMMAND = new template_1.Command()
-    .addIdentifiers('HOUSE', 'HOUSECONFIRM', 'HOUSEUNSURE')
+    .addIdentifiers('HOUSE', 'HOUSECONFIRM')
     .onButton(async (interaction) => {
-    if (interaction.customId === 'HOUSEUNSURE')
-        return void interaction.update({ content: 'No house selected', components: [] }).catch(console.debug);
     if (!interaction.customId.startsWith('HOUSECONFIRM'))
         return;
     const selection = interaction.customId.split('_').pop();

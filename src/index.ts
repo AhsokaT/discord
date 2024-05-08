@@ -1,28 +1,21 @@
-import { ActivitiesOptions, ActivityType, GatewayIntentBits } from 'discord.js';
+import { ActivitiesOptions, ActivityType, GatewayIntentBits, GuildTextBasedChannel } from 'discord.js';
 import { Client } from './client';
 import { config } from 'dotenv';
 
 // Commands
-import { BanCommand as OldBan } from './Commands/ban';
 import { HOUSE_COMMAND } from './Commands/House/housePicker';
-import { USER_INFO_COMMAND } from './Commands/New/userinfo';
-import { UnbanCommand } from './Commands/unban';
 import { postHousePicker } from './misc';
 import { LEADERBOARD, UPDATE_LEADERBOARD } from './Commands/House/leaderboard';
 import { HOUSE_INFO } from './Commands/House/houseInfo';
 import { guildMemberRemove } from './Events/guildMemberRemove';
 import { HOUSE_POINTS } from './Commands/House/housePoints';
-import { RENAME_HOUSE } from './Commands/House/renameHouse';
 import { guildMemberAdd } from './Events/guildMemberAdd';
 import { guildBanAdd } from './Events/guildBanAdd';
 import { guildBanRemove } from './Events/guildBanRemove';
-import { PLAY } from './Commands/play';
-import { MESSAGE } from './Commands/send';
 import { MESSAGE_DELETE } from './Commands/messageDelete';
-import { TEST } from './Commands/test';
 import { POINT_CHANGE } from './Commands/seeAllChanges';
-import { HousePoints } from './housePoints';
 import { DELETE_INTERACTION } from './Commands/DeleteInteraction';
+import { HOUSES } from './Commands/House/choosehouse';
 
 // dotenv
 config();
@@ -85,43 +78,35 @@ client.on('ready', ready => {
     setActivity();
 });
 
-client.once('ready', async () => {
-    client.registerCommands(
-        new OldBan(),
-        new UnbanCommand()
-    );
-
-    client.addCommands(
+client.once('ready', async ready => {
+    (ready as Client<true>).addCommands(
         LEADERBOARD,
-        USER_INFO_COMMAND,
         HOUSE_COMMAND,
         HOUSE_INFO,
         HOUSE_POINTS,
         UPDATE_LEADERBOARD,
-        RENAME_HOUSE,
-        PLAY,
-        MESSAGE,
         MESSAGE_DELETE,
-        // TEST,
         POINT_CHANGE,
-        DELETE_INTERACTION
+        DELETE_INTERACTION,
+        HOUSES
     );
 
-    postHousePicker(client)
-        .catch(err => console.debug(`Unable to post house picker: ${err}`));
+    try {
+        postHousePicker(ready as Client<true>);
+    } catch (err) {
+        console.debug(`Unable to post house picker: ${err}`);
+    }
+});
 
-    // client.emit('guildMemberAdd', await (await client.fetchDO()).members.fetch('451448994128723978'));
+client.on('guildMemberAdd', async member => {
+    if (member.guild.id !== '509135025560616963')
+        return;
+
+    const channel = await member.guild.channels.fetch('961986228926963732') as GuildTextBasedChannel;
+
+    channel.send({ content: `Welcome to the server, ${member}! When you're ready, use </choosehouse:${client.choosehouseId}> to join a house and begin collecting points!` });
 });
 
 client.login(process.env.TOKEN);
 
 process.on('unhandledRejection', console.error);
-
-const x = HousePoints.sample();
-const y = HousePoints.sample();
-
-console.debug(x);
-console.debug(y);
-console.debug(x.difference(y));
-console.debug(y.toJSON());
-console.debug(x.equals(y));

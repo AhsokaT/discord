@@ -117,7 +117,7 @@ function housePosition([h, p]: [string, number], index: number, all: [string, nu
     return `\n\`${padString(Ordinal[index + 1], Object.values(Ordinal))}\` \`${padString(`${p} points`, all.map(([_, p]) => `${p} points`))}\` <@&${RoleID[h]}>`;
 }
 
-export const LeaderboardEmbed = (client: Client<true>) => new EmbedBuilder()
+export const LeaderboardEmbed = (client: Client) => new EmbedBuilder()
     .setColor('#2F3136')
     .setTitle('Leaderboard')
     .setDescription(client.housePointManager.sorted.reduce((acc, h, i, a) => acc + housePosition(h, i, a), `Refreshed <t:${Math.round(Date.now() / 1000)}:R>\n`));

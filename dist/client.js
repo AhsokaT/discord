@@ -17,14 +17,14 @@ var ChannelID;
     ChannelID["OWL"] = "1023373108389883979";
     ChannelID["TURTLE"] = "1023373586465046528";
     ChannelID["PANDA"] = "1023373723551666296";
-})(ChannelID = exports.ChannelID || (exports.ChannelID = {}));
+})(ChannelID || (exports.ChannelID = ChannelID = {}));
 class Client extends discord_js_1.Client {
     youtube;
     commands = new Set();
     newCommands = new Set();
-    subscriptions = new discord_js_1.Collection();
     housePointManager;
     database;
+    choosehouseId = null;
     constructor(options) {
         super(options);
         if (!process.env.YOUTUBEAPI)
@@ -81,15 +81,19 @@ class Client extends discord_js_1.Client {
                 .catch(rej);
         });
     }
-    addCommands(...commands) {
-        commands.forEach(command => {
+    async addCommands(...commands) {
+        for (const command of commands)
             this.newCommands.add(command);
-            command.guilds.forEach(id => {
-                this.guilds.fetch(id)
-                    .then(guild => command.commandBuilders.forEach(builder => guild.commands.create(builder)))
-                    .catch(console.debug);
-            });
-        });
+        const guilds = commands.reduce((guilds, command) => {
+            for (const guildId of command.guilds)
+                guilds.set(guildId, [...(guilds.get(guildId) || []), command]);
+            return guilds;
+        }, new Map());
+        for (const [guildId, commands] of guilds) {
+            const body = commands.flatMap(command => command.commandBuilders).filter(builder => builder instanceof discord_js_1.SlashCommandBuilder);
+            const posted = await this.rest.put(discord_js_1.Routes.applicationGuildCommands(this.application.id, guildId), { body });
+            this.choosehouseId = posted.find(({ name }) => name === 'choosehouse')?.id;
+        }
     }
     hasCustomID(interaction) {
         return 'customId' in interaction;

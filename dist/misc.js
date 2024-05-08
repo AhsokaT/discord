@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postHousePicker = void 0;
+exports.postHousePicker = postHousePicker;
 const discord_js_1 = require("discord.js");
 const housePicker_1 = require("./Commands/House/housePicker");
 async function postHousePicker(client) {
@@ -48,4 +48,3 @@ async function postHousePicker(client) {
             channel.send(payload).then(res).catch(rej);
     });
 }
-exports.postHousePicker = postHousePicker;

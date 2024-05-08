@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LeaderboardEmbed = exports.BanButton = exports.RevokeBanButton = exports.HouseInfoButton = exports.LeaderboardButton = exports.UserInfoButton = exports.DeleteInteractionButton = exports.UpdateLeaderboardButton = exports.allPointChangeEmbed = exports.pointChangeEmbed = exports.pointChangeButton = void 0;
+exports.LeaderboardEmbed = exports.BanButton = exports.RevokeBanButton = exports.HouseInfoButton = exports.LeaderboardButton = exports.UserInfoButton = exports.DeleteInteractionButton = exports.UpdateLeaderboardButton = exports.pointChangeButton = void 0;
+exports.pointChangeEmbed = pointChangeEmbed;
+exports.allPointChangeEmbed = allPointChangeEmbed;
 const discord_js_1 = require("discord.js");
 const houseInfo_1 = require("./House/houseInfo");
 const housePicker_1 = require("./House/housePicker");
@@ -45,7 +47,6 @@ function pointChangeEmbed(house, before, after) {
         .setTitle('Point update')
         .setDescription(`\`${padString(diff, [diff])}\` \`${padString(before.toString(), [before])}\` → \`${padString(after.toString(), [after])}\` <@&${housePicker_1.RoleID[house]}>`);
 }
-exports.pointChangeEmbed = pointChangeEmbed;
 function allPointChangeEmbed(before, after) {
     const allDiff = Object.keys(housePicker_1.House).map(h => before[h] - after[h]).map(d => `${(d > 0 ? 'Removed' : 'Added')} ${Math.abs(d)} points`);
     return new discord_js_1.EmbedBuilder()
@@ -59,7 +60,6 @@ function allPointChangeEmbed(before, after) {
         return acc + `\n${diffStr} \`${padString(before[house].toString(), Object.values(before))}\` → \`${padString(after[house].toString(), Object.values(after))}\` <@&${housePicker_1.RoleID[house]}>`;
     }, ''));
 }
-exports.allPointChangeEmbed = allPointChangeEmbed;
 const UpdateLeaderboardButton = (label = 'Refresh') => new discord_js_1.ButtonBuilder()
     .setCustomId('UPDATELEADERBOARD')
     .setStyle(discord_js_1.ButtonStyle.Primary)

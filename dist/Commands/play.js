@@ -38,7 +38,8 @@ exports.PLAY = new template_1.Command()
             channelId: voice.id,
             guildId: interaction.guildId,
             adapterCreator: interaction.guild.voiceAdapterCreator,
-            selfDeaf: true
+            selfDeaf: true,
+            selfMute: false
         }), interaction, voice);
         subscription.connection.on('error', console.warn);
         client.subscriptions.set(interaction.guildId, subscription);
