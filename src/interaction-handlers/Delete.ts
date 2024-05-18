@@ -1,5 +1,5 @@
 import { ButtonInteraction } from 'discord.js';
-import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
+import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 
 @ApplyOptions<InteractionHandler.Options>({
@@ -14,3 +14,9 @@ export class Delete extends InteractionHandler {
         return interaction.customId === 'DELETEINTERACTION' ? this.some() : this.none();
     }
 }
+
+container.stores.loadPiece({
+    piece: Delete,
+    name: Delete.name,
+    store: 'interaction-handlers'
+});

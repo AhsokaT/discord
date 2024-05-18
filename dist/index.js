@@ -4,6 +4,16 @@ const discord_js_1 = require("discord.js");
 const misc_1 = require("./misc");
 const client_1 = require("./Client/client");
 const dotenv_1 = require("dotenv");
+// Commands
+require("./Commands/HousePicker");
+require("./Commands/HousePoints");
+require("./Commands/Leaderboard");
+// Interaction Handlers
+require("./interaction-handlers/Delete");
+require("./interaction-handlers/HouseButtons");
+require("./interaction-handlers/HousePicker");
+require("./interaction-handlers/Leaderboard");
+require("./interaction-handlers/ViewChanges");
 (0, dotenv_1.config)();
 const client = new client_1.Client({
     presence: {
@@ -18,7 +28,8 @@ const client = new client_1.Client({
     intents: [
         discord_js_1.GatewayIntentBits.Guilds,
         discord_js_1.GatewayIntentBits.GuildMembers,
-    ]
+    ],
+    baseUserDirectory: null
 });
 client.on(discord_js_1.Events.ClientReady, ready => console.debug(`${ready.user.tag} is online!`));
 client.on(discord_js_1.Events.ClientReady, async (ready) => {

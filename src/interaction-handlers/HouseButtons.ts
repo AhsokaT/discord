@@ -1,6 +1,6 @@
-import { ActionRowBuilder, MessageActionRowComponentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ButtonInteraction, SelectMenuBuilder, TextChannel } from 'discord.js';
+import { ActionRowBuilder, MessageActionRowComponentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ButtonInteraction, TextChannel } from 'discord.js';
 import { HouseId, House, ChannelId } from '../Util/enum';
-import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
+import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { HouseInfoButton, UserInfoButton } from '../Util/builders';
 
@@ -111,3 +111,9 @@ export class HouseButtons extends InteractionHandler {
         return /^(CHOOSEHOUSE|HOUSEUNSURE|HOUSECONFIRM)/.test(interaction.customId) ? this.some() : this.none();
     }
 }
+
+container.stores.loadPiece({
+    piece: HouseButtons,
+    name: HouseButtons.name,
+    store: 'interaction-handlers'
+});

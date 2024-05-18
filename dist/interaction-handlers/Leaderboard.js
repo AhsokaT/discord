@@ -34,3 +34,8 @@ exports.Leaderboard = Leaderboard = __decorate([
         interactionHandlerType: framework_1.InteractionHandlerTypes.Button
     })
 ], Leaderboard);
+framework_1.container.stores.loadPiece({
+    piece: Leaderboard,
+    name: Leaderboard.name,
+    store: 'interaction-handlers'
+});

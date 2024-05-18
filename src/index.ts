@@ -3,6 +3,18 @@ import { postHousePicker } from './misc';
 import { Client } from './Client/client';
 import { config } from 'dotenv';
 
+// Commands
+import './Commands/HousePicker';
+import './Commands/HousePoints';
+import './Commands/Leaderboard';
+
+// Interaction Handlers
+import './interaction-handlers/Delete';
+import './interaction-handlers/HouseButtons';
+import './interaction-handlers/HousePicker';
+import './interaction-handlers/Leaderboard';
+import './interaction-handlers/ViewChanges';
+
 config();
 
 const client = new Client({
@@ -18,7 +30,8 @@ const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
-    ]
+    ],
+    baseUserDirectory: null
 });
 
 client.on(Events.ClientReady, ready => console.debug(`${ready.user.tag} is online!`));

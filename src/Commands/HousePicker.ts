@@ -1,6 +1,6 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
 import { House } from '../Util/enum';
-import { Command } from '@sapphire/framework';
+import { Command, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 
 @ApplyOptions<Command.Options>({
@@ -40,3 +40,9 @@ export class HousePicker extends Command {
         registry.registerChatInputCommand({ name: this.name, description: this.description }, { guildIds: ['509135025560616963'] });
     }
 }
+
+container.stores.loadPiece({
+    piece: HousePicker,
+    name: HousePicker.name,
+    store: 'commands'
+});

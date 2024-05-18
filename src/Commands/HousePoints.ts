@@ -1,7 +1,7 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { Client } from '../Client/client';
 import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../Util/builders';
-import { Command } from '@sapphire/framework';
+import { Command, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { House, ChannelId, HouseId } from '../Util/enum';
 import { HousePoints } from '../Database/DatabaseManager';
@@ -100,3 +100,9 @@ export class HousePointsCommand extends Command {
         registry.registerChatInputCommand(builder, { guildIds: ['509135025560616963'] });
     }
 }
+
+container.stores.loadPiece({
+    piece: HousePointsCommand,
+    name: HousePointsCommand.name,
+    store: 'commands'
+});

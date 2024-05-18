@@ -1,6 +1,6 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder } from 'discord.js';
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command } from '@sapphire/framework';
+import { Command, container } from '@sapphire/framework';
 import { DeleteInteractionButton, LeaderboardEmbed, UpdateLeaderboardButton } from '../Util/builders';
 import { Client } from '../Client/client';
 
@@ -24,3 +24,9 @@ export class Leaderboard extends Command {
         registry.registerChatInputCommand({ name: this.name, description: this.description }, { guildIds: ['509135025560616963'] });
     }
 }
+
+container.stores.loadPiece({
+    piece: Leaderboard,
+    name: Leaderboard.name,
+    store: 'commands'
+});

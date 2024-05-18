@@ -33,3 +33,8 @@ exports.Leaderboard = Leaderboard = __decorate([
         description: 'See who\'s ahead in the house competitions'
     })
 ], Leaderboard);
+framework_1.container.stores.loadPiece({
+    piece: Leaderboard,
+    name: Leaderboard.name,
+    store: 'commands'
+});

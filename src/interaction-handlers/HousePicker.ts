@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
+import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageActionRowComponentBuilder, StringSelectMenuInteraction } from 'discord.js';
 import { House, HouseId } from '../Util/enum';
 
@@ -43,3 +43,9 @@ export class HousePicker extends InteractionHandler {
         return /^HOUSE/.test(interaction.customId) && interaction.inCachedGuild() ? this.some() : this.none();
     }
 }
+
+container.stores.loadPiece({
+    piece: HousePicker,
+    name: HousePicker.name,
+    store: 'interaction-handlers'
+});

@@ -37,3 +37,8 @@ exports.ViewChanges = ViewChanges = __decorate([
         interactionHandlerType: framework_1.InteractionHandlerTypes.Button
     })
 ], ViewChanges);
+framework_1.container.stores.loadPiece({
+    piece: ViewChanges,
+    name: ViewChanges.name,
+    store: 'interaction-handlers'
+});

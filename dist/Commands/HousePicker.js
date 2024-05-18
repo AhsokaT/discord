@@ -42,3 +42,8 @@ exports.HousePicker = HousePicker = __decorate([
         description: 'Choose your house!'
     })
 ], HousePicker);
+framework_1.container.stores.loadPiece({
+    piece: HousePicker,
+    name: HousePicker.name,
+    store: 'commands'
+});

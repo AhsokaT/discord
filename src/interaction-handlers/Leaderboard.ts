@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonInteraction, MessageActionRowComponentBuilder } from 'discord.js';
-import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
+import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { DeleteInteractionButton, LeaderboardEmbed, UpdateLeaderboardButton } from '../Util/builders';
 import { Client } from '../Client/client';
@@ -26,3 +26,9 @@ export class Leaderboard extends InteractionHandler {
         return /LEADERBOARD|UPDATELEADERBOARD/.test(interaction.customId) ? this.some() : this.none();
     }
 }
+
+container.stores.loadPiece({
+    piece: Leaderboard,
+    name: Leaderboard.name,
+    store: 'interaction-handlers'
+});

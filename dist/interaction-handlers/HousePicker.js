@@ -47,3 +47,8 @@ exports.HousePicker = HousePicker = __decorate([
         interactionHandlerType: framework_1.InteractionHandlerTypes.SelectMenu
     })
 ], HousePicker);
+framework_1.container.stores.loadPiece({
+    piece: HousePicker,
+    name: HousePicker.name,
+    store: 'interaction-handlers'
+});

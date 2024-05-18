@@ -91,3 +91,8 @@ exports.HousePointsCommand = HousePointsCommand = __decorate([
         description: 'Add or remove points from houses'
     })
 ], HousePointsCommand);
+framework_1.container.stores.loadPiece({
+    piece: HousePointsCommand,
+    name: HousePointsCommand.name,
+    store: 'commands'
+});

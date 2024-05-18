@@ -23,3 +23,8 @@ exports.Delete = Delete = __decorate([
         interactionHandlerType: framework_1.InteractionHandlerTypes.Button
     })
 ], Delete);
+framework_1.container.stores.loadPiece({
+    piece: Delete,
+    name: Delete.name,
+    store: 'interaction-handlers'
+});

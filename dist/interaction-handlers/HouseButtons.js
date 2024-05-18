@@ -102,3 +102,8 @@ exports.HouseButtons = HouseButtons = __decorate([
         interactionHandlerType: framework_1.InteractionHandlerTypes.Button
     })
 ], HouseButtons);
+framework_1.container.stores.loadPiece({
+    piece: HouseButtons,
+    name: HouseButtons.name,
+    store: 'interaction-handlers'
+});
