@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postHousePicker = postHousePicker;
+exports.postHousePicker = void 0;
 const discord_js_1 = require("discord.js");
-const housePicker_1 = require("./Commands/House/housePicker");
+const enum_1 = require("./Util/enum");
 async function postHousePicker(client) {
     return new Promise(async (res, rej) => {
         const channel = await client.channels.fetch('961986228926963732')
@@ -19,27 +19,11 @@ async function postHousePicker(client) {
                     .addComponents(new discord_js_1.StringSelectMenuBuilder()
                     .setCustomId('HOUSE')
                     .setPlaceholder('Choose your house!')
-                    .addOptions(new discord_js_1.StringSelectMenuOptionBuilder()
-                    .setLabel(housePicker_1.House.TIGER)
-                    .setValue('TIGER')
-                    .setEmoji({ name: housePicker_1.HouseEmoji.TIGER })
-                    .setDescription(housePicker_1.HouseDescription.TIGER), new discord_js_1.StringSelectMenuOptionBuilder()
-                    .setLabel(housePicker_1.House.OWL)
-                    .setValue('OWL')
-                    .setEmoji({ name: housePicker_1.HouseEmoji.OWL })
-                    .setDescription(housePicker_1.HouseDescription.OWL), new discord_js_1.StringSelectMenuOptionBuilder()
-                    .setLabel(housePicker_1.House.RAVEN)
-                    .setValue('RAVEN')
-                    .setEmoji({ name: housePicker_1.HouseEmoji.RAVEN })
-                    .setDescription(housePicker_1.HouseDescription.RAVEN), new discord_js_1.StringSelectMenuOptionBuilder()
-                    .setLabel(housePicker_1.House.TURTLE)
-                    .setValue('TURTLE')
-                    .setEmoji({ name: housePicker_1.HouseEmoji.TURTLE })
-                    .setDescription(housePicker_1.HouseDescription.TURTLE), new discord_js_1.StringSelectMenuOptionBuilder()
-                    .setLabel(housePicker_1.House.PANDA)
-                    .setValue('PANDA')
-                    .setEmoji({ name: housePicker_1.HouseEmoji.PANDA })
-                    .setDescription(housePicker_1.HouseDescription.PANDA)))
+                    .addOptions(enum_1.House.ALL.map(house => new discord_js_1.StringSelectMenuOptionBuilder()
+                    .setLabel(house.name)
+                    .setEmoji(house.emoji)
+                    .setDescription(house.description)
+                    .setValue(house.id))))
             ]
         };
         if (message)
@@ -48,3 +32,4 @@ async function postHousePicker(client) {
             channel.send(payload).then(res).catch(rej);
     });
 }
+exports.postHousePicker = postHousePicker;

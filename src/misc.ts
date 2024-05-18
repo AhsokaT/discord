@@ -1,6 +1,6 @@
-import { ActionRowBuilder, Message, MessageActionRowComponentBuilder, StringSelectMenuBuilder, SelectMenuOptionBuilder, StringSelectMenuOptionBuilder } from 'discord.js';
-import { Client } from './client';
-import { House, HouseDescription, HouseEmoji } from './Commands/House/housePicker';
+import { ActionRowBuilder, Message, MessageActionRowComponentBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from 'discord.js';
+import { Client } from './Client/client';
+import { House } from './Util/enum';
 
 export async function postHousePicker(client: Client<true>) {
     return new Promise<Message<true>>(async (res, rej) => {
@@ -23,31 +23,13 @@ export async function postHousePicker(client: Client<true>) {
                             .setCustomId('HOUSE')
                             .setPlaceholder('Choose your house!')
                             .addOptions(
-                                new StringSelectMenuOptionBuilder()
-                                    .setLabel(House.TIGER)
-                                    .setValue('TIGER')
-                                    .setEmoji({ name: HouseEmoji.TIGER })
-                                    .setDescription(HouseDescription.TIGER),
-                                new StringSelectMenuOptionBuilder()
-                                    .setLabel(House.OWL)
-                                    .setValue('OWL')
-                                    .setEmoji({ name: HouseEmoji.OWL })
-                                    .setDescription(HouseDescription.OWL),
-                                new StringSelectMenuOptionBuilder()
-                                    .setLabel(House.RAVEN)
-                                    .setValue('RAVEN')
-                                    .setEmoji({ name: HouseEmoji.RAVEN })
-                                    .setDescription(HouseDescription.RAVEN),
-                                new StringSelectMenuOptionBuilder()
-                                    .setLabel(House.TURTLE)
-                                    .setValue('TURTLE')
-                                    .setEmoji({ name: HouseEmoji.TURTLE })
-                                    .setDescription(HouseDescription.TURTLE),
-                                new StringSelectMenuOptionBuilder()
-                                    .setLabel(House.PANDA)
-                                    .setValue('PANDA')
-                                    .setEmoji({ name: HouseEmoji.PANDA })
-                                    .setDescription(HouseDescription.PANDA)
+                                House.ALL.map(
+                                    house => new StringSelectMenuOptionBuilder()
+                                        .setLabel(house.name)
+                                        .setEmoji(house.emoji)
+                                        .setDescription(house.description)
+                                        .setValue(house.id)
+                                )
                             )
                     )
             ]
