@@ -52,8 +52,7 @@ client.on(Events.GuildMemberAdd, async member => {
     const commands = await member.guild.commands.fetch();
     const command = commands.find(({ name }) => name === 'choosehouse');
 
-    channel.send({ content: `Welcome to the server, ${member}! When you're ready, use ${command ? `</choosehouse:${command.id}>` : '`/choosehouse`'} to join a house and begin collecting points!` })
-        .then(msg => setTimeout(() => msg.delete(), 10000));
+    channel.send({ content: `Welcome to the server, ${member}! When you're ready, use ${command ? `</choosehouse:${command.id}>` : '`/choosehouse`'} to join a house and begin collecting points!` });
 });
 
 client.login();

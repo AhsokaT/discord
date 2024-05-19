@@ -33,7 +33,7 @@ export class DatabaseManager {
             [Symbol.dispose]: () => this.mongo.close(),
             [Symbol.asyncDispose]: () => this.mongo.close(),
             db: this.mongo.db('Raven'),
-            collection: this.mongo.db('Raven').collection<HouseDocument>('Users')
+            collection: this.mongo.db('Raven').collection<HouseDocument>('Houses')
         };
     }
 
