@@ -1,5 +1,4 @@
 import { ActivityType, Events, GatewayIntentBits, TextChannel } from 'discord.js';
-import { postHousePicker } from './misc';
 import { Client } from './Client/client';
 import { config } from 'dotenv';
 
@@ -9,11 +8,13 @@ import './Commands/HousePoints';
 import './Commands/Leaderboard';
 
 // Interaction Handlers
-import './interaction-handlers/Delete';
-import './interaction-handlers/HouseButtons';
-import './interaction-handlers/HousePicker';
-import './interaction-handlers/Leaderboard';
-import './interaction-handlers/ViewChanges';
+import './Handlers/Delete';
+import './Handlers/HouseButtons';
+import './Handlers/HousePicker';
+import './Handlers/Leaderboard';
+import './Handlers/ViewChanges';
+import './Handlers/UserInfo';
+import './Handlers/HouseInfo';
 
 config();
 
@@ -35,14 +36,6 @@ const client = new Client({
 });
 
 client.on(Events.ClientReady, ready => console.debug(`${ready.user.tag} is online!`));
-
-client.on(Events.ClientReady, async (ready: Client<true>) => {
-    try {
-        postHousePicker(ready);
-    } catch (err) {
-        console.debug(`Unable to post house picker: ${err}`);
-    }
-});
 
 client.on(Events.GuildMemberAdd, async member => {
     if (member.guild.id !== '509135025560616963' || member.user.bot)
