@@ -3,7 +3,7 @@ import { Client } from '../Client/client';
 import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../Util/builders';
 import { Command, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { House, ChannelId, HouseId } from '../util/enum';
+import { House, ChannelId, HouseId } from '../Util/enum';
 import { HousePoints } from '../Database/DatabaseManager';
 
 @ApplyOptions<Command.Options>({
