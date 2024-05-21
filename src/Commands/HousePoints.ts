@@ -1,6 +1,6 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { Client } from '../Client/client';
-import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../util/builders';
+import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../Util/builders';
 import { Command, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { House, ChannelId, HouseId } from '../util/enum';

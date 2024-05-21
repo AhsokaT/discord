@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, container } from '@sapphire/framework';
-import { allPointChangeEmbed, pointChangeEmbed } from '../util/builders';
+import { allPointChangeEmbed, pointChangeEmbed } from '../Util/builders';
 import { PermissionFlagsBits } from 'discord.js';
 
 @ApplyOptions<Command.Options>({

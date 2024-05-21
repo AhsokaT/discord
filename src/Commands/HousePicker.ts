@@ -1,5 +1,5 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
-import { House } from '../util/enum';
+import { House } from '../Util/enum';
 import { Command, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 

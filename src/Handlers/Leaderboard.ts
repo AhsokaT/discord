@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonInteraction, MessageActionRowComponentBuilder } from 'discord.js';
 import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { DeleteInteractionButton, LeaderboardEmbed, UpdateLeaderboardButton } from '../util/builders';
+import { DeleteInteractionButton, LeaderboardEmbed, UpdateLeaderboardButton } from '../Util/builders';
 import { Client } from '../Client/client';
 
 @ApplyOptions<InteractionHandler.Options>({
