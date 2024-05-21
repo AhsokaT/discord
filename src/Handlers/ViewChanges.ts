@@ -1,7 +1,7 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, ButtonInteraction } from 'discord.js';
 import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { DeleteInteractionButton, allPointChangeEmbed } from '../Util/builders';
+import { DeleteInteractionButton, allPointChangeEmbed } from '../util/builders';
 import { HousePoints } from '../Database/DatabaseManager';
 
 @ApplyOptions<InteractionHandler.Options>({
@@ -18,7 +18,7 @@ export class ViewChanges extends InteractionHandler {
 
         interaction.reply({
             embeds: [
-                allPointChangeEmbed(before, after)
+                allPointChangeEmbed(before, after, interaction.user)
             ],
             components: [
                 new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(DeleteInteractionButton())

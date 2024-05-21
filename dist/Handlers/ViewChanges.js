@@ -10,7 +10,7 @@ exports.ViewChanges = void 0;
 const discord_js_1 = require("discord.js");
 const framework_1 = require("@sapphire/framework");
 const decorators_1 = require("@sapphire/decorators");
-const builders_1 = require("../Util/builders");
+const builders_1 = require("../util/builders");
 let ViewChanges = class ViewChanges extends framework_1.InteractionHandler {
     run(interaction) {
         let [_, json] = interaction.customId.split('_');
@@ -19,7 +19,7 @@ let ViewChanges = class ViewChanges extends framework_1.InteractionHandler {
         const after = Object.keys(changes).reduce((acc, h) => Object.assign(acc, { [h]: changes[h][1] }), {});
         interaction.reply({
             embeds: [
-                (0, builders_1.allPointChangeEmbed)(before, after)
+                (0, builders_1.allPointChangeEmbed)(before, after, interaction.user)
             ],
             components: [
                 new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.DeleteInteractionButton)())

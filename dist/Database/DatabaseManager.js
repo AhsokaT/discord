@@ -47,7 +47,7 @@ var __disposeResources = (this && this.__disposeResources) || (function (Suppres
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DatabaseManager = void 0;
 const mongodb_1 = require("mongodb");
-const enum_1 = require("../Util/enum");
+const enum_1 = require("../util/enum");
 class DatabaseManager {
     client;
     mongo;

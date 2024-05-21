@@ -13,7 +13,7 @@ let HouseInfo = class HouseInfo extends framework_1.InteractionHandler {
     async run(interaction) {
         interaction.reply({
             ephemeral: true,
-            content: 'This button is deprecated.'
+            content: 'This button does nothing yet!'
         }).catch(console.warn);
     }
     parse(interaction) {

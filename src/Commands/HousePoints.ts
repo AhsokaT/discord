@@ -1,9 +1,9 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { Client } from '../Client/client';
-import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../Util/builders';
+import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../util/builders';
 import { Command, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { House, ChannelId, HouseId } from '../Util/enum';
+import { House, ChannelId, HouseId } from '../util/enum';
 import { HousePoints } from '../Database/DatabaseManager';
 
 @ApplyOptions<Command.Options>({
@@ -53,7 +53,7 @@ export class HousePointsCommand extends Command {
                 const channel = await client.channels.fetch(house.channelId) as TextChannel;
 
                 channel.send({
-                    embeds: [pointChangeEmbed(houseId, current[houseId], newTotals[houseId])],
+                    embeds: [pointChangeEmbed(houseId, current[houseId], newTotals[houseId], interaction.user)],
                     components: [actionRow]
                 })
                 .catch(console.debug);
@@ -70,7 +70,7 @@ export class HousePointsCommand extends Command {
             const [logs, trophy] = await Promise.all([client.channels.fetch(ChannelId.Logs), client.channels.fetch(ChannelId.Trophy)]) as [TextChannel, TextChannel];
 
             const payload = {
-                embeds: [allPointChangeEmbed(current, newTotals)],
+                embeds: [allPointChangeEmbed(current, newTotals, interaction.user)],
                 allowedMentions: { parse: [] },
                 components: [
                     new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(LeaderboardButton())

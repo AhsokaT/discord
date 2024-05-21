@@ -8,10 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HousePointsCommand = void 0;
 const discord_js_1 = require("discord.js");
-const builders_1 = require("../Util/builders");
+const builders_1 = require("../util/builders");
 const framework_1 = require("@sapphire/framework");
 const decorators_1 = require("@sapphire/decorators");
-const enum_1 = require("../Util/enum");
+const enum_1 = require("../util/enum");
 let HousePointsCommand = class HousePointsCommand extends framework_1.Command {
     async chatInputRun(interaction) {
         await interaction.deferReply({ ephemeral: true });
@@ -47,7 +47,7 @@ let HousePointsCommand = class HousePointsCommand extends framework_1.Command {
                 actionRow.addComponents((0, builders_1.LeaderboardButton)());
             const channel = await client.channels.fetch(house.channelId);
             channel.send({
-                embeds: [(0, builders_1.pointChangeEmbed)(houseId, current[houseId], newTotals[houseId])],
+                embeds: [(0, builders_1.pointChangeEmbed)(houseId, current[houseId], newTotals[houseId], interaction.user)],
                 components: [actionRow]
             })
                 .catch(console.debug);
@@ -59,7 +59,7 @@ let HousePointsCommand = class HousePointsCommand extends framework_1.Command {
         try {
             const [logs, trophy] = await Promise.all([client.channels.fetch(enum_1.ChannelId.Logs), client.channels.fetch(enum_1.ChannelId.Trophy)]);
             const payload = {
-                embeds: [(0, builders_1.allPointChangeEmbed)(current, newTotals)],
+                embeds: [(0, builders_1.allPointChangeEmbed)(current, newTotals, interaction.user)],
                 allowedMentions: { parse: [] },
                 components: [
                     new discord_js_1.ActionRowBuilder().addComponents((0, builders_1.LeaderboardButton)())

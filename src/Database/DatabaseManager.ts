@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 import { Client } from '../Client/client';
-import { House, HouseId } from '../Util/enum';
+import { House, HouseId } from '../util/enum';
 
 export interface HouseDocument {
     _id: HouseId;

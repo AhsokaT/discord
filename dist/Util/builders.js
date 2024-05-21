@@ -11,13 +11,8 @@ exports.Ordinal = {
     5: '5th'
 };
 const padLength = (strs) => strs.sort((a, b) => b.length - a.length)[0].length + 1;
-// if (points.some(p => p.length > 2))
-//     return 4;
-// if (points.some(p => p.length > 1))
-//     return 3;
-// return 2;
 function padString(str, points) {
-    return str.padStart(padLength(points.map(p => p.toString())), ' ').padEnd(padLength(points.map(p => p.toString())) + 1, ' ');
+    return str.padStart(padLength(points.map(String)), ' ').padEnd(padLength(points.map(String)) + 1, ' ');
 }
 const pointChangeButton = (before, after) => {
     const json = JSON.stringify(Object.keys(before).reduce((acc, h) => Object.assign(acc, { [h]: [before[h], after[h]] }), {}));
@@ -29,34 +24,21 @@ const pointChangeButton = (before, after) => {
         .setStyle(discord_js_1.ButtonStyle.Primary);
 };
 exports.pointChangeButton = pointChangeButton;
-// const _padString = (str: string, length: number) => str.padStart(length, ' ').padEnd(length++, ' ');
-// export const reverseString = (str: string) => Array.from(str).reduceRight((acc, c) => acc + c, '');
-// export function pointDifferenceString(difference: number) {
-//     return `\`${_padString(reverseString(`${difference > 0 ? 'Removed' : 'Added'} ${difference}`), String(difference).length)}\``;
-// }
-// export function pointUpdateRow(before: HousePoints, after: HousePoints, house: string) {
-//     const difference = pointDifferenceString(before[house] - after[house]);
-//     return `${difference} \`${_padString(String(before), padLength)}\` → \`${_padString(String(after), padLength)}\` <@&${RoleID[house]}>`;
-// }
-// export function pointUpdateEmbed(before: HousePoints, after: HousePoints) {
-//     return new EmbedBuilder()
-//         .setColor('#2F3136')
-//         .setTitle('Point update')
-//         .setDescription('Loading...');
-// }
-function pointChangeEmbed(house, before, after) {
+function pointChangeEmbed(house, before, after, author) {
     const diff = `${(before - after > 0 ? 'Removed' : 'Added')} ${Math.abs(before - after)} points`;
     return new discord_js_1.EmbedBuilder()
         .setColor('#2F3136')
         .setTitle('Point update')
+        .setAuthor({ name: author.username, iconURL: author.displayAvatarURL() })
         .setDescription(`\`${padString(diff, [diff])}\` \`${padString(before.toString(), [before])}\` → \`${padString(after.toString(), [after])}\` <@&${enum_1.House[house].roleId}>`);
 }
 exports.pointChangeEmbed = pointChangeEmbed;
-function allPointChangeEmbed(before, after) {
+function allPointChangeEmbed(before, after, author) {
     const allDiff = enum_1.House.ids.map(h => before[h] - after[h]).map(d => `${(d > 0 ? 'Removed' : 'Added')} ${Math.abs(d)} points`);
     return new discord_js_1.EmbedBuilder()
         .setColor('#2F3136')
         .setTitle('Point update')
+        .setAuthor({ name: author.username, iconURL: author.displayAvatarURL() })
         .setDescription(Object.keys(enum_1.House).sort((a, b) => after[b] - after[a]).reduce((acc, house) => {
         if (before[house] === after[house])
             return acc;

@@ -6,6 +6,8 @@ import { config } from 'dotenv';
 import './Commands/HousePicker';
 import './Commands/HousePoints';
 import './Commands/Leaderboard';
+import './Commands/Test';
+import './Commands/Embed';
 
 // Interaction Handlers
 import './Handlers/Delete';
@@ -33,11 +35,8 @@ const client = new Client({
         GatewayIntentBits.GuildMembers,
     ],
     baseUserDirectory: null
-});
-
-client.on(Events.ClientReady, ready => console.debug(`${ready.user.tag} is online!`));
-
-client.on(Events.GuildMemberAdd, async member => {
+})
+.on(Events.GuildMemberAdd, async member => {
     if (member.guild.id !== '509135025560616963' || member.user.bot)
         return;
 
@@ -46,6 +45,6 @@ client.on(Events.GuildMemberAdd, async member => {
     const command = commands.find(({ name }) => name === 'choosehouse');
 
     channel.send({ content: `Welcome to the server, ${member}! When you're ready, use ${command ? `</choosehouse:${command.id}>` : '`/choosehouse`'} to join a house and begin collecting points!` });
-});
+}).on(Events.ClientReady, ready => console.debug(`${ready.user.tag} is online!`));
 
 client.login();

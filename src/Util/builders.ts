@@ -1,4 +1,4 @@
-import { ButtonBuilder, ButtonStyle, EmbedBuilder, Snowflake } from 'discord.js';
+import { ButtonBuilder, ButtonStyle, EmbedBuilder, Snowflake, User } from 'discord.js';
 import { Client } from '../Client/client';
 import { HousePoints } from '../Database/DatabaseManager';
 import { House, HouseId } from './enum';
@@ -13,16 +13,8 @@ export const Ordinal = {
 
 const padLength = (strs: string[]) => strs.sort((a, b) => b.length - a.length)[0].length + 1;
 
-    // if (points.some(p => p.length > 2))
-    //     return 4;
-
-    // if (points.some(p => p.length > 1))
-    //     return 3;
-
-    // return 2;
-
 function padString(str: string, points: (string | number)[]) {
-    return str.padStart(padLength(points.map(p => p.toString())), ' ').padEnd(padLength(points.map(p => p.toString())) + 1, ' ');
+    return str.padStart(padLength(points.map(String)), ' ').padEnd(padLength(points.map(String)) + 1, ' ');
 }
 
 export const pointChangeButton = (before: HousePoints, after: HousePoints) => {
@@ -37,42 +29,23 @@ export const pointChangeButton = (before: HousePoints, after: HousePoints) => {
         .setStyle(ButtonStyle.Primary);
 }
 
-// const _padString = (str: string, length: number) => str.padStart(length, ' ').padEnd(length++, ' ');
-
-// export const reverseString = (str: string) => Array.from(str).reduceRight((acc, c) => acc + c, '');
-
-// export function pointDifferenceString(difference: number) {
-//     return `\`${_padString(reverseString(`${difference > 0 ? 'Removed' : 'Added'} ${difference}`), String(difference).length)}\``;
-// }
-
-// export function pointUpdateRow(before: HousePoints, after: HousePoints, house: string) {
-//     const difference = pointDifferenceString(before[house] - after[house]);
-
-//     return `${difference} \`${_padString(String(before), padLength)}\` → \`${_padString(String(after), padLength)}\` <@&${RoleID[house]}>`;
-// }
-
-// export function pointUpdateEmbed(before: HousePoints, after: HousePoints) {
-//     return new EmbedBuilder()
-//         .setColor('#2F3136')
-//         .setTitle('Point update')
-//         .setDescription('Loading...');
-// }
-
-export function pointChangeEmbed(house: HouseId, before: number, after: number) {
+export function pointChangeEmbed(house: HouseId, before: number, after: number, author: User) {
     const diff = `${(before - after > 0 ? 'Removed' : 'Added')} ${Math.abs(before - after)} points`;
 
     return new EmbedBuilder()
         .setColor('#2F3136')
         .setTitle('Point update')
+        .setAuthor({ name: author.username, iconURL: author.displayAvatarURL() })
         .setDescription(`\`${padString(diff, [diff])}\` \`${padString(before.toString(), [before])}\` → \`${padString(after.toString(), [after])}\` <@&${House[house].roleId}>`);
 }
 
-export function allPointChangeEmbed(before: HousePoints, after: HousePoints) {
+export function allPointChangeEmbed(before: HousePoints, after: HousePoints, author: User) {
     const allDiff = House.ids.map(h => before[h] - after[h]).map(d => `${(d > 0 ? 'Removed' : 'Added')} ${Math.abs(d)} points`);
 
     return new EmbedBuilder()
         .setColor('#2F3136')
         .setTitle('Point update')
+        .setAuthor({ name: author.username, iconURL: author.displayAvatarURL() })
         .setDescription(Object.keys(House).sort((a, b) => after[b] - after[a]).reduce((acc, house) => {
             if (before[house] === after[house])
                 return acc;

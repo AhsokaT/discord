@@ -8,10 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HouseButtons = void 0;
 const discord_js_1 = require("discord.js");
-const enum_1 = require("../Util/enum");
+const enum_1 = require("../util/enum");
 const framework_1 = require("@sapphire/framework");
 const decorators_1 = require("@sapphire/decorators");
-const builders_1 = require("../Util/builders");
+const builders_1 = require("../util/builders");
 let HouseButtons = class HouseButtons extends framework_1.InteractionHandler {
     async run(interaction) {
         if (/^(CHOOSEHOUSE)/.test(interaction.customId)) {

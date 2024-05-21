@@ -10,7 +10,7 @@ exports.Leaderboard = void 0;
 const discord_js_1 = require("discord.js");
 const framework_1 = require("@sapphire/framework");
 const decorators_1 = require("@sapphire/decorators");
-const builders_1 = require("../Util/builders");
+const builders_1 = require("../util/builders");
 let Leaderboard = class Leaderboard extends framework_1.InteractionHandler {
     run(interaction) {
         if (interaction.customId === 'LEADERBOARD')

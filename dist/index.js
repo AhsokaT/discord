@@ -7,6 +7,8 @@ const dotenv_1 = require("dotenv");
 require("./Commands/HousePicker");
 require("./Commands/HousePoints");
 require("./Commands/Leaderboard");
+require("./Commands/Test");
+require("./Commands/Embed");
 // Interaction Handlers
 require("./Handlers/Delete");
 require("./Handlers/HouseButtons");
@@ -31,14 +33,13 @@ const client = new client_1.Client({
         discord_js_1.GatewayIntentBits.GuildMembers,
     ],
     baseUserDirectory: null
-});
-client.on(discord_js_1.Events.ClientReady, ready => console.debug(`${ready.user.tag} is online!`));
-client.on(discord_js_1.Events.GuildMemberAdd, async (member) => {
+})
+    .on(discord_js_1.Events.GuildMemberAdd, async (member) => {
     if (member.guild.id !== '509135025560616963' || member.user.bot)
         return;
     const channel = await member.guild.channels.fetch('961986228926963732');
     const commands = await member.guild.commands.fetch();
     const command = commands.find(({ name }) => name === 'choosehouse');
     channel.send({ content: `Welcome to the server, ${member}! When you're ready, use ${command ? `</choosehouse:${command.id}>` : '`/choosehouse`'} to join a house and begin collecting points!` });
-});
+}).on(discord_js_1.Events.ClientReady, ready => console.debug(`${ready.user.tag} is online!`));
 client.login();
