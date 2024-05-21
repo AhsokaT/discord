@@ -6,6 +6,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { House, ChannelId, HouseId } from '../Util/enum';
 import { HousePoints } from '../Database/DatabaseManager';
 
+// .
 @ApplyOptions<Command.Options>({
     name: 'housepoints',
     description: 'Add or remove points from houses'

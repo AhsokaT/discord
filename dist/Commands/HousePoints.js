@@ -11,7 +11,8 @@ const discord_js_1 = require("discord.js");
 const builders_1 = require("../Util/builders");
 const framework_1 = require("@sapphire/framework");
 const decorators_1 = require("@sapphire/decorators");
-const enum_1 = require("../util/enum");
+const enum_1 = require("../Util/enum");
+// .
 let HousePointsCommand = class HousePointsCommand extends framework_1.Command {
     async chatInputRun(interaction) {
         await interaction.deferReply({ ephemeral: true });
