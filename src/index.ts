@@ -20,6 +20,7 @@ import './Handlers/HouseInfo';
 
 config();
 
+// Client
 const client = new Client({
     presence: {
         status: 'idle',
