@@ -1,5 +1,5 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ButtonInteraction, TextChannel } from 'discord.js';
-import { HouseId, House, ChannelId } from '../Util/enum';
+import { House, ChannelId } from '../Util/enum';
 import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { HouseInfoButton, UserInfoButton } from '../Util/builders';
@@ -10,7 +10,7 @@ import { HouseInfoButton, UserInfoButton } from '../Util/builders';
 export class HouseButtons extends InteractionHandler {
     async run(interaction: ButtonInteraction) {
         if (/^(CHOOSEHOUSE)/.test(interaction.customId)) {
-            const houseId = interaction.customId.split('_').pop() as HouseId;
+            const houseId = interaction.customId.split('_').pop() as House.id;
             const actionRow = new ActionRowBuilder<MessageActionRowComponentBuilder>();
             const house = House[houseId];
 
@@ -54,7 +54,7 @@ export class HouseButtons extends InteractionHandler {
             if (!interaction.inCachedGuild())
                 return void interaction.reply({ content: 'error', ephemeral: true });
     
-            const selection = interaction.customId.split('_').pop() as HouseId;
+            const selection = interaction.customId.split('_').pop() as House.id;
             const house = House[selection];
     
             try {

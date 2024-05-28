@@ -3,10 +3,9 @@ import { Client } from '../Client/client';
 import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../Util/builders';
 import { Command, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { House, ChannelId, HouseId } from '../Util/enum';
+import { House, ChannelId } from '../Util/enum';
 import { HousePoints } from '../Database/DatabaseManager';
 
-// .
 @ApplyOptions<Command.Options>({
     name: 'housepoints',
     description: 'Add or remove points from houses'
@@ -28,7 +27,7 @@ export class HousePointsCommand extends Command {
 
         let changes = Object.keys(newTotals)
             .filter(house => newTotals[house] !== current[house])
-            .map(house => [house, newTotals[house]]) as [HouseId, number][];
+            .map(house => [house, newTotals[house]]) as [House.id, number][];
 
         if (changes.length === 0)
             return void interaction.editReply('No changes were made');
@@ -41,7 +40,7 @@ export class HousePointsCommand extends Command {
 
         Object.keys(newTotals)
             .filter(house => newTotals[house] !== current[house])
-            .forEach(async (houseId: HouseId) => {
+            .forEach(async (houseId: House.id) => {
                 const changeButton = pointChangeButton(current, newTotals);
                 const actionRow = new ActionRowBuilder<MessageActionRowComponentBuilder>();
                 const house = House[houseId];

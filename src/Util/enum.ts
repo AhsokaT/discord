@@ -1,12 +1,12 @@
 export class House {
     private constructor(
-        readonly id: HouseId,
+        readonly id: House.id,
         readonly name: string,
         readonly description: string,
         readonly emoji: string,
         readonly roleId: string, 
         readonly channelId: string
-    ){}
+    ) {}
 
     static readonly ids = ['TIGER', 'OWL', 'RAVEN', 'TURTLE', 'PANDA'] as const;
     static get ALL() {
@@ -65,17 +65,13 @@ export class House {
     );
 }
 
-export type HouseId =
-    | 'TIGER'
-    | 'OWL'
-    | 'RAVEN'
-    | 'TURTLE'
-    | 'PANDA'
-    ;
+export namespace House {
+    export type id = typeof House['ids'][number];
 
-export interface HouseDocument {
-    _id: HouseId;
-    points: number;
+    export interface Document {
+        _id: id;
+        points: number;
+    }
 }
 
 export const ChannelId = {

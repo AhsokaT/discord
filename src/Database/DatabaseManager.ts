@@ -1,17 +1,12 @@
 import { MongoClient } from 'mongodb';
 import { Client } from '../Client/client';
-import { House, HouseId } from '../Util/enum';
+import { House } from '../Util/enum';
 
-export interface HouseDocument {
-    _id: HouseId;
-    points: number;
-}
-
-export type HousePoints = Record<HouseId, number>;
+export type HousePoints = Record<House.id, number>;
 
 export class DatabaseManager {
     readonly mongo: MongoClient;
-    readonly cache: Map<HouseId, number>;
+    readonly cache: Map<House.id, number>;
 
     constructor(readonly client: Client, mongoUrl = process.env.MONGO_URL) {
         if (mongoUrl == null)
@@ -23,7 +18,7 @@ export class DatabaseManager {
     }
 
     get sorted() {
-        return House.ids.map(name => [name, this.cache.get(name)] as [HouseId, number]).sort((a, b) => b[1] - a[1]);
+        return House.ids.map(name => [name, this.cache.get(name)] as [House.id, number]).sort((a, b) => b[1] - a[1]);
     }
 
     async connect() {
@@ -33,7 +28,7 @@ export class DatabaseManager {
             [Symbol.dispose]: () => this.mongo.close(),
             [Symbol.asyncDispose]: () => this.mongo.close(),
             db: this.mongo.db('Raven'),
-            collection: this.mongo.db('Raven').collection<HouseDocument>('Houses')
+            collection: this.mongo.db('Raven').collection<House.Document>('Houses')
         };
     }
 
@@ -48,7 +43,7 @@ export class DatabaseManager {
         return houses;
     }
 
-    async patch(data: [id: HouseId, points: number][]) {
+    async patch(data: [id: House.id, points: number][]) {
         using connection = await this.connect();
 
         const operations = data.map(([id, points]) => ({ updateOne: { filter: { _id: id }, update: { $set: { points } } } }));

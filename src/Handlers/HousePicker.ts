@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageActionRowComponentBuilder, StringSelectMenuInteraction } from 'discord.js';
-import { House, HouseId } from '../Util/enum';
+import { House } from '../Util/enum';
 
 @ApplyOptions<InteractionHandler.Options>({
     interactionHandlerType: InteractionHandlerTypes.SelectMenu
@@ -9,7 +9,7 @@ import { House, HouseId } from '../Util/enum';
 export class HousePicker extends InteractionHandler {
     run(interaction: StringSelectMenuInteraction<'cached'>) {
         const [selection] = interaction.values;
-        const house = House[selection as HouseId];
+        const house = House[selection as House.id];
     
         if (!selection) {
             console.debug('Select Menu Interaction did not include values');

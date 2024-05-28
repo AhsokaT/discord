@@ -1,7 +1,7 @@
 import { ButtonBuilder, ButtonStyle, EmbedBuilder, Snowflake, User } from 'discord.js';
 import { Client } from '../Client/client';
 import { HousePoints } from '../Database/DatabaseManager';
-import { House, HouseId } from './enum';
+import { House } from './enum';
 
 export const Ordinal = {
     1: '1st',
@@ -29,7 +29,7 @@ export const pointChangeButton = (before: HousePoints, after: HousePoints) => {
         .setStyle(ButtonStyle.Primary);
 }
 
-export function pointChangeEmbed(house: HouseId, before: number, after: number, author: User) {
+export function pointChangeEmbed(house: House.id, before: number, after: number, author: User) {
     const diff = `${(before - after > 0 ? 'Removed' : 'Added')} ${Math.abs(before - after)} points`;
 
     return new EmbedBuilder()
@@ -78,7 +78,7 @@ export const LeaderboardButton = (label = 'Leaderboard') => new ButtonBuilder()
     .setStyle(ButtonStyle.Primary)
     .setLabel(label);
 
-export const HouseInfoButton = (house: HouseId, label = 'House') => new ButtonBuilder()
+export const HouseInfoButton = (house: House.id, label = 'House') => new ButtonBuilder()
     .setCustomId(`HOUSEINFO_${house}`)
     .setStyle(ButtonStyle.Primary)
     .setLabel(label);
@@ -93,7 +93,7 @@ export const BanButton = (user: Snowflake, label = 'Ban') => new ButtonBuilder()
     .setStyle(ButtonStyle.Danger)
     .setLabel(label);
 
-function housePosition([h, p]: [HouseId, number], index: number, all: [string, number][]) {
+function housePosition([h, p]: [House.id, number], index: number, all: [string, number][]) {
     return `\n\`${padString(Ordinal[index + 1], Object.values(Ordinal))}\` \`${padString(`${p} points`, all.map(([_, p]) => `${p} points`))}\` <@&${House[h].roleId}>`;
 }
 
