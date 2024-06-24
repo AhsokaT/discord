@@ -4,8 +4,8 @@
   "description": "",
   "main": "",
   "scripts": {
-    "start": "npx tsx src/index.ts",
-    "dev": "npx tsx --env-file=.env --trace-deprecation src/index.ts"
+    "start": "tsx src/index.ts",
+    "dev": "tsx --env-file=.env --trace-deprecation src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,9 +14,7 @@
     "@sapphire/decorators": "^6.1.0",
     "@sapphire/framework": "^5.2.1",
     "discord.js": "^14.15.3",
-    "mongodb": "^6.7.0"
-  },
-  "devDependencies": {
+    "mongodb": "^6.7.0",
     "tsx": "^4.15.7"
   }
 }

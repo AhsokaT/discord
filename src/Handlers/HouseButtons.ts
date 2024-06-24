@@ -1,8 +1,8 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ButtonInteraction, TextChannel } from 'discord.js';
-import { House, ChannelId } from '../Util/enum';
+import { House, ChannelId } from '../util/enum';
 import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { HouseInfoButton, UserInfoButton } from '../Util/builders';
+import { HouseInfoButton, UserInfoButton } from '../util/builders';
 
 @ApplyOptions<InteractionHandler.Options>({
     interactionHandlerType: InteractionHandlerTypes.Button
@@ -22,7 +22,7 @@ export class HouseButtons extends InteractionHandler {
                 new ButtonBuilder()
                     .setStyle(ButtonStyle.Success)
                     .setLabel('Sign me up!')
-                    .setCustomId(`HOUSECONFIRM_${house}`)
+                    .setCustomId(`HOUSECONFIRM_${house.id}`)
             );
 
             interaction.update({
@@ -83,7 +83,7 @@ export class HouseButtons extends InteractionHandler {
                 return console.error(err);
             }
     
-            interaction.editReply({ content: `You have successfully joined **${House[selection]}**! You now have access to <#${house.channelId}>`, components: [] }).catch(console.debug);
+            interaction.editReply({ content: `You have successfully joined **${House[selection].name}**! You now have access to <#${house.channelId}>`, components: [] }).catch(console.debug);
     
             const logs = await interaction.client.channels.fetch(ChannelId.Logs) as TextChannel;
 

@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
-import { Client } from '../Client/client';
-import { House } from '../Util/enum';
+import { Client } from '../client/client';
+import { House } from '../util/enum';
 
 export type HousePoints = Record<House.id, number>;
 

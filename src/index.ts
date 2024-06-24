@@ -1,8 +1,8 @@
 import { ActivityType, GatewayIntentBits } from 'discord.js';
-import { Client } from './Client/client';
+import { Client } from './client/client';
 import './events/index';
-import './Commands/index';
-import './Handlers/index';
+import './commands/index';
+import './handlers/index';
 
 const client = new Client({
     presence: {

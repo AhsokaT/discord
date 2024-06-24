@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageActionRowComponentBuilder, StringSelectMenuInteraction } from 'discord.js';
-import { House } from '../Util/enum';
+import { House } from '../util/enum';
 
 @ApplyOptions<InteractionHandler.Options>({
     interactionHandlerType: InteractionHandlerTypes.SelectMenu
@@ -40,7 +40,7 @@ export class HousePicker extends InteractionHandler {
     }
 
     parse(interaction: StringSelectMenuInteraction) {
-        return /^HOUSE/.test(interaction.customId) && interaction.inCachedGuild() ? this.some() : this.none();
+        return interaction.customId.startsWith('HOUSE') && interaction.inCachedGuild() ? this.some() : this.none();
     }
 }
 

@@ -1,5 +1,5 @@
 import { Events, Listener, container } from '@sapphire/framework';
-import { Client } from '../Client/client';
+import { Client } from '../client/client';
 
 export class Ready extends Listener<typeof Events.ClientReady> {
     run(ready: Client<true>) {

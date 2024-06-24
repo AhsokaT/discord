@@ -1,6 +1,6 @@
 import { ButtonBuilder, ButtonStyle, EmbedBuilder, Snowflake, User } from 'discord.js';
-import { Client } from '../Client/client';
-import { HousePoints } from '../Database/DatabaseManager';
+import { Client } from '../client/client';
+import { HousePoints } from '../database/DatabaseManager';
 import { House } from './enum';
 
 export const Ordinal = {
@@ -11,14 +11,14 @@ export const Ordinal = {
     5: '5th'
 };
 
-const padLength = (strs: string[]) => strs.sort((a, b) => b.length - a.length)[0].length + 1;
+const padLength = (strs: string[]) => strs.slice().sort((a, b) => b.length - a.length)[0].length + 1;
 
 function padString(str: string, points: (string | number)[]) {
     return str.padStart(padLength(points.map(String)), ' ').padEnd(padLength(points.map(String)) + 1, ' ');
 }
 
 export const pointChangeButton = (before: HousePoints, after: HousePoints) => {
-    const json = JSON.stringify(Object.keys(before).reduce((acc, h) => Object.assign(acc, { [h]: [before[h], after[h]] }), {}));
+    const json = JSON.stringify((Object.keys(before) as House.id[]).reduce((acc, h) => Object.assign(acc, { [h]: [before[h], after[h]] }), {}));
 
     if (json.length > 98)
         return null;
@@ -46,13 +46,13 @@ export function allPointChangeEmbed(before: HousePoints, after: HousePoints, aut
         .setColor('#2F3136')
         .setTitle('Point update')
         .setAuthor({ name: author.username, iconURL: author.displayAvatarURL() })
-        .setDescription(Object.keys(House).sort((a, b) => after[b] - after[a]).reduce((acc, house) => {
+        .setDescription(House.ids.slice().sort((a, b) => after[b] - after[a]).reduce((acc, house) => {
             if (before[house] === after[house])
                 return acc;
 
             const diff = before[house] - after[house];
 
-            const diffStr = '\`' + [...padString([...`${(diff > 0 ? 'Removed' : 'Added')} ${Math.abs(diff)} points`].reverse().join(''), allDiff)].reverse().join('') + `\``;
+            const diffStr = '`' + [...padString([...`${(diff > 0 ? 'Removed' : 'Added')} ${Math.abs(diff)} points`].reverse().join(''), allDiff)].reverse().join('') + '`';
 
             return acc + `\n${diffStr} \`${padString(before[house].toString(), Object.values(before))}\` → \`${padString(after[house].toString(), Object.values(after))}\` <@&${House[house].roleId}>`;
         }, ''));
@@ -94,7 +94,7 @@ export const BanButton = (user: Snowflake, label = 'Ban') => new ButtonBuilder()
     .setLabel(label);
 
 function housePosition([h, p]: [House.id, number], index: number, all: [string, number][]) {
-    return `\n\`${padString(Ordinal[index + 1], Object.values(Ordinal))}\` \`${padString(`${p} points`, all.map(([_, p]) => `${p} points`))}\` <@&${House[h].roleId}>`;
+    return `\n\`${padString(Ordinal[index + 1 as keyof typeof Ordinal], Object.values(Ordinal))}\` \`${padString(`${p} points`, all.map(([_, p]) => `${p} points`))}\` <@&${House[h].roleId}>`;
 }
 
 export const LeaderboardEmbed = (client: Client) => new EmbedBuilder()

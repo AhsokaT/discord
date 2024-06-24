@@ -1,10 +1,10 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
-import { Client } from '../Client/client';
-import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../Util/builders';
+import { Client } from '../client/client';
+import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../util/builders';
 import { Command, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { House, ChannelId } from '../Util/enum';
-import { HousePoints } from '../Database/DatabaseManager';
+import { House, ChannelId } from '../util/enum';
+import { HousePoints } from '../database/DatabaseManager';
 
 @ApplyOptions<Command.Options>({
     name: 'housepoints',
@@ -25,9 +25,9 @@ export class HousePointsCommand extends Command {
             PANDA: interaction.options.getInteger('pandas') ?? current.PANDA
         };
 
-        let changes = Object.keys(newTotals)
+        let changes = House.ids
             .filter(house => newTotals[house] !== current[house])
-            .map(house => [house, newTotals[house]]) as [House.id, number][];
+            .map(house => [house, newTotals[house]] as [House.id, number]);
 
         if (changes.length === 0)
             return void interaction.editReply('No changes were made');
@@ -38,7 +38,7 @@ export class HousePointsCommand extends Command {
             console.error(err);
         }
 
-        Object.keys(newTotals)
+        House.ids
             .filter(house => newTotals[house] !== current[house])
             .forEach(async (houseId: House.id) => {
                 const changeButton = pointChangeButton(current, newTotals);
@@ -59,7 +59,7 @@ export class HousePointsCommand extends Command {
                 .catch(console.debug);
             });
 
-        const changed = Object.keys(newTotals).some(house => newTotals[house] !== current[house]);
+        const changed = House.ids.some(house => newTotals[house] !== current[house]);
 
         interaction.editReply(changed ? 'Changes made' : 'No changes were made').catch(console.debug);
 

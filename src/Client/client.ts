@@ -1,5 +1,5 @@
 import { ClientOptions } from 'discord.js';
-import { DatabaseManager } from '../Database/DatabaseManager';
+import { DatabaseManager } from '../database/DatabaseManager';
 import { SapphireClient, SapphireClientOptions } from '@sapphire/framework';
 
 export enum ChannelIds {
