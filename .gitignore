@@ -7,3 +7,5 @@ housePoints.json
 .vscode/*
 
 .metals
+
+dist/

@@ -2,9 +2,10 @@
   "name": "raven",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx tsx src/index.ts",
+    "dev": "npx tsx --env-file=.env src/index.ts"
   },
   "keywords": [],
   "author": "",
