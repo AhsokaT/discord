@@ -1,8 +1,8 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, ButtonInteraction } from 'discord.js';
 import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { DeleteInteractionButton, allPointChangeEmbed } from '../util/builders';
-import { HousePoints } from '../database/DatabaseManager';
+import { DeleteInteractionButton, allPointChangeEmbed } from '../util/builders.js';
+import { HousePoints } from '../database/DatabaseManager.js';
 
 @ApplyOptions<InteractionHandler.Options>({
     interactionHandlerType: InteractionHandlerTypes.Button

@@ -1,15 +1,13 @@
 {
     "include": ["src/**/*"],
-    "compileOnSave": false,
     "compilerOptions": {
-        "allowJs": true,
-        "checkJs": true,
         "strict": true,
         "experimentalDecorators": true,
         "target": "ES2022",
-        "moduleResolution": "Node",
-        "module": "CommonJS",
-        "outDir": "./dist",
-        "esModuleInterop": true
+        "module": "NodeNext",
+        "outDir": "dist",
+        "esModuleInterop": true,
+        "noEmit": true,
+        "skipLibCheck": true
     }
 }

@@ -1,7 +1,7 @@
 import { ButtonBuilder, ButtonStyle, EmbedBuilder, Snowflake, User } from 'discord.js';
-import { Client } from '../client/client';
-import { HousePoints } from '../database/DatabaseManager';
-import { House } from './enum';
+import { Client } from '../client/client.js';
+import { HousePoints } from '../database/DatabaseManager.js';
+import { House } from './enum.js';
 
 export const Ordinal = {
     1: '1st',

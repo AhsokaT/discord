@@ -17,7 +17,7 @@ export class UserInfo extends InteractionHandler {
             .setThumbnail(user.displayAvatarURL({ size: 4096 }))
             .addFields({ name: 'Username', value: user.tag });
     
-        const nickname = member && member.nickname;
+        const nickname = member?.nickname;
         const displayName = nickname ?? user.globalName;
     
         if (displayName)

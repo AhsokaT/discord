@@ -1,10 +1,10 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
-import { Client } from '../client/client';
-import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../util/builders';
+import { Client } from '../client/client.js';
+import { allPointChangeEmbed, LeaderboardButton, pointChangeButton, pointChangeEmbed } from '../util/builders.js';
 import { Command, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { House, ChannelId } from '../util/enum';
-import { HousePoints } from '../database/DatabaseManager';
+import { House, ChannelId } from '../util/enum.js';
+import { HousePoints } from '../database/DatabaseManager.js';
 
 @ApplyOptions<Command.Options>({
     name: 'housepoints',

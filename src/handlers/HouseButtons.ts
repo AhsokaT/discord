@@ -1,8 +1,8 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ButtonInteraction, TextChannel } from 'discord.js';
-import { House, ChannelId } from '../util/enum';
+import { House, ChannelId } from '../util/enum.js';
 import { InteractionHandler, InteractionHandlerTypes, container } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { HouseInfoButton, UserInfoButton } from '../util/builders';
+import { HouseInfoButton, UserInfoButton } from '../util/builders.js';
 
 @ApplyOptions<InteractionHandler.Options>({
     interactionHandlerType: InteractionHandlerTypes.Button

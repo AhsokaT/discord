@@ -1,8 +1,8 @@
 import { ActionRowBuilder, MessageActionRowComponentBuilder } from 'discord.js';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, container } from '@sapphire/framework';
-import { DeleteInteractionButton, LeaderboardEmbed, UpdateLeaderboardButton } from '../util/builders';
-import { Client } from '../client/client';
+import { DeleteInteractionButton, LeaderboardEmbed, UpdateLeaderboardButton } from '../util/builders.js';
+import { Client } from '../client/client.js';
 
 @ApplyOptions<Command.Options>({
     name: 'leaderboard',
