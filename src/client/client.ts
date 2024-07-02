@@ -2,7 +2,9 @@ import { ClientOptions } from 'discord.js';
 import { DatabaseManager } from '../database/DatabaseManager.js';
 import { SapphireClient, SapphireClientOptions } from '@sapphire/framework';
 
-export class Client<Ready extends boolean = boolean> extends SapphireClient<Ready> {
+export class Client<
+    Ready extends boolean = boolean
+> extends SapphireClient<Ready> {
     readonly database: DatabaseManager;
 
     constructor(options: ClientOptions & SapphireClientOptions) {

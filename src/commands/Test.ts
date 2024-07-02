@@ -1,27 +1,48 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, container } from '@sapphire/framework';
-import { allPointChangeEmbed, pointChangeEmbed } from '../util/builders.js';
-import { PermissionFlagsBits } from 'discord.js';
+import { ButtonStyle, ComponentType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
-    name: 'test',
+    name: 'test2',
     description: 'Testbed for new features',
 })
 export class Test extends Command {
-    chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-        interaction
-            .reply({
-                embeds: [
-                    allPointChangeEmbed(
-                        { TIGER: 0, OWL: 0, RAVEN: 0, TURTLE: 0, PANDA: 0 },
-                        { TIGER: 1, OWL: 2, RAVEN: 3, TURTLE: 4, PANDA: 5 },
-                        interaction.user
-                    ),
-                    pointChangeEmbed('TIGER', 0, 1, interaction.user),
-                ],
-                allowedMentions: { parse: [] },
+    async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
+        let time = performance.now();
+        await interaction.deferReply({ ephemeral: true });
+        time = performance.now() - time;
+
+        const embed = new EmbedBuilder()
+            .setColor(`#2B2D31`)
+            .setTitle('Changes staged')
+            .setAuthor({
+                name: interaction.user.username,
+                iconURL: interaction.user.displayAvatarURL(),
             })
-            .catch(console.error);
+            .addFields({ name: 'Changes', value: `${time.toFixed(2)}ms` });
+
+        await interaction.editReply({
+            embeds: [embed],
+            components: [
+                {
+                    type: ComponentType.ActionRow,
+                    components: [
+                        {
+                            type: ComponentType.Button,
+                            style: 1,
+                            customId: 'test',
+                            label: 'Commit',
+                        },
+                        {
+                            type: ComponentType.Button,
+                            style: ButtonStyle.Secondary,
+                            customId: 'test2',
+                            label: 'Cancel',
+                        },
+                    ],
+                },
+            ],
+        });
     }
 
     registerApplicationCommands(registry: Command.Registry) {
