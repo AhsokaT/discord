@@ -19,6 +19,7 @@ jobs:
         run: |
           ssh -o "StrictHostKeyChecking no" patbot@patbot "
             cd ${{ secrets.DEPLOY_PATH }}
+            killall node
             git pull
             npm install
             npm start
