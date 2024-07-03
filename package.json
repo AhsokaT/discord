@@ -18,7 +18,6 @@
 		"@sapphire/pieces": "^4.3.1",
 		"@sapphire/plugin-subcommands": "^6.0.3",
 		"@sapphire/utilities": "^3.16.2",
-		"@types/yt-search": "^2.10.3",
 		"discord.js": "^14.15.3",
 		"libsodium-wrappers": "^0.7.13",
 		"mongodb": "^6.8.0",
@@ -26,6 +25,7 @@
 		"ytdl-core": "^4.11.5"
 	},
 	"devDependencies": {
+		"@types/yt-search": "^2.10.3",
 		"tsx": "^4.16.0",
 		"typescript": "^5.5.3"
 	}
