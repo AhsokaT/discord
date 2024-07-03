@@ -1,0 +1,25 @@
+name: Deploy to Tailscale
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-via-tailscale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+          
+      - name: Deployment
+        run: |
+          ssh -o "StrictHostKeyChecking no" patbot@patbot "
+            cd ${{ secrets.DEPLOY_PATH }}
+            git pull
+            npm install
+            npm start
+          "
