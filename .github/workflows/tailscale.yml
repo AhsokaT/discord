@@ -14,18 +14,8 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
-          
-      - name: Deployment
-        run: |
-          ssh -o "StrictHostKeyChecking no" patbot@patbot "
-            cd ${{ secrets.DEPLOY_PATH }}
-            killall node
-            git pull
-            npm install
-            npm start
-          "
 
-      - name: runcode
+      - name: Deploy
         run: |
           ssh -o "StrictHostKeyChecking no" patbot@patbot"
             cd ${{ secrets.DEPLOY_PATH }}
