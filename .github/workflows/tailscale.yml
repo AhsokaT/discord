@@ -24,3 +24,16 @@ jobs:
             npm install
             npm start
           "
+
+      - name: runcode
+        run: |
+          ssh -o "StrictHostKeyChecking no" patbot@patbot"
+            cd ${{ secrets.DEPLOY_PATH }}
+            git pull
+            npm install
+            run: echo "Start bot"
+            echo '${{ secrets.VM_PASSWORD }}' | /usr/bin/sudo --stdin /usr/bin/systemctl start bot.service
+          "
+
+      - name: finish
+        run: echo "Finished"

@@ -9,6 +9,4 @@ const client = new Client({
     ],
 });
 
-// client.login();
-
-console.log('charlie the unicorn');
+client.login();
