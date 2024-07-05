@@ -1,12 +1,12 @@
 import { Command } from '@sapphire/framework';
 import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
-import { Client } from '../client/client.js';
-import { Subscription } from '../music/Subscription.js';
-import { Track } from '../music/Track.js';
+import { Client } from '../../client/client.js';
+import { Subscription } from '../../structs/Subscription.js';
+import { Track } from '../../structs/Track.js';
 import ytdl from 'ytdl-core';
-import { PieceOptions } from '../util/util.js';
+import { PieceOptions } from '../../util/util.js';
 import { AudioPlayerStatus } from '@discordjs/voice';
-import { PluginBits } from '../util/PluginBitField.js';
+import { PluginBits } from '../../util/PluginBitField.js';
 import yts from 'yt-search';
 
 @PieceOptions({

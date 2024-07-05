@@ -246,25 +246,30 @@ export const COMMANDS = {
             ],
         },
         {
-            name: 'playlist',
-            description: 'Empty',
+            name: 'shuffle',
+            description: 'Shuffle the queue',
             type: ApplicationCommandType.ChatInput,
-            options: [
-                {
-                    name: 'create',
-                    description: 'Create a playlist',
-                    type: ApplicationCommandOptionType.Subcommand,
-                    options: [
-                        {
-                            name: 'name',
-                            description: 'Playlist name',
-                            type: ApplicationCommandOptionType.String,
-                            required: true,
-                        },
-                    ],
-                },
-            ],
         },
+        // {
+        //     name: 'playlist',
+        //     description: 'Empty',
+        //     type: ApplicationCommandType.ChatInput,
+        //     options: [
+        //         {
+        //             name: 'create',
+        //             description: 'Create a playlist',
+        //             type: ApplicationCommandOptionType.Subcommand,
+        //             options: [
+        //                 {
+        //                     name: 'name',
+        //                     description: 'Playlist name',
+        //                     type: ApplicationCommandOptionType.String,
+        //                     required: true,
+        //                 },
+        //             ],
+        //         },
+        //     ],
+        // },
         {
             name: 'remove',
             description: 'Remove a song from the queue',

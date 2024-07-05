@@ -10,9 +10,9 @@ import {
     PermissionsBitField,
     SlashCommandBuilder,
 } from 'discord.js';
-import { Client } from '../client/client.js';
-import { COMMANDS, commandStr, PieceOptions } from '../util/util.js';
-import { PluginBits } from '../util/PluginBitField.js';
+import { Client } from '../../client/client.js';
+import { COMMANDS, commandStr, PieceOptions } from '../../util/util.js';
+import { PluginBits } from '../../util/PluginBitField.js';
 
 @PieceOptions({
     name: 'help',

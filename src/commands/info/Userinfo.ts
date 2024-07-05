@@ -4,7 +4,7 @@ import {
     GuildMember,
     UserContextMenuCommandInteraction,
 } from 'discord.js';
-import { PieceOptions, resolveGuildMemberData } from '../util/util.js';
+import { PieceOptions, resolveGuildMemberData } from '../../util/util.js';
 
 @PieceOptions({
     name: 'Info',

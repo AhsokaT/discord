@@ -1,6 +1,6 @@
 import { Command } from '@sapphire/framework';
-import { Client } from '../client/client.js';
-import { PieceOptions } from '../util/util.js';
+import { Client } from '../../client/client.js';
+import { PieceOptions } from '../../util/util.js';
 
 @PieceOptions({
     name: 'Disconnect',

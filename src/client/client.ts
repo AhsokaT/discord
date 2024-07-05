@@ -1,5 +1,5 @@
 import { ClientOptions, Snowflake } from 'discord.js';
-import { Subscription } from '../music/Subscription.js';
+import { Subscription } from '../structs/Subscription.js';
 import { GuildDataManager } from '../managers/DatabaseManager.js';
 import { join } from 'path';
 import { CommandManager } from '../managers/CommandManager.js';

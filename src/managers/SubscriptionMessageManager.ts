@@ -2,8 +2,8 @@ import {
     Message,
     PermissionFlagsBits,
 } from 'discord.js';
-import { Track } from '../music/Track.js';
-import { Subscription } from '../music/Subscription.js';
+import { Track } from '../structs/Track.js';
+import { Subscription } from '../structs/Subscription.js';
 
 export class SubscriptionMessageManager {
     public messageLock: boolean;

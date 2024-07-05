@@ -5,9 +5,9 @@ import {
     MessageActionRowComponentBuilder,
     StringSelectMenuBuilder,
 } from 'discord.js';
-import { MusicCommand } from '../music/MusicCommand.js';
-import { Subscription } from '../music/Subscription.js';
-import { PieceOptions } from '../util/util.js';
+import { MusicCommand } from '../../structs/MusicCommand.js';
+import { Subscription } from '../../structs/Subscription.js';
+import { PieceOptions } from '../../util/util.js';
 
 @PieceOptions({
     name: 'queue',

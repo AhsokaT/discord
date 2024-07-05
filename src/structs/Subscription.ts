@@ -22,7 +22,7 @@ import {
     StringSelectMenuBuilder,
     VoiceBasedChannel,
 } from 'discord.js';
-import { Track } from './Track.js';
+import { Track } from '../structs/Track.js';
 import { Client } from '../client/client.js';
 import { SubscriptionMessageManager } from '../managers/SubscriptionMessageManager.js';
 import { SubscriptionVoteManager } from '../managers/SubscriptionVoteManager.js';
@@ -115,7 +115,6 @@ export class Subscription {
                 this.loop && this.queue.push(track);
                 await this.messages.delete();
                 await this.processQueue();
-                // if (!this.isPlaying()) this.text.send({ embeds: [] }); // idle message
             })
             .on(AudioPlayerStatus.Playing, (oldState, newState) => {
                 const track = (newState.resource as AudioResource<Track>)

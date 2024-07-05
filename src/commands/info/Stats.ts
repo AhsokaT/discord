@@ -1,5 +1,5 @@
 import { Command } from '@sapphire/framework';
-import { PieceOptions } from '../util/util.js';
+import { PieceOptions } from '../../util/util.js';
 import { EmbedBuilder } from 'discord.js';
 
 @PieceOptions({

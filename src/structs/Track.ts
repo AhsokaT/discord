@@ -9,7 +9,7 @@ import {
     User,
 } from 'discord.js';
 import ytdl from 'ytdl-core';
-import { Subscription } from './Subscription.js';
+import { Subscription } from '../structs/Subscription.js';
 
 interface EmbedOptions {
     label?: string;

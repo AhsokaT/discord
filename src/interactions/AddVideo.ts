@@ -1,9 +1,9 @@
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
 import { ButtonInteraction } from 'discord.js';
 import { MusicInteractionHandler, PieceOptions } from '../util/util.js';
-import { Track } from '../music/Track.js';
+import { Track } from '../structs/Track.js';
 import yts from 'yt-search';
-import { Subscription } from '../music/Subscription.js';
+import { Subscription } from '../structs/Subscription.js';
 
 @PieceOptions({ interactionHandlerType: InteractionHandlerTypes.Button })
 export class AddVideoButton extends MusicInteractionHandler {

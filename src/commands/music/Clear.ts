@@ -1,9 +1,9 @@
 import { Command } from '@sapphire/framework';
-import { PieceOptions } from '../util/util.js';
+import { PieceOptions } from '../../util/util.js';
 import { SlashCommandBuilder } from 'discord.js';
-import { MusicCommand } from '../music/MusicCommand.js';
-import { Subscription } from '../music/Subscription.js';
-import { PluginBits } from '../util/PluginBitField.js';
+import { MusicCommand } from '../../structs/MusicCommand.js';
+import { Subscription } from '../../structs/Subscription.js';
+import { PluginBits } from '../../util/PluginBitField.js';
 
 @PieceOptions({
     name: 'clear',

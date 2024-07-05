@@ -1,5 +1,5 @@
 import { Command } from '@sapphire/framework';
-import { Subscription } from '../music/Subscription.js';
+import { Subscription } from './Subscription.js';
 import { Client } from '../client/client.js';
 
 export abstract class MusicCommand extends Command {

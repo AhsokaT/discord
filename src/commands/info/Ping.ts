@@ -1,5 +1,5 @@
 import { Command } from '@sapphire/framework';
-import { PieceOptions } from '../util/util.js';
+import { PieceOptions } from '../../util/util.js';
 import { EmbedBuilder } from 'discord.js';
 
 @PieceOptions({
@@ -13,7 +13,7 @@ export class Ping extends Command {
             fetchReply: true,
         });
 
-        const ping = reply.createdTimestamp - interaction.createdTimestamp;
+        const latency = reply.createdTimestamp - interaction.createdTimestamp;
 
         const embed = new EmbedBuilder()
             .setTitle(`:ping_pong: **Pong!**`)
@@ -26,7 +26,7 @@ export class Ping extends Command {
                 },
                 {
                     name: `Client latency`,
-                    value: `${ping}ms`,
+                    value: `${latency}ms`,
                     inline: true,
                 },
                 {

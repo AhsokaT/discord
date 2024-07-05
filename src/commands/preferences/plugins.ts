@@ -3,8 +3,8 @@ import {
     createSettingsComponents,
     createSettingsEmbed,
     PieceOptions,
-} from '../util/util.js';
-import { Client } from '../client/client.js';
+} from '../../util/util.js';
+import { Client } from '../../client/client.js';
 
 @PieceOptions({
     name: 'plugins',
