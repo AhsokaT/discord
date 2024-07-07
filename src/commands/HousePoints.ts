@@ -234,10 +234,12 @@ export class HousePointsCommand extends Command {
             }
 
             try {
-                for await (const channel of [
+                const channels = [
                     client.channels.fetch(ChannelId.Logs),
                     client.channels.fetch(ChannelId.Trophy),
-                ]) {
+                ];
+
+                for await (const channel of channels) {
                     if (!channel?.isTextBased()) continue;
 
                     channel.send({
