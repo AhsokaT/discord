@@ -22,3 +22,5 @@ const client = new Client({
 });
 
 client.login();
+
+console.log(await import('./commands/Ping.js'));
