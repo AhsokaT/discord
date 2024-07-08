@@ -3,6 +3,7 @@ import { Client } from './client/client.js';
 import './events/load.js';
 import './commands/load.js';
 import './handlers/load.js';
+import url from 'url';
 
 const client = new Client({
     presence: {
@@ -23,4 +24,4 @@ const client = new Client({
 
 client.login();
 
-console.log(await import('./commands/Ping.js'));
+console.log(await import(url.pathToFileURL('./commands/Ping.js').toString()));
