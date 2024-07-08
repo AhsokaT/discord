@@ -113,11 +113,11 @@ export class HousePointsCommand extends Command {
                     ephemeral: true,
                 });
 
+            collector.stop();
+
             if (button.customId === 'cancel') return void reply.delete();
 
             if (button.customId !== 'commit') return void reply.delete();
-
-            collector.stop();
 
             await button.update({
                 components: [
