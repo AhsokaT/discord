@@ -10,7 +10,6 @@ import {
     PermissionsBitField,
     SlashCommandBuilder,
 } from 'discord.js';
-import { Client } from '../../client/client.js';
 import { COMMANDS, commandStr, PieceOptions } from '../../util/util.js';
 import { PluginBits } from '../../util/PluginBitField.js';
 
@@ -23,7 +22,7 @@ export class Help extends Command {
         if (!interaction.inCachedGuild())
             return;
 
-        const client = interaction.client as Client;
+        const client = interaction.client;
         const guildData = client.guildData.cache.get(interaction.guildId) ?? await client.guildData.create(interaction.guildId);
         const commandId = interaction.options.getString('command');
 

@@ -4,7 +4,7 @@ import { GatewayIntentBits } from 'discord.js';
 const client = new Client({
     presence: { status: 'online' },
     intents: [
-        GatewayIntentBits.Guilds, 
+        GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildVoiceStates,
     ],
 });

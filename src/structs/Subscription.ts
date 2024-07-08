@@ -143,6 +143,15 @@ export class Subscription {
         return this.isPlaying() ? this.player.state.resource.metadata : null;
     }
 
+    shuffleQueue() {
+        for (let i = 0; i < this.queue.length; i++) {
+            const j = ~~(Math.random() * (i + 1));
+            [this.queue[i], this.queue[j]] = [this.queue[j], this.queue[i]];
+        }
+
+        return this.queue;
+    }
+
     isPlaying(): this is this & {
         readonly player: Subscription.AudioPlayerWithPlayingState;
         get playing(): Track;
@@ -248,7 +257,7 @@ export class Subscription {
         this.client.subscriptions.delete(this.guildId);
     }
 
-    processVoiceStateUpdate(
+    onVoiceStateUpdate(
         ...[oldState]: ClientEvents[Events.VoiceStateUpdate]
     ) {
         if (
@@ -277,7 +286,7 @@ export class Subscription {
 
             await entersState(this.player, AudioPlayerStatus.Playing, 5_000);
         } catch (error) {
-            console.error(error);
+            console.error(Error('Error while attempting to play track', { cause: error }));
 
             this.processQueue();
         } finally {

@@ -7,7 +7,6 @@ import {
     EmbedBuilder,
     MessageActionRowComponentBuilder,
 } from 'discord.js';
-import { Client } from '../client/client.js';
 import { COMMANDS, PieceOptions, commandStr } from '../util/util.js';
 import { PluginBits } from '../util/PluginBitField.js';
 
@@ -17,7 +16,7 @@ export class UserInfo extends InteractionHandler {
         if (!interaction.inGuild())
             return void interaction.deferUpdate();
     
-        const client = interaction.client as Client;
+        const client = interaction.client;
         const guild = client.guildData.cache.get(interaction.guildId) ?? await client.guildData.create(interaction.guildId);
         const [_, selection] = interaction.customId.split('_');
     

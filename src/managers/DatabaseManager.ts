@@ -81,7 +81,6 @@ export class GuildDataManager {
         assert.ok(token, TypeError('DISCORD_TOKEN is not defined in .env or passed to the constructor.'));
         assert.ok(mongoUrl, TypeError('MONGO_URL is not defined in .env or passed to the constructor.'));
 
-        this.client = client;
         this.discordAppId = discordAppId;
         this.cache = new Map();
         this.rest = new REST().setToken(token);

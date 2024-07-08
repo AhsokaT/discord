@@ -18,7 +18,7 @@ export class Remove extends MusicCommand {
 
         if (track == null)
             return void interaction.reply({
-                content: 'song not found',
+                content: 'track not found',
                 ephemeral: true,
             });
 

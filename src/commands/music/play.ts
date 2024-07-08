@@ -1,6 +1,5 @@
 import { Command } from '@sapphire/framework';
 import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
-import { Client } from '../../client/client.js';
 import { Subscription } from '../../structs/Subscription.js';
 import { Track } from '../../structs/Track.js';
 import ytdl from 'ytdl-core';
@@ -24,7 +23,7 @@ export class Play extends Command {
     async chatInputRun(
         interaction: Command.ChatInputCommandInteraction<'cached'>
     ) {
-        const client = interaction.client as Client<true>;
+        const client = interaction.client;
         const voice = interaction.member.voice.channel;
         const query = interaction.options.getString('query', true);
 

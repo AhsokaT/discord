@@ -4,19 +4,17 @@ import {
     createSettingsEmbed,
     PieceOptions,
 } from '../../util/util.js';
-import { Client } from '../../client/client.js';
 
 @PieceOptions({
     name: 'plugins',
     description: 'View and modify plugins for this application',
     preconditions: ['CachedGuild'],
 })
-export class Help extends Command {
+export class Plugins extends Command {
     async chatInputRun(
         interaction: Command.ChatInputCommandInteraction<'cached'>
     ) {
-        const client = interaction.client as Client<true>;
-        let guildData = await client.guildData.fetch(interaction.guildId);
+        let guildData = await interaction.client.guildData.fetch(interaction.guildId);
 
         interaction.reply({
             embeds: [createSettingsEmbed(interaction, guildData)],

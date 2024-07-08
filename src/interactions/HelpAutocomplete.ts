@@ -1,6 +1,5 @@
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
 import { AutocompleteInteraction } from 'discord.js';
-import { Client } from '../client/client.js';
 import { PieceOptions } from '../util/util.js';
 
 @PieceOptions({ interactionHandlerType: InteractionHandlerTypes.Autocomplete })
@@ -9,7 +8,7 @@ export class UserInfo extends InteractionHandler {
         if (!interaction.inGuild())
             return void interaction.respond([]);
 
-        const client = interaction.client as Client;
+        const client = interaction.client;
         const guildData = client.guildData.cache.get(interaction.guildId) ?? await client.guildData.create(interaction.guildId);
         const focussed = interaction.options.getFocused();
     

@@ -5,8 +5,7 @@
 	"description": "",
 	"type": "module",
 	"scripts": {
-		"start": "npx tsx --env-file=.env src/index.ts",
-		"dev": "npx tsx --env-file=.env --trace-deprecation src/index.ts"
+		"start": "npx tsx --env-file=.env src/index.ts"
 	},
 	"keywords": [],
 	"author": "",

@@ -1,7 +1,6 @@
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
 import { ButtonInteraction } from 'discord.js';
 import { PieceOptions, createSettingsComponents, createSettingsEmbed } from '../util/util.js';
-import { Client } from '../client/client.js';
 import { PluginBits } from '../util/PluginBitField.js';
 
 @PieceOptions({ interactionHandlerType: InteractionHandlerTypes.Button })
@@ -12,7 +11,7 @@ export class PluginToggle extends InteractionHandler {
         if (!interaction.inGuild())
             return;
 
-        const client = interaction.client as Client;
+        const client = interaction.client;
 
         let guild = await client.guildData.fetch(interaction.guildId);
 

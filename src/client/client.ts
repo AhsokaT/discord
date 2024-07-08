@@ -33,3 +33,12 @@ export class Client<
         return super.login(token);
     }
 }
+
+declare module 'discord.js' {
+    interface Client {
+        readonly subscriptions: Map<Snowflake, Subscription>;
+        readonly videoCache: Map<string, Subscription.VideoLike>;
+        readonly guildData: GuildDataManager;
+        readonly commands: CommandManager;
+    }
+}

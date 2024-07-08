@@ -1,5 +1,4 @@
 import { Command } from '@sapphire/framework';
-import { Client } from '../../client/client.js';
 import { PieceOptions } from '../../util/util.js';
 
 @PieceOptions({
@@ -9,7 +8,7 @@ import { PieceOptions } from '../../util/util.js';
 })
 export class Disconnect extends Command {
     async chatInputRun(interaction: Command.ChatInputCommandInteraction<'cached'>) {
-        const subscription = (interaction.client as Client).subscriptions.get(interaction.guildId);
+        const subscription = interaction.client.subscriptions.get(interaction.guildId);
 
         if (!subscription)
             return void interaction.reply({ content: 'there\'s nothing playing, dumbass (ー_ー)!!', ephemeral: true });
