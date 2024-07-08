@@ -1,10 +1,8 @@
 import { ActivityType, GatewayIntentBits } from 'discord.js';
 import { Client } from './client/client.js';
-import './events/load.js';
-import './commands/load.js';
-import './handlers/load.js';
-import url from 'url';
-import path from 'path';
+// import './events/load.js';
+// import './commands/load.js';
+// import './handlers/load.js';
 
 const client = new Client({
     presence: {
@@ -25,4 +23,4 @@ const client = new Client({
 
 client.login();
 
-console.log(await import(url.pathToFileURL(path.join(process.cwd(), 'src', 'commands', 'Ping.js')).toString()));
+console.log(process.env._preload_modules);
