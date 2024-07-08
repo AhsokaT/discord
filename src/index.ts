@@ -4,6 +4,7 @@ import './events/load.js';
 import './commands/load.js';
 import './handlers/load.js';
 import url from 'url';
+import path from 'path';
 
 const client = new Client({
     presence: {
@@ -24,4 +25,4 @@ const client = new Client({
 
 client.login();
 
-console.log(await import(url.pathToFileURL('./commands/Ping.js').toString()));
+console.log(await import(url.pathToFileURL(path.join(process.cwd(), 'src', 'commands', 'Ping.js')).toString()));
