@@ -7,7 +7,7 @@ import {
     StoreRegistryKey,
 } from '@sapphire/framework';
 import { opendir } from 'fs/promises';
-import { join, basename } from 'path';
+import { join, basename, extname } from 'path';
 
 type _ = StoreRegistryEntries['commands'];
 
@@ -33,7 +33,6 @@ export class Client<
 
     async loadPieces(path: string, storeRegistryKey: StoreRegistryKey) {
         for await (const file of this.walk(path)) {
-            // if (basename(file) !== 'Ping.js') continue;
             const module = await import(`../${basename(path)}/${basename(file)}`);
             const store = this.stores.get(storeRegistryKey);
 
@@ -42,7 +41,7 @@ export class Client<
                 if (!store.Constructor.prototype.isPrototypeOf(value.prototype)) continue;
 
                 // @ts-expect-error
-                store.loadPiece({ name: value.name, piece: value });
+                store.loadPiece({ name: basename(file).replace(extname(file), ''), piece: value });
             }
         }
     }

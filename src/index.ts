@@ -18,6 +18,4 @@ const client = new Client({
     baseUserDirectory: null
 });
 
-await client.login();
-
-console.log(client.stores.get('commands'));
+client.login();
