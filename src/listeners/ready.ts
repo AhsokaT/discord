@@ -1,4 +1,4 @@
-import { Events, Listener, container } from '@sapphire/framework';
+import { Events, Listener } from '@sapphire/framework';
 import { Client } from '../client/client.js';
 
 export class Ready extends Listener<typeof Events.ClientReady> {
@@ -6,9 +6,3 @@ export class Ready extends Listener<typeof Events.ClientReady> {
         console.debug(`${ready.user.tag} is online!`);
     }
 }
-
-container.stores.loadPiece({
-    piece: Ready,
-    name: 'ready',
-    store: 'listeners',
-});

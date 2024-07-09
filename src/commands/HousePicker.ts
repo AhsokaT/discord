@@ -6,7 +6,7 @@ import {
     EmbedBuilder,
 } from 'discord.js';
 import { House } from '../util/enum.js';
-import { Command, container } from '@sapphire/framework';
+import { Command } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 
 @ApplyOptions<Command.Options>({
@@ -69,9 +69,3 @@ export class HousePicker extends Command {
         );
     }
 }
-
-container.stores.loadPiece({
-    piece: HousePicker,
-    name: HousePicker.name,
-    store: 'commands',
-});

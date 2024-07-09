@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command, container } from '@sapphire/framework';
+import { Command } from '@sapphire/framework';
 import { EmbedBuilder } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
@@ -54,9 +54,3 @@ export class Ping extends Command {
         );
     }
 }
-
-container.stores.loadPiece({
-    piece: Ping,
-    name: 'Ping',
-    store: 'commands',
-});

@@ -7,6 +7,7 @@ import {
     MessageActionRowComponentBuilder,
     PermissionFlagsBits,
     SlashCommandBuilder,
+    SlashCommandIntegerOption,
     TextChannel,
 } from 'discord.js';
 import { Client } from '../client/client.js';
@@ -16,7 +17,7 @@ import {
     pointChangeButton,
     pointChangeEmbed,
 } from '../util/builders.js';
-import { Command, container } from '@sapphire/framework';
+import { Command } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { House, ChannelId } from '../util/enum.js';
 import { HousePoints } from '../database/DatabaseManager.js';
@@ -275,23 +276,14 @@ export class HousePointsCommand extends Command {
             .setDescription(this.description)
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
 
-        for (const house of House.ALL)
-            builder.addIntegerOption((option) =>
-                option
-                    .setName(
-                        house.id.toLowerCase().replace(/(\b\w+\b)/g, '$1s')
-                    )
-                    .setDescription(`New total for ${house.name}`)
-            );
+        House.ALL.map((house) =>
+            new SlashCommandIntegerOption()
+                .setName(house.id.toLowerCase().replace(/(\b\w+\b)/g, '$1s'))
+                .setDescription(`New total for ${house.name}`)
+        ).forEach((option) => builder.addIntegerOption(option));
 
         registry.registerChatInputCommand(builder, {
             guildIds: ['509135025560616963'],
         });
     }
 }
-
-container.stores.loadPiece({
-    piece: HousePointsCommand,
-    name: HousePointsCommand.name,
-    store: 'commands',
-});

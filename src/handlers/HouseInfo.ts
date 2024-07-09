@@ -2,7 +2,6 @@ import { ButtonInteraction } from 'discord.js';
 import {
     InteractionHandler,
     InteractionHandlerTypes,
-    container,
 } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 
@@ -25,9 +24,3 @@ export class HouseInfo extends InteractionHandler {
             : this.none();
     }
 }
-
-container.stores.loadPiece({
-    piece: HouseInfo,
-    name: HouseInfo.name,
-    store: 'interaction-handlers',
-});

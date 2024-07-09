@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command, container } from '@sapphire/framework';
+import { Command } from '@sapphire/framework';
 import { ButtonStyle, ComponentType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
@@ -58,9 +58,3 @@ export class Test extends Command {
         );
     }
 }
-
-container.stores.loadPiece({
-    piece: Test,
-    name: Test.name,
-    store: 'commands',
-});

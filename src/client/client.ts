@@ -1,7 +1,6 @@
 import { ClientOptions } from 'discord.js';
 import { DatabaseManager } from '../database/DatabaseManager.js';
 import {
-    Command,
     SapphireClient,
     SapphireClientOptions,
     StoreRegistryEntries,
@@ -34,12 +33,13 @@ export class Client<
 
     async loadPieces(path: string, storeRegistryKey: StoreRegistryKey) {
         for await (const file of this.walk(path)) {
+            // if (basename(file) !== 'Ping.js') continue;
             const module = await import(`../${basename(path)}/${basename(file)}`);
             const store = this.stores.get(storeRegistryKey);
 
             for (const value of Object.values(module)) {
                 if (typeof value !== 'function') continue;
-                if (!store.Constructor.prototype.isPrototypeOf(value)) continue;
+                if (!store.Constructor.prototype.isPrototypeOf(value.prototype)) continue;
 
                 // @ts-expect-error
                 store.loadPiece({ name: value.name, piece: value });
