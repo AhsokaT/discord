@@ -3,13 +3,10 @@ import { DatabaseManager } from '../database/DatabaseManager.js';
 import {
     SapphireClient,
     SapphireClientOptions,
-    StoreRegistryEntries,
     StoreRegistryKey,
 } from '@sapphire/framework';
 import { opendir } from 'fs/promises';
 import { join, basename, extname } from 'path';
-
-type _ = StoreRegistryEntries['commands'];
 
 export class Client<
     Ready extends boolean = boolean
