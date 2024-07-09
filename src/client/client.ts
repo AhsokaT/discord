@@ -1,8 +1,16 @@
 import { ClientOptions } from 'discord.js';
 import { DatabaseManager } from '../database/DatabaseManager.js';
-import { SapphireClient, SapphireClientOptions } from '@sapphire/framework';
+import {
+    Command,
+    SapphireClient,
+    SapphireClientOptions,
+    StoreRegistryEntries,
+    StoreRegistryKey,
+} from '@sapphire/framework';
 import { opendir } from 'fs/promises';
 import { join, basename } from 'path';
+
+type _ = StoreRegistryEntries['commands'];
 
 export class Client<
     Ready extends boolean = boolean
@@ -24,17 +32,26 @@ export class Client<
         }
     }
 
-    async loadCommands() {
-        for await (const file of this.walk(join(process.cwd(), 'dist', 'commands'))) {
-            const module = await import(`../commands/${basename(file)}`);
+    async loadPieces(path: string, storeRegistryKey: StoreRegistryKey) {
+        for await (const file of this.walk(path)) {
+            const module = await import(`../${basename(path)}/${basename(file)}`);
+            const store = this.stores.get(storeRegistryKey);
 
-            console.log(module);
+            for (const value of Object.values(module)) {
+                if (typeof value !== 'function') continue;
+                if (!store.Constructor.prototype.isPrototypeOf(value)) continue;
+
+                // @ts-expect-error
+                store.loadPiece({ name: value.name, piece: value });
+            }
         }
     }
 
     async login(token?: string) {
         await this.database.init();
-        await this.loadCommands();
+        await this.loadPieces(join(process.cwd(), 'dist', 'commands'), 'commands');
+        await this.loadPieces(join(process.cwd(), 'dist', 'listeners'), 'listeners');
+        await this.loadPieces(join(process.cwd(), 'dist', 'handlers'), 'interaction-handlers');
 
         return super.login(token);
     }
