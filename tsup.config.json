@@ -1,0 +1,6 @@
+{
+    "entry": ["src/**/*"],
+    "format": "esm",
+    "clean": true,
+    "bundle": false
+}
