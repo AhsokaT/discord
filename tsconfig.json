@@ -3,7 +3,8 @@
     "compilerOptions": {
         "lib": ["ESNext.Disposable", "ES2023"],
         "target": "ES2022",
-        "module": "NodeNext",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
         "strict": true,
         "skipLibCheck": true,
         "outDir": "dist",

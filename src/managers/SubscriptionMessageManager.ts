@@ -1,7 +1,4 @@
-import {
-    Message,
-    PermissionFlagsBits,
-} from 'discord.js';
+import { Message, PermissionFlagsBits } from 'discord.js';
 import { Track } from '../structs/Track.js';
 import { Subscription } from '../structs/Subscription.js';
 
@@ -15,13 +12,14 @@ export class SubscriptionMessageManager {
     }
 
     async patch() {
-        if (this.messageLock || !this.message?.editable)
-            return;
+        if (this.messageLock || !this.message?.editable) return;
 
         this.messageLock = true;
 
         try {
-            await this.message.edit({ components: this.subscription.createMessageComponents() });
+            await this.message.edit({
+                components: this.subscription.createMessageComponents(),
+            });
         } catch (error) {
             console.error('Unable to patch message:', error);
         } finally {
@@ -30,8 +28,7 @@ export class SubscriptionMessageManager {
     }
 
     async delete() {
-        if (this.messageLock || !this.message?.deletable)
-            return;
+        if (this.messageLock || !this.message?.deletable) return;
 
         this.messageLock = true;
 
@@ -46,27 +43,37 @@ export class SubscriptionMessageManager {
     }
 
     async create(track: Track) {
-        const hasPermissions = this.subscription.text.permissionsFor(this.subscription.client.user)?.has([PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks]);
+        const hasPermissions = this.subscription.text
+            .permissionsFor(this.subscription.client.user)
+            ?.has([
+                PermissionFlagsBits.SendMessages,
+                PermissionFlagsBits.EmbedLinks,
+            ]);
 
-        if (this.messageLock || this.message != null || !hasPermissions)
-            return;
+        if (this.messageLock || this.message != null || !hasPermissions) return;
 
         this.messageLock = true;
 
         try {
-            const commands = this.subscription.client.guildData.cache.get(this.subscription.guildId)?.commands;
+            const commands = this.subscription.client.guildData.cache.get(
+                this.subscription.guildId
+            )?.commands;
 
             const embed = track.createEmbed({
                 label: 'Now playing',
                 relativeDuration: true,
-                commandId: commands && Array.from(commands.values()).find(command => command.name === 'play')?.id,
-                channelId: this.subscription.voice.id
+                commandId:
+                    commands &&
+                    Array.from(commands.values()).find(
+                        (command) => command.name === 'play'
+                    )?.id,
+                channelId: this.subscription.voice.id,
             });
 
-            if (track.interaction?.isRepliable() && !track.interaction.replied && track.interaction.deferred)
-                this.message = await track.interaction.editReply({ embeds: [embed], components: this.subscription.createMessageComponents() });
-            else
-                this.message = await this.subscription.text.send({ embeds: [embed], components: this.subscription.createMessageComponents() });
+            this.message = await this.subscription.text.send({
+                embeds: [embed],
+                components: this.subscription.createMessageComponents(),
+            });
         } catch (error) {
             console.error('Unable to create message:', error);
         } finally {

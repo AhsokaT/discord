@@ -2,9 +2,8 @@ import { Command } from '@sapphire/framework';
 import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { Subscription } from '../../structs/Subscription.js';
 import { Track } from '../../structs/Track.js';
-import ytdl from 'ytdl-core';
+import ytdl from '@distube/ytdl-core';
 import { PieceOptions } from '../../util/util.js';
-import { AudioPlayerStatus } from '@discordjs/voice';
 import { PluginBits } from '../../util/PluginBitField.js';
 import yts from 'yt-search';
 
@@ -23,110 +22,88 @@ export class Play extends Command {
     async chatInputRun(
         interaction: Command.ChatInputCommandInteraction<'cached'>
     ) {
+        await interaction.deferReply({ ephemeral: true });
         const client = interaction.client;
+        const me = interaction.guild.members.me;
         const voice = interaction.member.voice.channel;
         const query = interaction.options.getString('query', true);
 
         if (!voice)
-            return void interaction
-                .reply({
-                    content: 'join a voice voice (ー_ー)!!',
-                    ephemeral: true,
-                })
-                .catch(console.warn);
+            return interaction.editReply('join a voice voice (ー_ー)!!');
 
         if (!voice.joinable || voice.id === voice.guild.afkChannelId)
-            return void interaction
-                .reply({
-                    content: "uh oh ㅠㅅㅠ I can't join your voice voice",
-                    ephemeral: true,
-                })
-                .catch(console.warn);
+            return interaction.editReply(
+                `uh oh ㅠㅅㅠ I can't join your voice voice`
+            );
 
         if (!interaction.channel)
-            return void interaction
-                .reply({
-                    content:
-                        "uh oh ㅠㅅㅠ I can't send messages in this channel",
-                    ephemeral: true,
-                })
-                .catch(console.warn);
+            return interaction.editReply(
+                `uh oh ㅠㅅㅠ I can't send messages in this channel`
+            );
 
-        if (
-            voice.guild.members.me?.permissions.has(
-                PermissionFlagsBits.DeafenMembers
-            )
-        )
-            voice.guild.members.me.voice.setDeaf(true).catch(console.warn);
-
-        let subscription =
+        const subscription =
             client.subscriptions.get(interaction.guildId) ??
             new Subscription(client, interaction.channel, voice);
 
         client.subscriptions.set(interaction.guildId, subscription);
 
-        const ephemeral =
-            subscription.player.state.status !== AudioPlayerStatus.Idle;
-
-        await interaction.deferReply({ ephemeral });
+        if (me?.permissions.has(PermissionFlagsBits.DeafenMembers))
+            await me.voice.setDeaf(true);
 
         let video: Subscription.VideoLike | null = null;
 
-        try {
-            const idOrUrl = ytdl.validateID(query) || ytdl.validateURL(query);
+        const idResolvable = ytdl.validateID(query) || ytdl.validateURL(query);
 
-            if (idOrUrl) {
-                const videoId = ytdl.getVideoID(query);
+        // ! add better error handling
+        if (idResolvable) {
+            let id: string;
 
-                video =
-                    client.videoCache.get(query) ?? (await yts({ videoId }));
-            } else {
+            try {
+                id = ytdl.getVideoID(query);
+            } catch {
+                return interaction.editReply(
+                    `Could not parse ID from \` ${query} \``
+                );
+            }
+
+            video = client.videoCache.get(id) ?? (await yts({ videoId: id }));
+        } else {
+            try {
                 const result = await yts({ query });
 
                 const [first] = result.videos;
 
                 if (first) video = first;
+            } catch {
+                return interaction.editReply(
+                    `I couldn't find the video you were looking for (ー_ー)!!`
+                );
             }
-        } catch (error) {
-            console.error(error);
         }
 
         if (video == null)
-            return void interaction
-                .reply({
-                    content:
-                        "I couldn't find the video you were looking for (ー_ー)!!",
-                    ephemeral: true,
-                })
-                .catch(console.error);
+            return interaction.editReply(
+                `I couldn't find the video you were looking for (ー_ー)!!`
+            );
 
         client.videoCache.set(video.videoId, video);
 
         if (client.videoCache.size > 1000)
             client.videoCache.delete(client.videoCache.keys().next().value);
 
-        const track = new Track(
-            subscription,
-            video,
-            interaction.user,
-            interaction
+        const track = new Track(subscription, video, interaction.user);
+        const inQueue = subscription.queue.some((queued) =>
+            queued.equals(track)
         );
 
-        if (
-            subscription.queue.some((i) => i.equals(track)) ||
-            subscription.playing?.equals(track)
-        )
-            return void interaction
-                .reply({
-                    content: 'video is already in the queue >~<!',
-                    ephemeral: true,
-                })
-                .catch(console.error);
+        if (inQueue)
+            return interaction.editReply(
+                'video is already in the queue >~<!'
+            );
 
-        if (subscription.player.state.status !== AudioPlayerStatus.Idle)
-            await interaction.editReply(`${track} added`);
+        await subscription.enqueue(track);
 
-        subscription.enqueue(track);
+        await interaction.editReply(track.toAddedString());
     }
 
     static readonly builder = new SlashCommandBuilder()

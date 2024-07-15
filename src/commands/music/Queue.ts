@@ -52,7 +52,8 @@ export class Queue extends MusicCommand {
 
         subscription.queue.forEach((track, index) => {
             const trackString = `> \` ${index + 1} \` ${track}\n`; // Format the track string
-            if ((fieldValue.length + trackString.length) > 1024) { // Check if adding the next track exceeds 1024 characters
+            if (fieldValue.length + trackString.length > 1024) {
+                // Check if adding the next track exceeds 1024 characters
                 // Add the current field to the embed
                 embed.addFields({ name: `Up next`, value: fieldValue });
                 fieldValue = trackString; // Start a new field value with the current track
@@ -67,18 +68,10 @@ export class Queue extends MusicCommand {
             embed.addFields({ name: `Up next`, value: fieldValue });
         }
 
-        embed.addFields(
-            // {
-            //     name: 'Up next',
-            //     value: subscription.queue
-            //         .map((track, index) => `> \` ${index + 1} \` ${track}`)
-            //         .join('\n'),
-            // },
-            {
-                name: 'Time',
-                value: timeString,
-            }
-        );
+        embed.addFields({
+            name: 'Duration',
+            value: timeString,
+        });
 
         const selectMenu = new StringSelectMenuBuilder()
             .setCustomId('QUEUE')

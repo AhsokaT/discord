@@ -1,8 +1,11 @@
 import { Listener, Events } from '@sapphire/framework';
 import { Guild } from 'discord.js';
+import { Database } from '../managers/Database.js';
 
 export class GuildCreateListener extends Listener<typeof Events.GuildCreate> {
-    run(guild: Guild) {
-        guild.client.guildData.create(guild.id);
+    async run(guild: Guild) {
+        await using db = await Database.connect();
+
+        await db.createGuildDocument(guild.id);
     }
 }

@@ -7,7 +7,5 @@ export class PlaylistAdd extends Subcommand {
         assert.ok(interaction.inGuild());
 
         await using db = await Database.connect();
-
-        await db.create(interaction.guildId);
     }
 }

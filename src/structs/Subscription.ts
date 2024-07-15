@@ -28,6 +28,8 @@ import { SubscriptionMessageManager } from '../managers/SubscriptionMessageManag
 import { SubscriptionVoteManager } from '../managers/SubscriptionVoteManager.js';
 import yts from 'yt-search';
 
+// ! fix message/playing mismatch when songs are added quickly
+
 export namespace Subscription {
     export interface Playable<Metadata = unknown> {
         // add message manager to track as well
@@ -228,11 +230,11 @@ export class Subscription {
         return this.queue.length > 0 ? [buttonRow, queueRow] : [buttonRow];
     }
 
-    enqueue(...tracks: Track[]) {
+    async enqueue(...tracks: Track[]) {
         this.queue.push(...tracks);
 
-        this.processQueue();
-        this.messages.patch();
+        await this.processQueue();
+        await this.messages.patch();
     }
 
     dequeue(...tracks: Track[]) {
@@ -257,9 +259,7 @@ export class Subscription {
         this.client.subscriptions.delete(this.guildId);
     }
 
-    onVoiceStateUpdate(
-        ...[oldState]: ClientEvents[Events.VoiceStateUpdate]
-    ) {
+    onVoiceStateUpdate(...[oldState]: ClientEvents[Events.VoiceStateUpdate]) {
         if (
             this.voice.id === oldState.channel?.id &&
             oldState.channel.members.size === 1
@@ -286,7 +286,9 @@ export class Subscription {
 
             await entersState(this.player, AudioPlayerStatus.Playing, 5_000);
         } catch (error) {
-            console.error(Error('Error while attempting to play track', { cause: error }));
+            console.error(
+                Error('Error while attempting to play track', { cause: error })
+            );
 
             this.processQueue();
         } finally {

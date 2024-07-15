@@ -1,22 +1,47 @@
+import { Subscription } from './Subscription.js';
 import { Track } from './Track.js';
 
-export class Queue extends Array<Track> {
+export class QueueMap extends Map<string, Track> {
+    constructor(readonly subscription: Subscription) {
+        super();
+    }
+
+    toArray() {
+        return [...this.entries()];
+    }
+
     shuffle() {
-        for (let i = 0; i < this.length; i++) {
+        const array = this.toArray();
+
+        for (let i = 0; i < array.length; i++) {
             const j = ~~(Math.random() * (i + 1));
-            [this[i], this[j]] = [this[j], this[i]];
+            [array[i], array[j]] = [array[j], array[i]];
         }
+
+        this.clear();
+
+        for (const [id, track] of array) this.set(id, track);
     }
 
-    toDurationString() {
-        const ms =
-            this.reduce((acc, curr) => acc + curr.video.duration.seconds, 0) *
-            1000;
-        return new Date(ms).toISOString().slice(11, 19);
+    set(id: string, track: Track): this {
+        super.set(id, track);
+
+        this.subscription.messages.patch();
+
+        return this;
     }
 
-    toTimeString() {
-        let timeString = this.toDurationString();
-        return timeString.startsWith('00:') ? timeString.slice(3) : timeString;
+    delete(id: string): boolean {
+        const deleted = super.delete(id);
+
+        this.subscription.messages.patch();
+
+        return deleted;
+    }
+
+    clear(): void {
+        super.clear();
+
+        this.subscription.messages.patch();
     }
 }

@@ -6,6 +6,12 @@ import { CommandManager } from '../managers/CommandManager.js';
 import { SapphireClient, SapphireClientOptions } from '@sapphire/framework';
 import '@sapphire/plugin-subcommands/register';
 
+export class Subscriptions extends Map<Snowflake, Subscription> {
+    resolve(guildId: Snowflake) {
+        return this.get(guildId);
+    }
+}
+
 export class Client<
     Ready extends boolean = boolean
 > extends SapphireClient<Ready> {
@@ -28,6 +34,8 @@ export class Client<
     }
 
     async login(token?: string) {
+        console.log('Logging in...');
+
         await this.guildData.init();
 
         return super.login(token);

@@ -5,13 +5,14 @@
 	"description": "",
 	"type": "module",
 	"scripts": {
-		"start": "npx tsx --env-file=.env src/index.ts"
+		"start": "tsx --env-file=.env src/index.ts"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
 		"@discordjs/voice": "^0.17.0",
+		"@distube/ytdl-core": "^4.13.5",
 		"@sapphire/discord.js-utilities": "^7.3.0",
 		"@sapphire/framework": "^5.2.1",
 		"@sapphire/pieces": "^4.3.1",

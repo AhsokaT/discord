@@ -1,14 +1,31 @@
 import { MongoClient, Document } from 'mongodb';
 import assert from 'assert/strict';
 
-export class Database<D extends Document> implements AsyncDisposable {
+export namespace Database {
+    export interface GuildDocument {
+        _id: string;
+        plugins: string;
+    }
+
+    export interface Playlist {
+        name: string;
+        tracks: string[];
+    }
+
+    export interface UserDocument {
+        _id: string;
+        playlists: Playlist[];
+    }
+}
+
+export class Database implements AsyncDisposable {
     constructor(readonly mongo: MongoClient) {}
 
     [Symbol.asyncDispose](): Promise<void> {
         return this.mongo.close();
     }
 
-    async create(guildId: string) {
+    async createGuildDocument(guildId: string) {
         // noop
     }
 
@@ -16,9 +33,9 @@ export class Database<D extends Document> implements AsyncDisposable {
         // noop
     }
 
-    static async connect<D extends Document>(
+    static async connect(
         mongoUrl = process.env.MONGO_URL
-    ): Promise<Database<D>> {
+    ): Promise<Database> {
         assert.ok(
             mongoUrl,
             TypeError(
@@ -28,6 +45,6 @@ export class Database<D extends Document> implements AsyncDisposable {
 
         const mongo = await MongoClient.connect(mongoUrl);
 
-        return new this<D>(mongo);
+        return new this(mongo);
     }
 }
