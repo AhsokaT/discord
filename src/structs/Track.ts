@@ -42,6 +42,9 @@ export class Track implements Subscription.Playable<Track> {
         if (this.index === -1)
             return `${this} added.\n-# Video will begin playing shortly.`;
 
+        if (this.index === 0)
+            return `${this} added.\n-# Video is up next.`;
+
         let waitStr = '';
         const before = this.subscription.queue.slice(0, this.index);
         const wait = before.reduce((acc, curr) => acc + curr.video.seconds, 0);
@@ -49,7 +52,7 @@ export class Track implements Subscription.Playable<Track> {
         const timeStart = ~~((new Date().getTime() + wait * 1000) / 1000);
 
         if (wait > 0)
-            waitStr = ` and will begin playing at <t:${timeStart}:t><t:${timeStart}:R>`;
+            waitStr = ` and will begin playing <t:${timeStart}:R>`;
 
         return `${this} added.\n-# Video is ${toOrdinal(
             this.index + 1

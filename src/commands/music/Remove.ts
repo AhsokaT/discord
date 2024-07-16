@@ -17,7 +17,7 @@ export class Remove extends MusicCommand {
         const track = subscription.queue.find((track) => track.id === songId);
 
         if (track == null)
-            return void interaction.reply({
+            return interaction.reply({
                 content: 'track not found',
                 ephemeral: true,
             });

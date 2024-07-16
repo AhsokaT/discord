@@ -1,6 +1,5 @@
 import {
     APIApplicationCommand,
-    APIGuildMember,
     ActionRowBuilder,
     ApplicationCommand,
     ApplicationCommandOptionType,
@@ -8,24 +7,14 @@ import {
     ButtonBuilder,
     ButtonStyle,
     EmbedBuilder,
-    GuildMember,
     Interaction,
     MessageActionRowComponentBuilder,
     PermissionFlagsBits,
-    Role,
 } from 'discord.js';
 import { GuildData } from '../managers/DatabaseManager.js';
 import { InteractionHandler } from '@sapphire/framework';
 import { Client } from '../client/client.js';
 import { PluginBits } from './PluginBitField.js';
-
-interface ResolvedGuildMemberData {
-    nickname: string | null;
-    roles: string[] | Role[];
-    premiumSince: number | null;
-    communicationDisabledUntil: number | null;
-    joinedServer: number | null;
-}
 
 type ResolveOptions<Class extends new (...args: any[]) => any> =
     Class extends new (ctx: any, options: infer O) => any ? O : never;
@@ -56,36 +45,6 @@ export interface UsageDataDocument {
     interactionHandlerType: number | null;
     commandType: number | null;
     name: string;
-}
-
-export function resolveGuildMemberData(
-    member: GuildMember | APIGuildMember
-): ResolvedGuildMemberData {
-    if (member instanceof GuildMember)
-        return {
-            nickname: member.nickname,
-            roles: [
-                ...member.roles.cache
-                    .sort((a, b) => b.position - a.position)
-                    .values(),
-            ],
-            premiumSince: member.premiumSinceTimestamp,
-            communicationDisabledUntil:
-                member.communicationDisabledUntilTimestamp,
-            joinedServer: member.joinedTimestamp,
-        };
-
-    return {
-        nickname: member.nick ?? null,
-        roles: member.roles,
-        premiumSince: member.premium_since
-            ? Date.parse(member.premium_since)
-            : null,
-        communicationDisabledUntil: member.communication_disabled_until
-            ? Date.parse(member.communication_disabled_until)
-            : null,
-        joinedServer: member.joined_at ? Date.parse(member.joined_at) : null,
-    };
 }
 
 export function commandStr(
@@ -256,26 +215,82 @@ export const COMMANDS = {
             description: 'Shuffle the queue',
             type: ApplicationCommandType.ChatInput,
         },
-        // {
-        //     name: 'playlist',
-        //     description: 'Empty',
-        //     type: ApplicationCommandType.ChatInput,
-        //     options: [
-        //         {
-        //             name: 'create',
-        //             description: 'Create a playlist',
-        //             type: ApplicationCommandOptionType.Subcommand,
-        //             options: [
-        //                 {
-        //                     name: 'name',
-        //                     description: 'Playlist name',
-        //                     type: ApplicationCommandOptionType.String,
-        //                     required: true,
-        //                 },
-        //             ],
-        //         },
-        //     ],
-        // },
+        {
+            name: 'playlist',
+            description: 'Empty',
+            type: ApplicationCommandType.ChatInput,
+            options: [
+                {
+                    name: 'create',
+                    description: 'Create a playlist',
+                    type: ApplicationCommandOptionType.Subcommand,
+                    options: [
+                        {
+                            name: 'name',
+                            description: 'Playlist name',
+                            type: ApplicationCommandOptionType.String,
+                            required: true,
+                        },
+                    ],
+                },
+                {
+                    name: 'add',
+                    description: 'Add a song to a playlist',
+                    type: ApplicationCommandOptionType.Subcommand,
+                    options: [
+                        {
+                            name: 'playlist',
+                            description: 'The playlist to add the song to',
+                            type: ApplicationCommandOptionType.String,
+                            required: true,
+                            autocomplete: true,
+                        },
+                        {
+                            name: 'song',
+                            description: 'The song to add to the playlist',
+                            type: ApplicationCommandOptionType.String,
+                            required: true,
+                            autocomplete: true,
+                        },
+                    ],
+                },
+                {
+                    name: 'delete',
+                    description: 'Delete a playlist',
+                    type: ApplicationCommandOptionType.Subcommand,
+                    options: [
+                        {
+                            name: 'playlist',
+                            description: 'The playlist to delete',
+                            type: ApplicationCommandOptionType.String,
+                            required: true,
+                            autocomplete: true,
+                        },
+                    ],
+                },
+                {
+                    name: 'remove',
+                    description: 'Remove a song from a playlist',
+                    type: ApplicationCommandOptionType.Subcommand,
+                    options: [
+                        {
+                            name: 'playlist',
+                            description: 'The playlist to remove the song from',
+                            type: ApplicationCommandOptionType.String,
+                            required: true,
+                            autocomplete: true,
+                        },
+                        {
+                            name: 'song',
+                            description: 'The song to remove from the playlist',
+                            type: ApplicationCommandOptionType.String,
+                            required: true,
+                            autocomplete: true,
+                        },
+                    ],
+                }
+            ],
+        },
         {
             name: 'remove',
             description: 'Remove a song from the queue',

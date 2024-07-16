@@ -25,7 +25,7 @@ export class Client<
 
         this.stores
             .get('interaction-handlers')
-            .registerPath(join(process.cwd(), 'src', 'interactions'));
+            .registerPath(join(process.cwd(), 'dist', 'interactions'));
 
         this.videoCache = new Map();
         this.subscriptions = new Map();
