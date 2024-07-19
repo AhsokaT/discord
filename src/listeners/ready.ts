@@ -1,8 +1,8 @@
 import { Events, Listener } from '@sapphire/framework';
-import { Client } from '../client/client.js';
-import { ChannelId } from '../util/enum.js';
 import assert from 'assert/strict';
 import { EmbedBuilder } from 'discord.js';
+import { Client } from '../client/client.js';
+import { ChannelId } from '../util/enum.js';
 
 export class Ready extends Listener<typeof Events.ClientReady> {
     async run(ready: Client<true>) {
@@ -18,7 +18,13 @@ export class Ready extends Listener<typeof Events.ClientReady> {
         const embed = new EmbedBuilder()
             .setColor('#2B2D31')
             .setTitle('Client ready')
-            .setDescription(`> ${ready.irohQuotes[~~(Math.random() * ready.irohQuotes.length)]}`)
+            .setDescription(
+                `> ${
+                    ready.irohQuotes[
+                        ~~(Math.random() * ready.irohQuotes.length)
+                    ]
+                }\n— Uncle Iroh`
+            )
             .addFields(
                 {
                     name: 'Ready since',

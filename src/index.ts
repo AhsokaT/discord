@@ -15,7 +15,7 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
     ],
-    baseUserDirectory: null
+    baseUserDirectory: null,
 });
 
 client.login();

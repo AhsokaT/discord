@@ -1,3 +1,5 @@
+import { ApplyOptions } from '@sapphire/decorators';
+import { Command } from '@sapphire/framework';
 import {
     ActionRowBuilder,
     ButtonBuilder,
@@ -5,21 +7,15 @@ import {
     ComponentType,
     EmbedBuilder,
     MessageActionRowComponentBuilder,
-    PermissionFlagsBits,
-    SlashCommandBuilder,
-    SlashCommandIntegerOption,
-    TextChannel,
 } from 'discord.js';
+import { HousePoints } from '../database/DatabaseManager.js';
 import {
     allPointChangeEmbed,
     LeaderboardButton,
     pointChangeButton,
     pointChangeEmbed,
 } from '../util/builders.js';
-import { Command } from '@sapphire/framework';
-import { ApplyOptions } from '@sapphire/decorators';
-import { House, ChannelId } from '../util/enum.js';
-import { HousePoints } from '../database/DatabaseManager.js';
+import { ChannelId, House } from '../util/enum.js';
 
 @ApplyOptions<Command.Options>({
     name: 'housepoints',
@@ -66,12 +62,13 @@ export class HousePointsCommand extends Command {
         const stagedStr = stagedEmbed.data.description;
 
         stagedEmbed
+            .setTitle(null)
             .setDescription(
                 `> ${
                     client.irohQuotes[
                         ~~(Math.random() * client.irohQuotes.length)
                     ]
-                }`
+                }\n— Uncle Iroh`
             )
             .addFields(
                 { name: 'Staged changes', value: stagedStr ?? 'Missing value' },
@@ -189,7 +186,7 @@ export class HousePointsCommand extends Command {
                 })
                 .addFields(
                     {
-                        name: 'Database patch time',
+                        name: 'Database update time',
                         value: `${time.toFixed(2)}ms`,
                     },
                     {
@@ -199,7 +196,7 @@ export class HousePointsCommand extends Command {
                                 current,
                                 newTotals,
                                 interaction.user
-                            ).data.description ?? 'Error',
+                            ).data.description ?? 'Missing value',
                     }
                 );
 
@@ -228,9 +225,11 @@ export class HousePointsCommand extends Command {
                 else actionRow.addComponents(LeaderboardButton());
 
                 try {
-                    const channel = (await client.channels.fetch(
+                    const channel = await client.channels.fetch(
                         house.channelId
-                    )) as TextChannel;
+                    );
+
+                    if (!channel?.isTextBased()) continue;
 
                     await channel.send({
                         embeds: [embed],
@@ -278,23 +277,6 @@ export class HousePointsCommand extends Command {
         collector.on('end', (collected, reason) => {
             if (reason === 'time')
                 return void interaction.deleteReply().catch(console.error);
-        });
-    }
-
-    registerApplicationCommands(registry: Command.Registry) {
-        const builder = new SlashCommandBuilder()
-            .setName(this.name)
-            .setDescription(this.description)
-            .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
-
-        House.ALL.map((house) =>
-            new SlashCommandIntegerOption()
-                .setName(house.id.toLowerCase().replace(/(\b\w+\b)/g, '$1s'))
-                .setDescription(`New total for ${house.name}`)
-        ).forEach((option) => builder.addIntegerOption(option));
-
-        registry.registerChatInputCommand(builder, {
-            guildIds: ['509135025560616963'],
         });
     }
 }
