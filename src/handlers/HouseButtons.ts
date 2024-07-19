@@ -65,7 +65,7 @@ export class HouseButtons extends InteractionHandler {
                 .addFields(
                     House.ALL.map((house) => ({
                         name: `${house.emoji} ${house.name}`,
-                        value: `<@&${house.roleId}> ${house.description}`,
+                        value: `<@&${house.roleId}>\n-#${house.description}`,
                     }))
                 );
 

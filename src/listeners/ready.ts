@@ -12,7 +12,34 @@ export class Ready extends Listener<typeof Events.ClientReady> {
 
         assert.ok(channel?.isTextBased());
 
+        const readySince = ~~(ready.readyTimestamp / 1000);
+        const memoryUsage = process.memoryUsage().heapUsed / 1024 / 1024;
+
         const embed = new EmbedBuilder()
-            .setAuthor;
+            .setColor('#2B2D31')
+            .setTitle('Proccess started')
+            .addFields(
+                {
+                    name: 'Ready since',
+                    value: `<t:${~~readySince}:f> <t:${~~readySince}:R>`,
+                    inline: true,
+                },
+                {
+                    name: 'Memory usage',
+                    value: `${memoryUsage.toFixed(2)}MB`,
+                    inline: true,
+                },
+                {
+                    name: 'Node.js',
+                    value: process.version,
+                    inline: true,
+                }
+            )
+            .setAuthor({
+                name: ready.user.username,
+                iconURL: ready.user.displayAvatarURL(),
+            });
+
+        await channel.send({ embeds: [embed] });
     }
 }
