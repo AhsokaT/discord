@@ -79,4 +79,5 @@ export const ChannelId = {
     Trophy: '1028280826472955975',
     ChooseYourHouse: '961986228926963732',
     General: '509135026156470295',
+    GitHubLogs: '1263991065027940373',
 } as const;

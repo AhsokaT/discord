@@ -1,6 +1,6 @@
 import { Events, Listener } from '@sapphire/framework';
 import assert from 'assert/strict';
-import { EmbedBuilder } from 'discord.js';
+import { ChannelType, EmbedBuilder } from 'discord.js';
 import { Client } from '../client/client.js';
 import { ChannelId } from '../util/enum.js';
 
@@ -8,9 +8,18 @@ export class Ready extends Listener<typeof Events.ClientReady> {
     async run(ready: Client<true>) {
         console.debug(`${ready.user.tag} is online!`);
 
-        const channel = await ready.channels.fetch(ChannelId.Logs);
+        const logs = await ready.channels.fetch(ChannelId.Logs);
+        const gitHubLogs = await ready.channels.fetch(ChannelId.GitHubLogs);
 
-        assert.ok(channel?.isTextBased());
+        assert(logs?.type === ChannelType.GuildText);
+        assert(gitHubLogs?.type === ChannelType.GuildText);
+
+        const hook = await gitHubLogs.createWebhook({
+            name: 'Iroh Webhook',
+            avatar: ready.user.avatarURL(),
+        });
+
+        gitHubLogs.send(hook.url);
 
         const readySince = ~~(ready.readyTimestamp / 1000);
         const memoryUsage = process.memoryUsage().heapUsed / 1024 / 1024;
@@ -47,6 +56,6 @@ export class Ready extends Listener<typeof Events.ClientReady> {
                 iconURL: ready.user.displayAvatarURL(),
             });
 
-        await channel.send({ embeds: [embed] });
+        await logs.send({ embeds: [embed] });
     }
 }
