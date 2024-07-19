@@ -61,11 +61,4 @@ export class HousePicker extends Command {
             ephemeral: true,
         });
     }
-
-    registerApplicationCommands(registry: Command.Registry) {
-        registry.registerChatInputCommand(
-            { name: this.name, description: this.description },
-            { guildIds: ['509135025560616963'] }
-        );
-    }
 }

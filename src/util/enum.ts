@@ -4,7 +4,7 @@ export class House {
         readonly name: string,
         readonly description: string,
         readonly emoji: string,
-        readonly roleId: string, 
+        readonly roleId: string,
         readonly channelId: string
     ) {}
 
@@ -15,7 +15,7 @@ export class House {
             House.OWL,
             House.RAVEN,
             House.TURTLE,
-            House.PANDA
+            House.PANDA,
         ] as const;
     }
 
@@ -49,7 +49,7 @@ export class House {
     static readonly TURTLE = new House(
         'TURTLE',
         'The Otakus',
-        'chill, perseverance, otaku, cosplay(LOT\'S OF NOSE BLEEDS), gamers and tech enthusiast! ',
+        "chill, perseverance, otaku, cosplay(LOT'S OF NOSE BLEEDS), gamers and tech enthusiast! ",
         '🐢',
         '1024014510723432478',
         '1023373586465046528'
@@ -66,7 +66,7 @@ export class House {
 }
 
 export namespace House {
-    export type id = typeof House['ids'][number];
+    export type id = (typeof House)['ids'][number];
 
     export interface Document {
         _id: id;
@@ -77,4 +77,6 @@ export namespace House {
 export const ChannelId = {
     Logs: '1025143957186941038',
     Trophy: '1028280826472955975',
+    ChooseYourHouse: '961986228926963732',
+    General: '509135026156470295',
 } as const;
