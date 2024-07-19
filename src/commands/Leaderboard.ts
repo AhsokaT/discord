@@ -1,12 +1,11 @@
-import { ActionRowBuilder, MessageActionRowComponentBuilder } from 'discord.js';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
+import { ActionRowBuilder, MessageActionRowComponentBuilder } from 'discord.js';
 import {
     DeleteInteractionButton,
     LeaderboardEmbed,
     UpdateLeaderboardButton,
 } from '../util/builders.js';
-import { Client } from '../client/client.js';
 
 @ApplyOptions<Command.Options>({
     name: 'leaderboard',
@@ -16,7 +15,7 @@ export class Leaderboard extends Command {
     chatInputRun(interaction: Command.ChatInputCommandInteraction) {
         interaction
             .reply({
-                embeds: [LeaderboardEmbed(interaction.client as Client)],
+                embeds: [LeaderboardEmbed(interaction.client)],
                 components: [
                     new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
                         UpdateLeaderboardButton(),
