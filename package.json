@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsup",
     "start": "node .",
-    "dev": "node --env-file=.env ."
+    "dev": "npm run build && node --env-file=.env ."
   },
   "keywords": [],
   "author": "",
