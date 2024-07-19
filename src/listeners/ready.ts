@@ -17,7 +17,8 @@ export class Ready extends Listener<typeof Events.ClientReady> {
 
         const embed = new EmbedBuilder()
             .setColor('#2B2D31')
-            .setTitle('Proccess started')
+            .setTitle('Client ready')
+            .setDescription(`> ${ready.irohQuotes[~~(Math.random() * ready.irohQuotes.length)]}`)
             .addFields(
                 {
                     name: 'Ready since',

@@ -10,7 +10,6 @@ import {
     SlashCommandIntegerOption,
     TextChannel,
 } from 'discord.js';
-import { Client } from '../client/client.js';
 import {
     allPointChangeEmbed,
     LeaderboardButton,
@@ -28,7 +27,7 @@ import { HousePoints } from '../database/DatabaseManager.js';
 })
 export class HousePointsCommand extends Command {
     async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-        const client = interaction.client as Client<true>;
+        const client = interaction.client;
         const current = Object.fromEntries([
             ...client.database.cache,
         ]) as HousePoints;
