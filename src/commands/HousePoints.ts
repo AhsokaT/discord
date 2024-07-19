@@ -62,12 +62,24 @@ export class HousePointsCommand extends Command {
             current,
             newTotals,
             interaction.user
-        )
-            .setTitle('Staged changes')
-            .addFields({
-                name: ':stopwatch: Timeout',
-                value: `<t:${timeoutTimestamp}:R>`,
-            });
+        );
+        const stagedStr = stagedEmbed.data.description;
+
+        stagedEmbed
+            .setDescription(
+                `> ${
+                    client.irohQuotes[
+                        ~~(Math.random() * client.irohQuotes.length)
+                    ]
+                }`
+            )
+            .addFields(
+                { name: 'Staged changes', value: stagedStr ?? 'Missing value' },
+                {
+                    name: ':stopwatch: Timeout',
+                    value: `<t:${timeoutTimestamp}:R>`,
+                }
+            );
 
         const commitButton = new ButtonBuilder()
             .setCustomId('commit')
