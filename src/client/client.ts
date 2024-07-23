@@ -1,12 +1,13 @@
-import { ClientOptions } from 'discord.js';
-import { DatabaseManager } from '../database/DatabaseManager.js';
 import {
     SapphireClient,
     SapphireClientOptions,
     StoreRegistryKey,
 } from '@sapphire/framework';
+import { ClientOptions } from 'discord.js';
 import { opendir } from 'fs/promises';
-import { join, basename, extname } from 'path';
+import { basename, extname, join } from 'path';
+import { DatabaseManager } from '../database/DatabaseManager.js';
+import { isClass, isSubclassOf } from '../util/util.js';
 
 export class Client<
     Ready extends boolean = boolean
@@ -28,37 +29,60 @@ export class Client<
         super(options);
 
         this.database = new DatabaseManager(this);
+        this.stores
+            .get('interaction-handlers')
+            .registerPath(join(process.cwd(), 'dist', 'handlers'));
     }
 
     async *walk(path: string): AsyncGenerator<string> {
-        const dir = await opendir(path);
+        try {
+            const dir = await opendir(path);
 
-        for await (const dirent of dir) {
-            if (dirent.isDirectory()) yield* this.walk(join(dir.path, dirent.name));
-            else if (dirent.isFile()) yield join(dir.path, dirent.name);
-        }
+            for await (const dirent of dir) {
+                const entry = join(dir.path, dirent.name);
+
+                if (dirent.isDirectory()) yield* this.walk(entry);
+                else if (dirent.isFile()) yield entry;
+            }
+        } catch {}
     }
 
-    async loadPieces(path: string, storeRegistryKey: StoreRegistryKey) {
-        for await (const file of this.walk(path)) {
-            const module = await import(`../${basename(path)}/${basename(file)}`);
-            const store = this.stores.get(storeRegistryKey);
+    async loadPieces(name: StoreRegistryKey) {
+        const defaultPath = join(process.cwd(), 'dist', name);
+        const store = this.stores.get(name);
+        const paths = store.paths.size > 0 ? store.paths : [defaultPath];
 
-            for (const value of Object.values(module)) {
-                if (typeof value !== 'function') continue;
-                if (!store.Constructor.prototype.isPrototypeOf(value.prototype)) continue;
+        for (const path of paths) {
+            for await (const file of this.walk(path)) {
+                const relative = `../${basename(path)}/${basename(file)}`;
+                const module = await import(relative);
+                const name = basename(file, extname(file));
 
-                // @ts-expect-error
-                store.loadPiece({ name: basename(file).replace(extname(file), ''), piece: value });
+                for (const piece of this.parse(module, store.Constructor)) {
+                    // @ts-expect-error
+                    store.loadPiece({ name, piece });
+                }
             }
         }
     }
 
+    *parse<T extends abstract new (...args: any[]) => any>(
+        module: unknown,
+        ctor: T
+    ): Generator<T> {
+        if (isClass(module) && isSubclassOf(module, ctor)) yield module;
+
+        if (typeof module !== 'object' || module === null) return;
+
+        for (const value of Object.values(module))
+            if (isClass(value) && isSubclassOf(value, ctor)) yield value;
+    }
+
     async login(token?: string) {
         await this.database.init();
-        await this.loadPieces(join(process.cwd(), 'dist', 'commands'), 'commands');
-        await this.loadPieces(join(process.cwd(), 'dist', 'listeners'), 'listeners');
-        await this.loadPieces(join(process.cwd(), 'dist', 'handlers'), 'interaction-handlers');
+
+        for (const store of this.stores.values())
+            await this.loadPieces(store.name);
 
         return super.login(token);
     }
@@ -69,6 +93,10 @@ declare module 'discord.js' {
         readonly database: DatabaseManager;
         readonly irohQuotes: string[];
         walk(path: string): AsyncGenerator<string>;
-        loadPieces(path: string, storeRegistryKey: StoreRegistryKey): Promise<void>;
+        loadPieces(name: StoreRegistryKey): Promise<void>;
+        parse<T extends abstract new (...args: any[]) => any>(
+            module: unknown,
+            ctor: T
+        ): Generator<T>;
     }
 }

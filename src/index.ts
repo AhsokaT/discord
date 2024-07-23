@@ -7,14 +7,11 @@ const client = new Client({
         activities: [
             {
                 type: ActivityType.Watching,
-                name: 'Zuko looking for his honour'
-            }
-        ]
+                name: 'Zuko looking for his honour',
+            },
+        ],
     },
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,
-    ],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
     baseUserDirectory: null,
 });
 

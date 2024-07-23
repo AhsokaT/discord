@@ -1,48 +1,19 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
-import { ButtonStyle, ComponentType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { PermissionFlagsBits } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
-    name: 'test2',
-    description: 'Testbed for new features',
+    name: 'test',
+    description: 'Command for testing things',
 })
 export class Test extends Command {
     async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-        let time = performance.now();
-        await interaction.deferReply({ ephemeral: true });
-        time = performance.now() - time;
+        const isProduction =
+            '_' in process && String(process._).includes('heroku');
 
-        const embed = new EmbedBuilder()
-            .setColor(`#2B2D31`)
-            .setTitle('Changes staged')
-            .setAuthor({
-                name: interaction.user.username,
-                iconURL: interaction.user.displayAvatarURL(),
-            })
-            .addFields({ name: 'Changes', value: `${time.toFixed(2)}ms` });
+        if (isProduction) return interaction.reply({ content: 'noop', ephemeral: true });
 
-        await interaction.editReply({
-            embeds: [embed],
-            components: [
-                {
-                    type: ComponentType.ActionRow,
-                    components: [
-                        {
-                            type: ComponentType.Button,
-                            style: 1,
-                            customId: 'test',
-                            label: 'Commit',
-                        },
-                        {
-                            type: ComponentType.Button,
-                            style: ButtonStyle.Secondary,
-                            customId: 'test2',
-                            label: 'Cancel',
-                        },
-                    ],
-                },
-            ],
-        });
+        interaction.reply({ ephemeral: true, content: 'noop (pass production check)' });
     }
 
     registerApplicationCommands(registry: Command.Registry) {

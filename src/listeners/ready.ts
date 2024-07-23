@@ -8,18 +8,14 @@ export class Ready extends Listener<typeof Events.ClientReady> {
     async run(ready: Client<true>) {
         console.debug(`${ready.user.tag} is online!`);
 
+        const isProduction =
+            '_' in process && String(process._).includes('heroku');
+
+        if (!isProduction) return;
+
         const logs = await ready.channels.fetch(ChannelId.Logs);
-        const gitHubLogs = await ready.channels.fetch(ChannelId.GitHubLogs);
 
         assert(logs?.type === ChannelType.GuildText);
-        assert(gitHubLogs?.type === ChannelType.GuildText);
-
-        const hook = await gitHubLogs.createWebhook({
-            name: 'Iroh Webhook',
-            avatar: ready.user.avatarURL(),
-        });
-
-        gitHubLogs.send(hook.url);
 
         const readySince = ~~(ready.readyTimestamp / 1000);
         const memoryUsage = process.memoryUsage().heapUsed / 1024 / 1024;
