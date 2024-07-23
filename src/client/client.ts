@@ -20,7 +20,6 @@ export class Client<
         `Life happens wherever you are, whether you make it or not.`,
         `Sometimes the best way to solve your own problems is to help someone else.`,
         `Protection and power are overrated. I think you are very wise to choose happiness and love.`,
-        `Failure is only the opportunity to begin again. Only this time, more wisely.`,
         `Sometimes the best way to solve your own problems is to help someone else.`,
         `It is important to draw wisdom from many different places. If you take it from only one place, it becomes rigid and stale. Understanding others, the other elements and the other nations will help you become whole.`,
     ];

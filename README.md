@@ -1,7 +1,9 @@
 <div align="center">
 
+<img src="UncleIroh.png" alt="Uncle Iroh" width="150"/>
+
 # Uncle Iroh
 
-*Failure is only the opportunity to begin again. Only this time, more wisely.*
+*Sharing tea with a fascinating stranger is one of life's true delights*
 
 </div>
