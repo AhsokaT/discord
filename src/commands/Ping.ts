@@ -44,7 +44,7 @@ export class Ping extends Command {
                 }
             );
 
-        interaction.editReply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
     }
 
     registerApplicationCommands(registry: Command.Registry) {

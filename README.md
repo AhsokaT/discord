@@ -8,11 +8,11 @@
 
 **Made with**
 
-![discord.js](https://img.shields.io/npm/v/discord.js?style=flat&label=discord.js)
-![NPM Version](https://img.shields.io/npm/v/%40sapphire%2Fframework?style=flat&label=%40sapphire%2Fframework&color=crimson)
-![NPM Version](https://img.shields.io/npm/v/%40sapphire%2Fdecorators?style=flat&label=%40sapphire%2Fdecorators&color=yellow)
-![NPM Version](https://img.shields.io/npm/v/mongodb?style=flat&label=mongodb&color=forestgreen)
-![NPM Version](https://img.shields.io/npm/v/tsup?style=flat&label=tsup&color=purple)
+![GitHub package.json prod dependency version](https://img.shields.io/github/package-json/dependency-version/AhsokaT/Raven/discord.js)
+![GitHub package.json prod dependency version](https://img.shields.io/github/package-json/dependency-version/AhsokaT/Raven/%40sapphire%2Fframework?color=crimson)
+![GitHub package.json prod dependency version](https://img.shields.io/github/package-json/dependency-version/AhsokaT/Raven/%40sapphire%2Fdecorators?color=yellow)
+![GitHub package.json prod dependency version](https://img.shields.io/github/package-json/dependency-version/AhsokaT/Raven/mongodb?color=forestgreen)
+![GitHub package.json dev/peer/optional dependency version](https://img.shields.io/github/package-json/dependency-version/AhsokaT/Raven/dev/tsup?color=purple)
 
 A Discord bot written entirely in [TypeScript](https://www.typescriptlang.org), made for Raven ⚡
 
