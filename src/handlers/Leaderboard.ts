@@ -19,26 +19,22 @@ import { Client } from '../client/client.js';
     interactionHandlerType: InteractionHandlerTypes.Button,
 })
 export class Leaderboard extends InteractionHandler {
-    run(interaction: ButtonInteraction) {
+    async run(interaction: ButtonInteraction) {
         if (interaction.customId === 'LEADERBOARD')
-            return void interaction
-                .reply({
-                    embeds: [LeaderboardEmbed(interaction.client as Client)],
-                    components: [
-                        new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-                            UpdateLeaderboardButton(),
-                            DeleteInteractionButton()
-                        ),
-                    ],
-                    allowedMentions: { parse: [] },
-                })
-                .catch(console.error);
-
-        interaction
-            .update({
+            await interaction.reply({
                 embeds: [LeaderboardEmbed(interaction.client as Client)],
-            })
-            .catch(console.debug);
+                components: [
+                    new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+                        UpdateLeaderboardButton(),
+                        DeleteInteractionButton()
+                    ),
+                ],
+                allowedMentions: { parse: [] },
+            });
+        else
+            await interaction.update({
+                embeds: [LeaderboardEmbed(interaction.client as Client)],
+            });
     }
 
     parse(interaction: ButtonInteraction) {

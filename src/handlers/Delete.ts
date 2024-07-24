@@ -9,8 +9,8 @@ import { ApplyOptions } from '@sapphire/decorators';
     interactionHandlerType: InteractionHandlerTypes.Button,
 })
 export class Delete extends InteractionHandler {
-    run(interaction: ButtonInteraction) {
-        interaction.message.delete();
+    async run(interaction: ButtonInteraction) {
+        await interaction.message.delete();
     }
 
     parse(interaction: ButtonInteraction) {

@@ -8,6 +8,7 @@ import {
     EmbedBuilder,
     MessageActionRowComponentBuilder,
 } from 'discord.js';
+import { promisify } from 'util';
 import { HousePoints } from '../database/DatabaseManager.js';
 import {
     allPointChangeEmbed,
@@ -46,7 +47,7 @@ export class HousePointsCommand extends Command {
             .map((house) => [house, newTotals[house]] as [House.id, number]);
 
         if (changes.length === 0)
-            return void interaction.reply({
+            return interaction.reply({
                 content: 'No changes were made',
                 ephemeral: true,
             });
@@ -111,22 +112,22 @@ export class HousePointsCommand extends Command {
 
         collector.on('collect', async (button) => {
             if (button.customId === 'party')
-                return void button.reply({
+                return button.reply({
                     content: gifs[~~(Math.random() * gifs.length)],
                     ephemeral: true,
                 });
 
             if (button.user.id !== interaction.user.id)
-                return void button.reply({
+                return button.reply({
                     content: 'You do not have permission to use this',
                     ephemeral: true,
                 });
 
             collector.stop();
 
-            if (button.customId === 'cancel') return void reply.delete();
+            if (button.customId === 'cancel') return reply.delete();
 
-            if (button.customId !== 'commit') return void reply.delete();
+            if (button.customId !== 'commit') return reply.delete();
 
             await button.update({
                 components: [
@@ -170,10 +171,13 @@ export class HousePointsCommand extends Command {
                     components: [],
                 });
 
-                return setTimeout(
-                    () => button.deleteReply().catch(console.error),
-                    30_000
-                );
+                await promisify(setTimeout)(30_000);
+
+                try {
+                    await button.deleteReply();
+                } catch (error) {
+                    console.error(error);
+                }
             }
             time = performance.now() - time;
 
@@ -274,9 +278,9 @@ export class HousePointsCommand extends Command {
             }
         });
 
-        collector.on('end', (collected, reason) => {
+        collector.on('end', (...[, reason]) => {
             if (reason === 'time')
-                return void interaction.deleteReply().catch(console.error);
+                return interaction.deleteReply().catch(console.error);
         });
     }
 }

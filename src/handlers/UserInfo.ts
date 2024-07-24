@@ -83,13 +83,11 @@ export class UserInfo extends InteractionHandler {
             )}:D> <t:${Math.round(user.createdTimestamp / 1000)}:R>`,
         });
 
-        interaction
-            .reply({
-                ephemeral: true,
-                allowedMentions: { parse: [] },
-                embeds: [infoEmbed],
-            })
-            .catch(console.warn);
+        await interaction.reply({
+            ephemeral: true,
+            allowedMentions: { parse: [] },
+            embeds: [infoEmbed],
+        });
     }
 
     parse(interaction: ButtonInteraction) {

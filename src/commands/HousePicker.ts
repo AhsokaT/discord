@@ -16,7 +16,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 export class HousePicker extends Command {
     chatInputRun(interaction: Command.ChatInputCommandInteraction) {
         if (!interaction.inCachedGuild())
-            return void interaction.reply({
+            return interaction.reply({
                 content: 'error',
                 ephemeral: true,
             });
@@ -26,7 +26,7 @@ export class HousePicker extends Command {
                 ...House.ALL.map((house) => house.roleId)
             )
         )
-            return void interaction.reply({
+            return interaction.reply({
                 content: 'You have already joined a house!',
                 ephemeral: true,
             });
@@ -55,7 +55,7 @@ export class HousePicker extends Command {
                 }))
             );
 
-        interaction.reply({
+        return interaction.reply({
             embeds: [embed],
             components: [actionRow],
             ephemeral: true,
