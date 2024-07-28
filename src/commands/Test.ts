@@ -9,10 +9,10 @@ import { House } from '../util/enum.js';
 })
 export class Test extends Command {
     async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-        // const isProduction =
-        //     '_' in process && String(process._).includes('heroku');
+        const isProduction =
+            '_' in process.env && String(process.env._).includes('heroku');
 
-        // if (isProduction) return interaction.reply({ content: 'noop', ephemeral: true });
+        if (isProduction) return;
 
         const embed = new EmbedBuilder()
             .setColor('#2F3136')
