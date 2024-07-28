@@ -6,7 +6,6 @@ import {
     User,
 } from 'discord.js';
 import { Client } from '../client/client.js';
-import { HousePoints } from '../database/DatabaseManager.js';
 import { House } from './enum.js';
 
 function numberToOrdinal(n: number): string {
@@ -24,7 +23,10 @@ function padString(str: string, points: (string | number)[]) {
         .padEnd(padLength(points.map(String)) + 1, ' ');
 }
 
-export const pointChangeButton = (before: HousePoints, after: HousePoints) => {
+export const pointChangeButton = (
+    before: House.Points,
+    after: House.Points
+) => {
     const json = JSON.stringify(
         (Object.keys(before) as House.id[]).reduce(
             (acc, h) => Object.assign(acc, { [h]: [before[h], after[h]] }),
@@ -67,8 +69,8 @@ export function pointChangeEmbed(
 }
 
 export function allPointChangeEmbed(
-    before: HousePoints,
-    after: HousePoints,
+    before: House.Points,
+    after: House.Points,
     author: User
 ) {
     const allDiff = House.ids
@@ -166,9 +168,9 @@ export const BanButton = (user: Snowflake, label = 'Ban') =>
         .setLabel(label);
 
 function housePosition(
-    [h, p]: [House.id, number],
+    [h, p]: readonly [House.id, number],
     index: number,
-    all: [string, number][]
+    all: (readonly [House.id, number])[]
 ) {
     return `\n\` ${numberToOrdinal(index + 1)} \` \`${padString(
         `${p} points`,
@@ -181,8 +183,10 @@ export const LeaderboardEmbed = (client: Client) =>
         .setColor('#2F3136')
         .setTitle('Leaderboard')
         .setDescription(
-            client.database.sorted.reduce(
-                (acc, h, i, a) => acc + housePosition(h, i, a),
-                `Refreshed <t:${Math.round(Date.now() / 1000)}:R>\n`
-            )
+            client.store
+                .toSorted()
+                .reduce(
+                    (acc, h, i, a) => acc + housePosition(h, i, a),
+                    `Refreshed <t:${Math.round(Date.now() / 1000)}:R>\n`
+                )
         );

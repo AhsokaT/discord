@@ -6,13 +6,13 @@ import {
 import { ClientOptions } from 'discord.js';
 import { opendir } from 'fs/promises';
 import { basename, extname, join } from 'path';
-import { DatabaseManager } from '../database/DatabaseManager.js';
+import { HouseStore } from '../structs/HouseStore.js';
 import { isClass, isSubclassOf } from '../util/util.js';
 
 export class Client<
     Ready extends boolean = boolean
 > extends SapphireClient<Ready> {
-    readonly database: DatabaseManager;
+    readonly store: HouseStore;
     readonly irohQuotes = [
         `Sometimes life is like this dark tunnel. You can't always see the light at the end of the tunnel, but if you just keep moving... you will come to a better place.`,
         `Pride is not the opposite of shame, but its source. True humility is the only antidote to shame.`,
@@ -27,7 +27,7 @@ export class Client<
     constructor(options: ClientOptions & SapphireClientOptions) {
         super(options);
 
-        this.database = new DatabaseManager(this);
+        this.store = new HouseStore();
         this.stores
             .get('interaction-handlers')
             .registerPath(join(process.cwd(), 'dist', 'handlers'));
@@ -53,8 +53,8 @@ export class Client<
 
         for (const path of paths) {
             for await (const file of this.walk(path)) {
-                const relative = `../${basename(path)}/${basename(file)}`;
-                const module = await import(relative);
+                const resolved = `../${basename(path)}/${basename(file)}`;
+                const module = await import(resolved);
                 const name = basename(file, extname(file));
 
                 for (const piece of this.parse(module, store.Constructor)) {
@@ -73,12 +73,12 @@ export class Client<
 
         if (typeof module !== 'object' || module === null) return;
 
-        for (const value of Object.values(module))
-            if (isClass(value) && isSubclassOf(value, ctor)) yield value;
+        for (const i of Object.values(module))
+            if (isClass(i) && isSubclassOf(i, ctor)) yield i;
     }
 
     async login(token?: string) {
-        await this.database.init();
+        await this.store.load();
 
         for (const store of this.stores.values())
             await this.loadPieces(store.name);
@@ -89,7 +89,7 @@ export class Client<
 
 declare module 'discord.js' {
     interface Client {
-        readonly database: DatabaseManager;
+        readonly store: HouseStore;
         readonly irohQuotes: string[];
         walk(path: string): AsyncGenerator<string>;
         loadPieces(name: StoreRegistryKey): Promise<void>;

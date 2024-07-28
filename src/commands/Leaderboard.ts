@@ -12,19 +12,17 @@ import {
     description: "See who's ahead in the house competitions",
 })
 export class Leaderboard extends Command {
-    chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-        interaction
-            .reply({
-                embeds: [LeaderboardEmbed(interaction.client)],
-                components: [
-                    new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-                        UpdateLeaderboardButton(),
-                        DeleteInteractionButton()
-                    ),
-                ],
-                allowedMentions: { parse: [] },
-            })
-            .catch(console.error);
+    async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
+        await interaction.reply({
+            embeds: [LeaderboardEmbed(interaction.client)],
+            components: [
+                new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+                    UpdateLeaderboardButton(),
+                    DeleteInteractionButton()
+                ),
+            ],
+            allowedMentions: { parse: [] },
+        });
     }
 
     registerApplicationCommands(registry: Command.Registry) {

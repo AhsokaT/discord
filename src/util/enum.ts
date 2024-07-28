@@ -67,7 +67,7 @@ export class House {
 
 export namespace House {
     export type id = (typeof House)['ids'][number];
-
+    export type Points = Record<House.id, number>;
     export interface Document {
         _id: id;
         points: number;

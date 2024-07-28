@@ -1,48 +1,46 @@
-import {
-    ActionRowBuilder,
-    MessageActionRowComponentBuilder,
-    ButtonInteraction,
-} from 'discord.js';
+import { ApplyOptions } from '@sapphire/decorators';
 import {
     InteractionHandler,
     InteractionHandlerTypes,
 } from '@sapphire/framework';
-import { ApplyOptions } from '@sapphire/decorators';
+import {
+    ActionRowBuilder,
+    ButtonInteraction,
+    MessageActionRowComponentBuilder,
+} from 'discord.js';
 import {
     DeleteInteractionButton,
     allPointChangeEmbed,
 } from '../util/builders.js';
-import { HousePoints } from '../database/DatabaseManager.js';
+import { House } from '../util/enum.js';
 
 @ApplyOptions<InteractionHandler.Options>({
     interactionHandlerType: InteractionHandlerTypes.Button,
 })
 export class ViewChanges extends InteractionHandler {
-    run(interaction: ButtonInteraction) {
+    async run(interaction: ButtonInteraction) {
         let [_, json] = interaction.customId.split('_');
 
         const changes = JSON.parse(json);
 
         const before = Object.keys(changes).reduce(
             (acc, h) => Object.assign(acc, { [h]: changes[h][0] }),
-            {} as HousePoints
-        );
+            {}
+        ) as House.Points;
         const after = Object.keys(changes).reduce(
             (acc, h) => Object.assign(acc, { [h]: changes[h][1] }),
-            {} as HousePoints
-        );
+            {}
+        ) as House.Points;
 
-        interaction
-            .reply({
-                embeds: [allPointChangeEmbed(before, after, interaction.user)],
-                components: [
-                    new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-                        DeleteInteractionButton()
-                    ),
-                ],
-                allowedMentions: { parse: [] },
-            })
-            .catch(console.debug);
+        await interaction.reply({
+            embeds: [allPointChangeEmbed(before, after, interaction.user)],
+            components: [
+                new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+                    DeleteInteractionButton()
+                ),
+            ],
+            allowedMentions: { parse: [] },
+        });
     }
 
     parse(interaction: ButtonInteraction) {

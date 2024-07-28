@@ -8,14 +8,15 @@ export class Ready extends Listener<typeof Events.ClientReady> {
     async run(ready: Client<true>) {
         console.debug(`${ready.user.tag} is online!`);
 
-        const isProduction =
-            '_' in process && String(process._).includes('heroku');
+        // const isProduction =
+        //     '_' in process && String(process._).includes('heroku');
 
-        if (!isProduction) return;
+        // if (!isProduction) return;
 
         const logs = await ready.channels.fetch(ChannelId.Logs);
 
         assert(logs?.type === ChannelType.GuildText);
+        logs.send('_: ' + process.env._);
 
         const readySince = ~~(ready.readyTimestamp / 1000);
         const memoryUsage = process.memoryUsage().heapUsed / 1024 / 1024;

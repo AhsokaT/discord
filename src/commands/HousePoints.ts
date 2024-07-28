@@ -3,13 +3,13 @@ import { Command } from '@sapphire/framework';
 import {
     ActionRowBuilder,
     ButtonBuilder,
+    ButtonInteraction,
     ButtonStyle,
     ComponentType,
     EmbedBuilder,
     MessageActionRowComponentBuilder,
 } from 'discord.js';
 import { promisify } from 'util';
-import { HousePoints } from '../database/DatabaseManager.js';
 import {
     allPointChangeEmbed,
     LeaderboardButton,
@@ -23,24 +23,23 @@ import { ChannelId, House } from '../util/enum.js';
     description: 'Add or remove points from houses',
 })
 export class HousePointsCommand extends Command {
+    readonly gifs = [
+        'https://tenor.com/view/smiling-friends-adult-swim-smiling-friends-smiling-friends-spamish-pim-pimling-smiling-friends-pim-gif-10921009947340864978',
+        'https://tenor.com/view/going-crazy-mr-boss-smiling-friends-freaking-out-going-wild-gif-5258506792416434328',
+        'https://tenor.com/view/glep-coffee-tired-morning-tired-meme-gif-25383597',
+        'https://tenor.com/view/smiling-friends-alan-gif-27591763',
+    ] as const;
+
     async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
         const client = interaction.client;
-        const current = Object.fromEntries([
-            ...client.database.cache,
-        ]) as HousePoints;
-        const newTotals: HousePoints = {
+        const current = Object.fromEntries(client.store) as House.Points;
+        const newTotals: House.Points = {
             TIGER: interaction.options.getInteger('tigers') ?? current.TIGER,
             OWL: interaction.options.getInteger('owls') ?? current.OWL,
             RAVEN: interaction.options.getInteger('ravens') ?? current.RAVEN,
             TURTLE: interaction.options.getInteger('turtles') ?? current.TURTLE,
             PANDA: interaction.options.getInteger('pandas') ?? current.PANDA,
         };
-        const gifs = [
-            'https://tenor.com/view/smiling-friends-adult-swim-smiling-friends-smiling-friends-spamish-pim-pimling-smiling-friends-pim-gif-10921009947340864978',
-            'https://tenor.com/view/going-crazy-mr-boss-smiling-friends-freaking-out-going-wild-gif-5258506792416434328',
-            'https://tenor.com/view/glep-coffee-tired-morning-tired-meme-gif-25383597',
-            'https://tenor.com/view/smiling-friends-alan-gif-27591763',
-        ] as const;
 
         let changes = House.ids
             .filter((house) => newTotals[house] !== current[house])
@@ -111,11 +110,7 @@ export class HousePointsCommand extends Command {
         });
 
         collector.on('collect', async (button) => {
-            if (button.customId === 'party')
-                return button.reply({
-                    content: gifs[~~(Math.random() * gifs.length)],
-                    ephemeral: true,
-                });
+            if (button.customId === 'party') return this.party(button);
 
             if (button.user.id !== interaction.user.id)
                 return button.reply({
@@ -151,7 +146,7 @@ export class HousePointsCommand extends Command {
 
             let time = performance.now();
             try {
-                await client.database.patch(changes);
+                await client.store.patch(changes);
             } catch (error) {
                 console.error(error);
 
@@ -280,7 +275,14 @@ export class HousePointsCommand extends Command {
 
         collector.on('end', (...[, reason]) => {
             if (reason === 'time')
-                return interaction.deleteReply().catch(console.error);
+                interaction.deleteReply().catch(console.error);
+        });
+    }
+
+    async party(button: ButtonInteraction) {
+        await button.reply({
+            content: this.gifs[~~(Math.random() * this.gifs.length)],
+            ephemeral: true,
         });
     }
 }

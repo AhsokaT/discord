@@ -38,7 +38,9 @@ export class Leaderboard extends InteractionHandler {
     }
 
     parse(interaction: ButtonInteraction) {
-        return /LEADERBOARD|UPDATELEADERBOARD/.test(interaction.customId)
+        return ['LEADERBOARD', 'UPDATELEADERBOARD'].some((id) =>
+            interaction.customId.startsWith(id)
+        )
             ? this.some()
             : this.none();
     }

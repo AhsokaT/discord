@@ -14,7 +14,7 @@ export class UserInfo extends InteractionHandler {
         const user = await interaction.client.users.fetch(userId);
         const member = await interaction.guild?.members
             .fetch(userId)
-            .catch(() => void 0);
+            .catch(() => null);
 
         const infoEmbed = new EmbedBuilder()
             .setColor('#2B2D31')
