@@ -16,7 +16,9 @@ export class Ready extends Listener<typeof Events.ClientReady> {
         const logs = await ready.channels.fetch(ChannelId.Logs);
 
         assert(logs?.type === ChannelType.GuildText);
-        logs.send('_: ' + process.env._);
+        logs.send(`process.env._: ${process.env._}`);
+
+        if (5 + 5 === 10) return;
 
         const readySince = ~~(ready.readyTimestamp / 1000);
         const memoryUsage = process.memoryUsage().heapUsed / 1024 / 1024;
