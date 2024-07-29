@@ -7,12 +7,7 @@ import {
 } from 'discord.js';
 import { Client } from '../client/client.js';
 import { House } from './enum.js';
-
-function numberToOrdinal(n: number): string {
-    const suffixes = ['th', 'st', 'nd', 'rd'];
-    const value = n % 100;
-    return n + (suffixes[(value - 20) % 10] || suffixes[value] || suffixes[0]);
-}
+import { toOrdinal } from './util.js';
 
 const padLength = (strs: string[]) =>
     strs.slice().sort((a, b) => b.length - a.length)[0].length + 1;
@@ -53,7 +48,7 @@ export function pointChangeEmbed(
     )} points`;
 
     return new EmbedBuilder()
-        .setColor('#2F3136')
+        .setColor('#2B2D31')
         .setTitle('Point update')
         .setAuthor({
             name: author.username,
@@ -78,7 +73,7 @@ export function allPointChangeEmbed(
         .map((d) => `${d > 0 ? 'Removed' : 'Added'} ${Math.abs(d)} points`);
 
     return new EmbedBuilder()
-        .setColor('#2F3136')
+        .setColor('#2B2D31')
         .setTitle('Point update')
         .setAuthor({
             name: author.username,
@@ -172,7 +167,7 @@ function housePosition(
     index: number,
     all: (readonly [House.id, number])[]
 ) {
-    return `\n\` ${numberToOrdinal(index + 1)} \` \`${padString(
+    return `\n\` ${toOrdinal(index + 1)} \` \`${padString(
         `${p} points`,
         all.map(([_, p]) => `${p} points`)
     )}\` <@&${House[h].roleId}>`;
@@ -180,7 +175,7 @@ function housePosition(
 
 export const LeaderboardEmbed = (client: Client) =>
     new EmbedBuilder()
-        .setColor('#2F3136')
+        .setColor('#2B2D31')
         .setTitle('Leaderboard')
         .setDescription(
             client.store

@@ -2,6 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { House } from '../util/enum.js';
+import { toOrdinal } from '../util/util.js';
 
 @ApplyOptions<Command.Options>({
     name: 'test',
@@ -15,17 +16,42 @@ export class Test extends Command {
         if (isProduction) return;
 
         const embed = new EmbedBuilder()
-            .setColor('#2F3136')
-            .setTitle('Leaderboard');
+            .setColor('#2B2D31')
+            .setTitle(`Points gained ${House.TURTLE.emoji}`)
+            .setDescription(`${House.TURTLE.roleMention}`)
+            .addFields(
+                {
+                    name: 'Before',
+                    value: '116',
+                    inline: true,
+                },
+                {
+                    name: 'Gained',
+                    value: '34',
+                    inline: true,
+                },
+                {
+                    name: 'Now',
+                    value: '150',
+                    inline: true,
+                },
+                {
+                    name: 'Position',
+                    value: `You are ${toOrdinal(
+                        interaction.client.store.position(House.TURTLE.id)
+                    )} on the leaderboard\n-# You are in front of ${
+                        House[interaction.client.store.toSorted()[2][0]]
+                            .roleMention
+                    } and behind ${House.RAVEN.roleMention}`,
+                    inline: true,
+                }
+            );
 
-        for (const [house, points] of interaction.client.store.toSorted()) {
-            embed.addFields({
-                name: `${House[house].emoji} ${House[house].name}`,
-                value: `${points} points`,
-            });
-        }
-
-        return await interaction.reply({ ephemeral: true, embeds: [embed] });
+        return await interaction.reply({
+            ephemeral: true,
+            embeds: [embed],
+            allowedMentions: { parse: [] },
+        });
     }
 
     registerApplicationCommands(registry: Command.Registry) {

@@ -177,7 +177,7 @@ export class HousePointsCommand extends Command {
             time = performance.now() - time;
 
             const embed = new EmbedBuilder()
-                .setColor(`#2B2D31`)
+                .setColor('#2B2D31')
                 .setTitle('Changes pushed')
                 .setAuthor({
                     name: interaction.user.username,

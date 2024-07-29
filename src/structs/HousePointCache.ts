@@ -14,6 +14,10 @@ export class HousePointCache extends Map<House.id, number> {
         return super.set(id, points);
     }
 
+    position(id: House.id): number {
+        return this.toSorted().findIndex(([name]) => name === id) + 1;
+    }
+
     toSorted() {
         return House.ids
             .map((name) => [name, this.get(name)] as const)

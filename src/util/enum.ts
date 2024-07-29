@@ -23,7 +23,7 @@ export class House {
         'TIGER',
         'Tiger Terror Squad',
         'brave, courageous, fearless, strong, fierce, competitive, and powerful.',
-        '🐯',
+        '<:Tigers:1062102038093238332>',
         '1024014286416261191',
         '1023372920170483713'
     );
@@ -41,7 +41,7 @@ export class House {
         'RAVEN',
         'Raven Reapers',
         'The eye of all eyes, Pure Daily Offenders, can be calm or on crud, depending on the tea or tequila!',
-        '👁️',
+        '<:Ravens:1062101903690965034>',
         '1024014477789773965',
         '1023373249733738536'
     );
@@ -50,7 +50,7 @@ export class House {
         'TURTLE',
         'The Otakus',
         "chill, perseverance, otaku, cosplay(LOT'S OF NOSE BLEEDS), gamers and tech enthusiast! ",
-        '🐢',
+        '<:Turtles:1062101988667559997>',
         '1024014510723432478',
         '1023373586465046528'
     );
@@ -59,10 +59,14 @@ export class House {
         'PANDA',
         'Pandamonium',
         'bashful, emotional, foodie, jokes, sleepy, knowledgeable.',
-        '🐼',
+        '<:Pandas:1062102080069840916>',
         '1024014614536667239',
         '1023373723551666296'
     );
+
+    get roleMention() {
+        return `<@&${this.roleId}>`;
+    }
 }
 
 export namespace House {
