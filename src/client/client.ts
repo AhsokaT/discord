@@ -1,5 +1,4 @@
 import { SapphireClient, SapphireClientOptions } from '@sapphire/framework';
-import '@sapphire/plugin-subcommands/register';
 import { ClientOptions, Snowflake } from 'discord.js';
 import { join } from 'path';
 import { CommandManager } from '../managers/CommandManager.ts';
