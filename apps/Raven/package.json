@@ -1,0 +1,25 @@
+{
+    "name": "raven",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "type": "module",
+    "scripts": {
+        "build": "tsup",
+        "start": "node .",
+        "dev": "npm run build && node --env-file=.env ."
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@sapphire/decorators": "^6.1.0",
+        "@sapphire/framework": "^5.2.1",
+        "discord.js": "^14.15.3",
+        "mongodb": "^6.8.0"
+    },
+    "devDependencies": {
+        "tsup": "^8.2.2",
+        "typescript": "^5.5.4"
+    }
+}
