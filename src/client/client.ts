@@ -1,16 +1,11 @@
-import { ClientOptions, Snowflake } from 'discord.js';
-import { Subscription } from '../structs/Subscription.js';
-import { GuildDataManager } from '../managers/DatabaseManager.js';
-import { join } from 'path';
-import { CommandManager } from '../managers/CommandManager.js';
 import { SapphireClient, SapphireClientOptions } from '@sapphire/framework';
 import '@sapphire/plugin-subcommands/register';
-
-export class Subscriptions extends Map<Snowflake, Subscription> {
-    resolve(guildId: Snowflake) {
-        return this.get(guildId);
-    }
-}
+import { ClientOptions, Snowflake } from 'discord.js';
+import { join } from 'path';
+import { CommandManager } from '../managers/CommandManager.ts';
+import { GuildDataManager } from '../managers/DatabaseManager.ts';
+import { Subscription } from '../structs/Subscription.ts';
+import { Database } from '../managers/Database.ts';
 
 export class Client<
     Ready extends boolean = boolean
@@ -19,14 +14,16 @@ export class Client<
     readonly videoCache: Map<string, Subscription.VideoLike>;
     readonly guildData: GuildDataManager;
     readonly commands: CommandManager;
+    readonly userCache: Map<string, Database.UserDocument>;
 
     constructor(options: ClientOptions & SapphireClientOptions) {
         super(options);
 
         this.stores
             .get('interaction-handlers')
-            .registerPath(join(process.cwd(), 'dist', 'interactions'));
+            .registerPath(join(process.cwd(), 'src', 'interactions'));
 
+        this.userCache = new Map();
         this.videoCache = new Map();
         this.subscriptions = new Map();
         this.commands = new CommandManager(this);
@@ -48,5 +45,6 @@ declare module 'discord.js' {
         readonly videoCache: Map<string, Subscription.VideoLike>;
         readonly guildData: GuildDataManager;
         readonly commands: CommandManager;
+        readonly userCache: Map<string, Database.UserDocument>;
     }
 }

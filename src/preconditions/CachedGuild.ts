@@ -3,7 +3,11 @@ import { ChatInputCommandInteraction } from 'discord.js';
 
 export class CachedGuild extends Precondition {
     chatInputRun(interaction: ChatInputCommandInteraction) {
-        return interaction.inCachedGuild() ? this.ok() : this.error({ message: 'You can only use this command in a guild' });
+        return interaction.inCachedGuild()
+            ? this.ok()
+            : this.error({
+                  message: 'You can only use this command in a guild',
+              });
     }
 }
 

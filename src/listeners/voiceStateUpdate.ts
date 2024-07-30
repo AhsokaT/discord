@@ -1,10 +1,8 @@
-import { Events, Listener } from '@sapphire/framework';
-import { VoiceState } from 'discord.js';
+import { Listener } from '@sapphire/framework';
+import { ClientEvents, Events } from 'discord.js';
 
-export class VoiceStateUpdateListener extends Listener<
-    typeof Events.VoiceStateUpdate
-> {
-    public run(oldState: VoiceState, newState: VoiceState) {
+export class VoiceStateUpdateListener extends Listener<Events.VoiceStateUpdate> {
+    public run(...[oldState, newState]: ClientEvents[Events.VoiceStateUpdate]) {
         const client = this.container.client;
         const subscription = client.subscriptions.get(oldState.guild.id);
 

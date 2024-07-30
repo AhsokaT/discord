@@ -1,7 +1,7 @@
 import { Command } from '@sapphire/framework';
-import { PieceOptions } from '../../util/util.js';
 import { MusicCommand } from '../../structs/MusicCommand.js';
 import { Subscription } from '../../structs/Subscription.js';
+import { PieceOptions } from '../../util/util.js';
 
 @PieceOptions({
     name: 'Stop',
@@ -13,15 +13,20 @@ export class Stop extends MusicCommand {
         interaction: Command.ChatInputCommandInteraction<'cached'>,
         subscription: Subscription
     ) {
-        const passed = subscription.votes.castStop(interaction.user.id);
+        const id = interaction.user.id;
+        const voted = subscription.voteStop.has(id);
 
-        if (!passed) subscription.messages.patch();
+        subscription.voteStop[voted ? 'delete' : 'add'](id);
 
-        interaction
-            .reply({
-                content: passed ? 'Stopping' : 'Vote cast',
+        if (subscription.voteStop.size >= subscription.votes.neededVotes) {
+            subscription.stop();
+            subscription.voteStop.clear();
+            interaction.reply({ content: 'Stopping', ephemeral: true });
+        } else {
+            interaction.reply({
+                content: voted ? 'Removed vote' : 'Cast vote',
                 ephemeral: true,
-            })
-            .catch(console.error);
+            });
+        }
     }
 }

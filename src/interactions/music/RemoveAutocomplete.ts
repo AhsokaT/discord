@@ -1,6 +1,6 @@
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
 import { AutocompleteInteraction } from 'discord.js';
-import { MusicInteractionHandler, PieceOptions } from '../util/util.js';
+import { MusicInteractionHandler, PieceOptions } from '../../util/util.js';
 
 @PieceOptions({ interactionHandlerType: InteractionHandlerTypes.Autocomplete })
 export class RemoveAutocomplete extends MusicInteractionHandler {

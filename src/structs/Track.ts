@@ -8,8 +8,8 @@ import {
     User,
 } from 'discord.js';
 import ytdl from '@distube/ytdl-core';
-import { Subscription } from '../structs/Subscription.js';
-import { toOrdinal } from '../util/util.js';
+import { Subscription } from '../structs/Subscription.ts';
+import { toOrdinal } from '../util/util.ts';
 
 interface EmbedOptions {
     label?: string;
@@ -42,8 +42,7 @@ export class Track implements Subscription.Playable<Track> {
         if (this.index === -1)
             return `${this} added.\n-# Video will begin playing shortly.`;
 
-        if (this.index === 0)
-            return `${this} added.\n-# Video is up next.`;
+        if (this.index === 0) return `${this} added.\n-# Video is up next.`;
 
         let waitStr = '';
         const before = this.subscription.queue.slice(0, this.index);
@@ -51,8 +50,7 @@ export class Track implements Subscription.Playable<Track> {
         /** Start time using the Discord epoch (I think). */
         const timeStart = ~~((new Date().getTime() + wait * 1000) / 1000);
 
-        if (wait > 0)
-            waitStr = ` and will begin playing <t:${timeStart}:R>`;
+        if (wait > 0) waitStr = ` and will begin playing <t:${timeStart}:R>`;
 
         return `${this} added.\n-# Video is ${toOrdinal(
             this.index + 1

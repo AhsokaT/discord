@@ -1,5 +1,5 @@
 import { Snowflake } from 'discord.js';
-import { Subscription } from '../structs/Subscription.js';
+import { Subscription } from '../structs/Subscription.ts';
 
 export enum PassedVote {
     Skip,
@@ -7,6 +7,9 @@ export enum PassedVote {
     Stop
 }
 
+/**
+ * @deprecated
+ */
 export class SubscriptionVoteManager {
     readonly stop: Set<Snowflake>;
     readonly skip: Set<Snowflake>;

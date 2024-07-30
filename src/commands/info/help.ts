@@ -11,7 +11,6 @@ import {
     ButtonBuilder,
     ButtonStyle,
     EmbedBuilder,
-    EmbedField,
     MessageActionRowComponentBuilder,
     PermissionsBitField,
     SlashCommandBuilder,
@@ -20,55 +19,44 @@ import { COMMANDS, commandStr, PieceOptions } from '../../util/util.js';
 import { PluginBits } from '../../util/PluginBitField.js';
 import assert from 'assert/strict';
 
+type test = [parent: ApplicationCommand, ...subcommands: string[]][];
+
 @PieceOptions({
     name: 'help',
     description: 'View useful information about this application',
 })
 export class Help extends Command {
-    *walk(
-        options: Iterable<
-            | ApplicationCommand
-            | ApplicationCommandSubGroup
-            | ApplicationCommandSubCommand
-        >
+    *_walk(command: ApplicationCommand) {
+        if (command.options.length === 0)
+            yield `</${command.name}:${command.id}>}`;
+        else
+            for (const str of this.walkOptions(command, command.options))
+                yield `</${command.name}${str}`;
+    }
+
+    *walkOptions(
+        command: ApplicationCommand,
+        options: Iterable<ApplicationCommandOption>
     ): Generator<string> {
         for (const option of options) {
             if (option.type === ApplicationCommandOptionType.SubcommandGroup) {
                 if (option.options)
-                    for (const subcommand of this.walk(option.options))
-                        yield `${option.name} ${subcommand}`;
+                    for (const subcommand of this.walkOptions(
+                        command,
+                        option.options
+                    ))
+                        yield ` ${option.name}${subcommand}`;
                 else yield option.name;
-            } else if (option.type === ApplicationCommandOptionType.Subcommand) {
-                yield option.name;
-            }
-
-            // const suboptions = option.options?.filter(
-            //     (option) =>
-            //         option.type ===
-            //             ApplicationCommandOptionType.SubcommandGroup ||
-            //         option.type === ApplicationCommandOptionType.Subcommand
-            // );
-
-            // const params = option.options?.filter(
-            //     (option) =>
-            //         option.type !==
-            //             ApplicationCommandOptionType.SubcommandGroup &&
-            //         option.type !== ApplicationCommandOptionType.Subcommand
-            // );
-
-            // let paramsStr =
-            //     params?.reduce(
-            //         (acc, param) =>
-            //             `${acc} \`${param.name}${!param.required ? '?' : ''}\``,
-            //         ''
-            //     ) ?? '';
-
-            // if (suboptions?.length)
-            //     for (const name of this.walk(suboptions)) {
-            //         console.log('walked:', name);
-            //         yield `${option.name} ${name}`;
-            //     }
-            // else yield `${option.name} ${paramsStr}\n-# ${option.description}`;
+            } else if (
+                option.type === ApplicationCommandOptionType.Subcommand
+            ) {
+                yield ` ${option.name}:${command.id}> ${[
+                    ...this.walkOptions(command, option.options ?? []),
+                ].join(' ')}`;
+            } else
+                yield `:${command.id}> \`${option.name}${
+                    !option.required ? '?' : ''
+                }\``;
         }
     }
 
@@ -88,10 +76,6 @@ export class Help extends Command {
 
         const commands = await guild.commands.fetch();
         const query = interaction.options.getString('command');
-
-        for (const [id, command] of commands) {
-            // noop
-        }
 
         if (query) {
             const focused =
@@ -124,7 +108,10 @@ export class Help extends Command {
             })
             .setTitle('Arcane');
 
-        let description = [...this.walk(commands.values())].join('\n');
+        let description = commands
+            .map((command) => [...this._walk(command)])
+            .flat()
+            .join('\n');
 
         embed.setDescription(description);
 

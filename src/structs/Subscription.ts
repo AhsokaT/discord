@@ -1,14 +1,14 @@
 import {
     AudioPlayer,
+    AudioPlayerPlayingState,
     AudioPlayerStatus,
     AudioResource,
     createAudioPlayer,
     entersState,
-    NoSubscriberBehavior,
     getVoiceConnection,
     joinVoiceChannel,
+    NoSubscriberBehavior,
     VoiceConnectionStatus,
-    AudioPlayerPlayingState,
 } from '@discordjs/voice';
 import {
     ActionRowBuilder,
@@ -22,11 +22,11 @@ import {
     StringSelectMenuBuilder,
     VoiceBasedChannel,
 } from 'discord.js';
-import { Track } from '../structs/Track.js';
-import { Client } from '../client/client.js';
-import { SubscriptionMessageManager } from '../managers/SubscriptionMessageManager.js';
-import { SubscriptionVoteManager } from '../managers/SubscriptionVoteManager.js';
 import yts from 'yt-search';
+import { Client } from '../client/client.ts';
+import { SubscriptionMessageManager } from '../managers/SubscriptionMessageManager.ts';
+import { SubscriptionVoteManager } from '../managers/SubscriptionVoteManager.ts';
+import { Track } from '../structs/Track.ts';
 
 // ! fix message/playing mismatch when songs are added quickly
 
@@ -55,6 +55,7 @@ export class Subscription {
     public queueLock: boolean;
     public loop: boolean;
     public pointer = 0;
+    readonly voteStop: Set<string>;
 
     constructor(
         readonly client: Client<true>,
@@ -65,6 +66,7 @@ export class Subscription {
         this.loop = false;
         this.queue = [];
         this.history = [];
+        this.voteStop = new Set();
         this.votes = new SubscriptionVoteManager(this);
         this.messages = new SubscriptionMessageManager(this);
 
@@ -131,6 +133,14 @@ export class Subscription {
             });
 
         connection.subscribe(this.player);
+    }
+
+    get voters() {
+        return this.voice.members.filter((member) => !member.user.bot);
+    }
+
+    get neededVotes() {
+        return ~~(this.voters.size / 2);
     }
 
     get guild() {

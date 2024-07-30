@@ -5,7 +5,7 @@
 	"description": "",
 	"type": "module",
 	"scripts": {
-		"start": "tsx --env-file=.env src/index.ts"
+		"start": "tsx --trace-deprecation --env-file=.env src/index.ts"
 	},
 	"keywords": [],
 	"author": "",
@@ -19,6 +19,8 @@
 		"@sapphire/plugin-subcommands": "^6.0.3",
 		"@sapphire/utilities": "^3.16.2",
 		"discord.js": "^14.15.3",
+		"dotenv": "^16.4.5",
+		"eclipse": "file:../eclipse",
 		"libsodium-wrappers": "^0.7.13",
 		"mongodb": "^6.8.0",
 		"yt-search": "^2.11.1",
@@ -26,7 +28,7 @@
 	},
 	"devDependencies": {
 		"@types/yt-search": "^2.10.3",
-		"tsx": "^4.16.0",
-		"typescript": "^5.5.3"
+		"tsx": "^4.16.2",
+		"typescript": "^5.6.0-beta"
 	}
 }

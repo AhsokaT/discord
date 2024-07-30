@@ -1,9 +1,9 @@
 import { APIApplicationCommand, APIGuild, REST, Routes } from 'discord.js';
-import { Client } from '../client/client.js';
-import { COMMANDS, SETTINGS } from '../util/util.js';
+import { Client } from '../client/client.ts';
+import { COMMANDS, SETTINGS } from '../util/util.ts';
 import { MongoClient } from 'mongodb';
-import { PluginBitField, PluginBits } from '../util/PluginBitField.js';
-import { BitField } from '../util/BitField.js';
+import { PluginBitField, PluginBits } from '../util/PluginBitField.ts';
+import { BitField } from '../util/BitField.ts';
 import assert from 'node:assert/strict';
 
 export interface GuildDocument {

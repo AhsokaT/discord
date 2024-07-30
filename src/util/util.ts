@@ -11,10 +11,10 @@ import {
     MessageActionRowComponentBuilder,
     PermissionFlagsBits,
 } from 'discord.js';
-import { GuildData } from '../managers/DatabaseManager.js';
+import { GuildData } from '../managers/DatabaseManager.ts';
 import { InteractionHandler } from '@sapphire/framework';
-import { Client } from '../client/client.js';
-import { PluginBits } from './PluginBitField.js';
+import { Client } from '../client/client.ts';
+import { PluginBits } from './PluginBitField.ts';
 
 type ResolveOptions<Class extends new (...args: any[]) => any> =
     Class extends new (ctx: any, options: infer O) => any ? O : never;
@@ -216,80 +216,17 @@ export const COMMANDS = {
             type: ApplicationCommandType.ChatInput,
         },
         {
-            name: 'playlist',
-            description: 'Empty',
+            name: 'playlistcreate',
+            description: 'Create a new playlist',
             type: ApplicationCommandType.ChatInput,
             options: [
                 {
-                    name: 'create',
-                    description: 'Create a playlist',
-                    type: ApplicationCommandOptionType.Subcommand,
-                    options: [
-                        {
-                            name: 'name',
-                            description: 'Playlist name',
-                            type: ApplicationCommandOptionType.String,
-                            required: true,
-                        },
-                    ],
+                    name: 'name',
+                    description: 'The name of the playlist',
+                    type: ApplicationCommandOptionType.String,
+                    required: true,
                 },
-                {
-                    name: 'add',
-                    description: 'Add a song to a playlist',
-                    type: ApplicationCommandOptionType.Subcommand,
-                    options: [
-                        {
-                            name: 'playlist',
-                            description: 'The playlist to add the song to',
-                            type: ApplicationCommandOptionType.String,
-                            required: true,
-                            autocomplete: true,
-                        },
-                        {
-                            name: 'song',
-                            description: 'The song to add to the playlist',
-                            type: ApplicationCommandOptionType.String,
-                            required: true,
-                            autocomplete: true,
-                        },
-                    ],
-                },
-                {
-                    name: 'delete',
-                    description: 'Delete a playlist',
-                    type: ApplicationCommandOptionType.Subcommand,
-                    options: [
-                        {
-                            name: 'playlist',
-                            description: 'The playlist to delete',
-                            type: ApplicationCommandOptionType.String,
-                            required: true,
-                            autocomplete: true,
-                        },
-                    ],
-                },
-                {
-                    name: 'remove',
-                    description: 'Remove a song from a playlist',
-                    type: ApplicationCommandOptionType.Subcommand,
-                    options: [
-                        {
-                            name: 'playlist',
-                            description: 'The playlist to remove the song from',
-                            type: ApplicationCommandOptionType.String,
-                            required: true,
-                            autocomplete: true,
-                        },
-                        {
-                            name: 'song',
-                            description: 'The song to remove from the playlist',
-                            type: ApplicationCommandOptionType.String,
-                            required: true,
-                            autocomplete: true,
-                        },
-                    ],
-                }
-            ],
+            ]
         },
         {
             name: 'remove',
