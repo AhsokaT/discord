@@ -133,3 +133,4 @@ dist
 dist/
 .VSCodeCounter/
 .vscode
+package-lock.json
