@@ -1,10 +1,10 @@
 import assert from 'assert/strict';
 import { MongoClient } from 'mongodb';
-import { HouseStore } from './HouseStore.js';
 import { House } from '../util/enum.js';
+import { HousePointCache } from './HousePointCache.js';
 
 export class DatabaseConnection implements AsyncDisposable {
-    constructor(readonly store: HouseStore, readonly mongo: MongoClient) {}
+    private constructor(readonly mongo: MongoClient) {}
 
     async [Symbol.asyncDispose]() {
         await this.mongo.close();
@@ -25,7 +25,7 @@ export class DatabaseConnection implements AsyncDisposable {
                 `[DATABASE] => Bulk operation did not execute correctly.`
             );
 
-        for (const [id, points] of data) this.store.set(id, points);
+        return this.fetch();
     }
 
     async fetch() {
@@ -35,13 +35,11 @@ export class DatabaseConnection implements AsyncDisposable {
             .find()
             .toArray();
 
-        for (const house of houses) this.store.set(house._id, house.points);
-
-        return houses;
+        return new HousePointCache(houses.map((house) => [house._id, house.points]));
     }
 
-    static async connect(store: HouseStore, url = process.env.MONGO_URL) {
+    static async connect(url = process.env.MONGO_URL) {
         assert.ok(url, 'Missing url argument.');
-        return new DatabaseConnection(store, await MongoClient.connect(url));
+        return new DatabaseConnection(await MongoClient.connect(url));
     }
 }

@@ -43,7 +43,7 @@ export class HousePointsCommand extends Command {
 
         let changes = House.ids
             .filter((house) => newTotals[house] !== current[house])
-            .map((house) => [house, newTotals[house]] as [House.id, number]);
+            .map((house): [House.id, number] => [house, newTotals[house]]);
 
         if (changes.length === 0)
             return interaction.reply({

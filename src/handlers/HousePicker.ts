@@ -27,12 +27,10 @@ export class HousePicker extends InteractionHandler {
         const member = interaction.inCachedGuild()
             ? interaction.member
             : await guild.members.fetch(interaction.user.id);
-        const ids = House.ALL.map((house) => house.roleId);
-
-        assert.ok(selection);
+        const roles = House.ALL.map((house) => house.roleId);
 
         if (
-            member.roles.cache.hasAny(...ids) &&
+            member.roles.cache.hasAny(...roles) &&
             member.user.id !== '451448994128723978'
         )
             return interaction.reply({
