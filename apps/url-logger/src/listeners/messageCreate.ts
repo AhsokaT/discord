@@ -29,9 +29,6 @@ export class MessageCreateListener extends Listener<Events.MessageCreate> {
 
         let embed = new EmbedBuilder()
             .setColor("#2B2D31")
-            .setAuthor({
-                name: message.author.tag,
-            })
             .addFields({ name: "Message", value: message.url });
 
         let embeds: EmbedBuilder[] = [embed];
@@ -89,12 +86,6 @@ export class MessageCreateListener extends Listener<Events.MessageCreate> {
                                 ? ButtonStyle.Danger
                                 : ButtonStyle.Primary,
                         },
-                        {
-                            type: ComponentType.Button,
-                            emoji: "🗑️",
-                            customId: "delete",
-                            style: ButtonStyle.Primary,
-                        },
                     ],
                 },
             ],
@@ -118,7 +109,7 @@ export class MessageCreateListener extends Listener<Events.MessageCreate> {
 
     parseVideoUrls(str: string): string[] {
         const regex =
-            /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
+            /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/g; // nosonar
         const matches = [];
         let match;
         while ((match = regex.exec(str)) !== null) {

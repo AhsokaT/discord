@@ -4,7 +4,8 @@
     "main": "dist/index.mjs",
     "scripts": {
         "build": "tsup",
-        "start": "node --env-file=.env ."
+        "start": "node --env-file=.env .",
+        "dev": "npm run build && npm start"
     },
     "dependencies": {
         "@sapphire/framework": "^5.2.1",
@@ -13,6 +14,7 @@
     },
     "devDependencies": {
         "@types/yt-search": "^2.10.3",
-        "tsup": "^8.2.3"
+        "tsup": "^8.2.3",
+        "typescript": "^5.5.4"
     }
 }

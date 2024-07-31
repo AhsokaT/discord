@@ -3071,6 +3071,7 @@ __metadata:
     "@types/yt-search": "npm:^2.10.3"
     discord.js: "npm:^14.15.3"
     tsup: "npm:^8.2.3"
+    typescript: "npm:^5.5.4"
     yt-search: "npm:^2.11.1"
   languageName: unknown
   linkType: soft
