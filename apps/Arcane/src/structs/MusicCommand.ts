@@ -1,5 +1,5 @@
 import { Command } from '@sapphire/framework';
-import { Subscription } from './Subscription.ts';
+import { Subscription } from './Subscription.js';
 
 export abstract class MusicCommand extends Command {
     constructor(ctx: Command.LoaderContext, options: Command.Options) {

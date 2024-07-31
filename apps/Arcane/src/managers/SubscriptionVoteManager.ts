@@ -1,5 +1,5 @@
 import { Snowflake } from 'discord.js';
-import { Subscription } from '../structs/Subscription.ts';
+import { Subscription } from '../structs/Subscription.js';
 
 export enum PassedVote {
     Skip,

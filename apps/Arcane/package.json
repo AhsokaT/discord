@@ -1,11 +1,13 @@
 {
 	"name": "arcane",
 	"version": "1.0.0",
-	"main": "src/index.ts",
+	"main": "dist/index.js",
 	"description": "",
 	"type": "module",
 	"scripts": {
-		"start": "tsx --trace-deprecation --env-file=.env src/index.ts"
+		"build": "tsup",
+		"start": "node --env-file=.env .",
+		"dev": "npm run build && npm start"
 	},
 	"keywords": [],
 	"author": "",
@@ -22,7 +24,8 @@
 	},
 	"devDependencies": {
 		"@types/yt-search": "^2.10.3",
-		"tsx": "^4.16.2",
+		"tsup": "^8.2.3",
 		"typescript": "^5.5.4"
-	}
+	},
+	"private": true
 }

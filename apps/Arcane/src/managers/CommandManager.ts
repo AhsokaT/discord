@@ -6,9 +6,9 @@ import {
     Routes,
     APIApplicationCommand,
 } from 'discord.js';
-import { PluginBits } from '../util/PluginBitField.ts';
-import { Client } from '../client/client.ts';
-import { GuildData } from './DatabaseManager.ts';
+import { PluginBits } from '../util/PluginBitField.js';
+import { Client } from '../client/client.js';
+import { GuildData } from './DatabaseManager.js';
 import { Command } from '@sapphire/framework';
 
 export class CommandRepository extends Set<Command> {

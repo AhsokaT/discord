@@ -8,8 +8,8 @@ import {
     User,
 } from 'discord.js';
 import ytdl from '@distube/ytdl-core';
-import { Subscription } from '../structs/Subscription.ts';
-import { toOrdinal } from '../util/util.ts';
+import { Subscription } from '../structs/Subscription.js';
+import { toOrdinal } from '../util/util.js';
 
 interface EmbedOptions {
     label?: string;

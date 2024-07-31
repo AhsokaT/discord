@@ -1,23 +1,20 @@
 import { Command } from '@sapphire/framework';
+import assert from 'assert/strict';
 import {
-    APIApplicationCommand,
     ActionRowBuilder,
+    APIApplicationCommand,
     ApplicationCommand,
     ApplicationCommandOption,
-    ApplicationCommandOptionType,
-    ApplicationCommandSubCommand,
-    ApplicationCommandSubGroup,
-    ApplicationCommandType,
+    ApplicationCommandOptionType, ApplicationCommandType,
     ButtonBuilder,
     ButtonStyle,
     EmbedBuilder,
     MessageActionRowComponentBuilder,
     PermissionsBitField,
-    SlashCommandBuilder,
+    SlashCommandBuilder
 } from 'discord.js';
-import { COMMANDS, commandStr, PieceOptions } from '../../util/util.js';
 import { PluginBits } from '../../util/PluginBitField.js';
-import assert from 'assert/strict';
+import { COMMANDS, commandStr, PieceOptions } from '../../util/util.js';
 
 type test = [parent: ApplicationCommand, ...subcommands: string[]][];
 

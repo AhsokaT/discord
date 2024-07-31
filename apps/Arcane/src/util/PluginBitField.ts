@@ -1,4 +1,4 @@
-import { BitField } from './BitField.ts';
+import { BitField } from './BitField.js';
 
 export const PluginBits = {
     Settings: 1,

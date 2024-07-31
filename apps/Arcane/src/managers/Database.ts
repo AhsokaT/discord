@@ -1,6 +1,6 @@
 import assert from 'assert/strict';
 import { MongoClient } from 'mongodb';
-import { Client } from '../client/client';
+import { Client } from '../client/client.js';
 
 export namespace Database {
     export interface GuildDocument {

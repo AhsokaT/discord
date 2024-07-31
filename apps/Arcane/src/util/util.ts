@@ -11,10 +11,10 @@ import {
     MessageActionRowComponentBuilder,
     PermissionFlagsBits,
 } from 'discord.js';
-import { GuildData } from '../managers/DatabaseManager.ts';
+import { GuildData } from '../managers/DatabaseManager.js';
 import { InteractionHandler } from '@sapphire/framework';
-import { Client } from '../client/client.ts';
-import { PluginBits } from './PluginBitField.ts';
+import { Client } from '../client/client.js';
+import { PluginBits } from './PluginBitField.js';
 
 type ResolveOptions<Class extends new (...args: any[]) => any> =
     Class extends new (ctx: any, options: infer O) => any ? O : never;

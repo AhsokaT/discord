@@ -1,10 +1,10 @@
 import { SapphireClient, SapphireClientOptions } from '@sapphire/framework';
 import { ClientOptions, Snowflake } from 'discord.js';
 import { join } from 'path';
-import { CommandManager } from '../managers/CommandManager.ts';
-import { GuildDataManager } from '../managers/DatabaseManager.ts';
-import { Subscription } from '../structs/Subscription.ts';
-import { Database } from '../managers/Database.ts';
+import { CommandManager } from '../managers/CommandManager.js';
+import { GuildDataManager } from '../managers/DatabaseManager.js';
+import { Subscription } from '../structs/Subscription.js';
+import { Database } from '../managers/Database.js';
 
 export class Client<
     Ready extends boolean = boolean
@@ -20,7 +20,7 @@ export class Client<
 
         this.stores
             .get('interaction-handlers')
-            .registerPath(join(process.cwd(), 'src', 'interactions'));
+            .registerPath(join(process.cwd(), 'dist', 'interactions'));
 
         this.userCache = new Map();
         this.videoCache = new Map();

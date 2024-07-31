@@ -23,10 +23,10 @@ import {
     VoiceBasedChannel,
 } from 'discord.js';
 import yts from 'yt-search';
-import { Client } from '../client/client.ts';
-import { SubscriptionMessageManager } from '../managers/SubscriptionMessageManager.ts';
-import { SubscriptionVoteManager } from '../managers/SubscriptionVoteManager.ts';
-import { Track } from '../structs/Track.ts';
+import { Client } from '../client/client.js';
+import { SubscriptionMessageManager } from '../managers/SubscriptionMessageManager.js';
+import { SubscriptionVoteManager } from '../managers/SubscriptionVoteManager.js';
+import { Track } from '../structs/Track.js';
 
 // ! fix message/playing mismatch when songs are added quickly
 
