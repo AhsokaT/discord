@@ -16,7 +16,6 @@
 		"@sapphire/framework": "^5.2.1",
 		"discord.js": "^14.15.3",
 		"dotenv": "^16.4.5",
-		"eclipse": "file:../eclipse",
 		"libsodium-wrappers": "^0.7.13",
 		"mongodb": "^6.8.0",
 		"yt-search": "^2.11.1",
