@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="UncleIroh.png" alt="Uncle Iroh" width="150"/>
+<img src="UncleIroh.png" alt="Uncle Iroh" width="150" height="150"/>
 
 # Uncle Iroh
 
