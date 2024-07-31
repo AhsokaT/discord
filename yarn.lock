@@ -782,9 +782,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"arcane@workspace:apps/Arcane":
+"arcane@workspace:apps/arcane":
   version: 0.0.0-use.local
-  resolution: "arcane@workspace:apps/Arcane"
+  resolution: "arcane@workspace:apps/arcane"
   dependencies:
     "@discordjs/voice": "npm:^0.17.0"
     "@distube/ytdl-core": "npm:^4.13.5"
@@ -2487,9 +2487,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"raven@workspace:apps/Raven":
+"raven@workspace:apps/raven":
   version: 0.0.0-use.local
-  resolution: "raven@workspace:apps/Raven"
+  resolution: "raven@workspace:apps/raven"
   dependencies:
     "@sapphire/decorators": "npm:^6.1.0"
     "@sapphire/framework": "npm:^5.2.1"
