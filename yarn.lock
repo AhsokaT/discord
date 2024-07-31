@@ -3063,6 +3063,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"url-logger@workspace:apps/url-logger":
+  version: 0.0.0-use.local
+  resolution: "url-logger@workspace:apps/url-logger"
+  dependencies:
+    "@sapphire/framework": "npm:^5.2.1"
+    "@types/yt-search": "npm:^2.10.3"
+    discord.js: "npm:^14.15.3"
+    tsup: "npm:^8.2.3"
+    yt-search: "npm:^2.11.1"
+  languageName: unknown
+  linkType: soft
+
 "url-parse@npm:^1.5.3":
   version: 1.5.10
   resolution: "url-parse@npm:1.5.10"

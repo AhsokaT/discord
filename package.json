@@ -1,11 +1,11 @@
 {
-  "name": "discord",
-  "packageManager": "yarn@4.3.1",
-  "scripts": {
-    "build": "yarn workspaces foreach --all run build"
-  },
-  "workspaces": [
-    "apps/*"
-  ],
-  "private": true
+    "name": "discord",
+    "packageManager": "yarn@4.3.1",
+    "scripts": {
+        "build": "yarn workspaces foreach --all run build"
+    },
+    "workspaces": [
+        "apps/*"
+    ],
+    "private": true
 }
